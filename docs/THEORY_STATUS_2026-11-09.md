@@ -1,0 +1,13 @@
+# Theory status against the experiments since 2026-11-07 (2026-11-09; post hoc readings of design data, not new tests)
+The project already has a theory: docs/THEORY.md (T1 error-yield frontier of any answer-or-abstain system, T2 signal quality, T4 certificates, T5 the limit on verifying a low error rate) and docs/THEORY_CONJECTURES.md (target theorem T*, conjectures C1 to C4 with predictions).
+What was missing is that none of it is in the paper and that the later experiments were never read against it. Reading them now:
+| statement | prediction | later evidence | reading |
+|---|---|---|---|
+| T1 (frontier identity) | for a fixed signal, yield goes to 0 as target error goes to 0; every mechanism is a point under one curve | pinned pages, title retrieval, 27B veto and corroboration each moved along the coverage-error trade, none crossed it; the Learn-then-Test baseline sits above the system on FRESH-5 (9 against 4 errors at equal coverage) | consistent |
+| C1 residual errors are relation or qualifier mismatches | asked entity occurs in the span's sentence; a predicate check separates better than overlap | S27: 8 of 29 kept Mintaka errors are relation mismatches (1678 for a range of years, Senate for the chamber's name); predicate check not built | consistent; the predicate check is untested (S28 is its learned version) |
+| C2 error = evidence-induced + reader-specific; agreement removes only the second | (a) a bigger or extra reader on the same evidence removes under 20% of the remaining errors; (b) different evidence helps more | (a) 27B veto: 2 of 18 added errors (11%); (b) title retrieval without the web: added error 6.5% against 21% for pinning | both consistent |
+| C3 gold floor | graded SER >= coverage x gold-dispute rate | Mintaka: 19 of 28 errors were gold problems; adjudicated SER 0.45% against 1.40% | consistent |
+| C4 a deductive check moves the error into the semantic mapping | a narrow, auditable frame checker would reject most relation mismatches | not built; the closed-evidence worlds (exact mapping by construction) produced no wrong answer | untested on real data |
+| T5 verifying a low error rate needs many samples | roughly 3 over epsilon items | FRESH-5 allows k <= 6; L1 needs about 4,000 to 6,000 questions | consistent |
+So the theory is not missing; it is unpublished, partly untested, and specific to answer-or-abstain systems with span gates. What a general statement would add is predictiveness: given the AUROC of the signal and the base accuracy, the frontier is determined (T1, checked once on the S7 probe within 5 points);
+the open work is to test that prediction on the new sealed set and to turn C4 into a built and measured checker.

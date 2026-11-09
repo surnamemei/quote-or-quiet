@@ -62,3 +62,14 @@ Two independent agents, key withheld, 40 rows: 4 gold-relative wrong releases (u
 2. Secondary: gold-relative errors by relation; coverage by relation and by popularity stratum.
 3. Predictions: coverage 0.40 to 0.65; gold-relative wrong at most 1.5% of releases; system-judged-wrong at most 0.91% of releases (pooled earlier estimate). If any prediction fails it is reported as failed.
 4. Baseline: the LTT agreement-score rule (threshold calibrated on the 2,500 SimpleQA design items, unchanged) at matched coverage, to repeat the L1 comparison.
+
+### Pilot observation on the baseline (pilot only; written before the sealed run)
+Dry run of results/runs/s29/s29_final.py on the free-search-mcp pilot (144 questions, includes "founded"): the agreement-score baseline at t = 6 releases 80 with 4 gold-relative wrong, against 79 and 4 for the frozen system. On this question set the two rules are nearly the same, so an L1 gain over the baseline is not expected; the sealed run is mainly a test of L2 (error bound at coverage). Prediction added before the run: the system and the baseline at matched coverage differ by fewer than 3 wrong releases on the sealed set.
+The sealed run is chained to start after the prefetch (results/runs/s29/chain_sealed.sh); it waits for free RAM and VRAM and for the lock.
+
+### Execution detail (2026-11-09, before the sealed run)
+To use the GPU while the search prefetch is still running, the 3,359 sealed items are processed as four consecutive slices of 840 (file order; chain_chunks.sh), each started when its search results are cached, and the outputs are concatenated (s29_combine.py) before scoring. Items are processed independently with fixed seeds and the same code, so slicing does not change any item's result; the per-slice runs use identical settings. Nothing about the pre-registered rules changes.
+
+### L1 on the sealed set (added 2026-11-09, before any sealed result; see docs/CRITERIA_REVISION_L1.md)
+5. Revised L1: L1-a (system SER lower than the raw model closed book, the raw model with an abstention prompt, standard RAG and RAG with an abstention prompt; McNemar, Holm) and L1-b (non-inferiority to the agreement-score ablation at matched coverage: SER difference upper bound below +0.25 points, yield difference lower bound above -1 point, truth-relative errors from a blind review). Closed-book generations for B0/B1 are made once after the main run with the prompts fixed in the revision document.
+6. The original L1 test (50% lower than the ablation, discordant binomial) is run as well; prediction: not met.

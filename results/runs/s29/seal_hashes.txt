@@ -3,3 +3,5 @@
 cba68ee43c9344f4c1411255058c3e2a0300f2ab9114285e13a9a1fc956bfa9c  wd_build.py
 
 sealed without 'founded' (excluded after the pilot adjudication, 2026-11-09): n=3359 sha256(sorted ids joined by newline)=0c0906f259a30d19ae4f3347a452868f5e0f57d009b8083154a64df3a79db97b
+b6b280374449d8fcf99a2d583b0de49ae0351d93ff519a6fe56651a55ce2d80b *results/runs/s29/s29_closed.py
+04e34b99adeaa44eb2be227dea3d068f0f14425e7faa0c77833fd3675be1674f *docs/CRITERIA_REVISION_L1.md

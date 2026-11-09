@@ -10,13 +10,15 @@ sys.path.insert(0, str(ROOT))
 SEARCH = os.environ["S29_SEARCH"]
 OUT = ROOT / "results/runs/s29" / f"run_{SEARCH}"
 OUT.mkdir(parents=True, exist_ok=True)
-SETDIR = {"wdp": "pilot", "wd": "sealed"}
+SETDIR = {"wdp": "pilot", "wd": "sealed", "wd1": "sealed", "wd2": "sealed", "wd3": "sealed", "wd4": "sealed"}
 
 
 def items(name):
     rows = [json.loads(l) for l in open(ROOT / "results/runs/s29" / SETDIR[name] / "items.jsonl", encoding="utf-8")]
-    if name == "wd":    # 'founded' (companies) dropped after the pilot adjudication: gold ambiguity (founding vs incorporation), see docs/SEALED_SET_DESIGN.md
+    if name.startswith("wd") and name != "wdp":    # 'founded' (companies) dropped after the pilot adjudication: gold ambiguity (founding vs incorporation), see docs/SEALED_SET_DESIGN.md
         rows = [r for r in rows if r["relation"] != "founded"]
+        if len(name) > 2:    # wd1..wd4: consecutive slices of 840 in file order, so the run can start while the search prefetch is still going; per-item processing is independent, outputs are concatenated into wd_*.jsonl
+            i = int(name[2:]); rows = rows[(i - 1) * 840:i * 840]
     return [{"id": r["id"], "question": r["q"], "gold": r["gold"], "stratum": r["relation"], "meta": {"stratum": r["stratum"], "qid": r["qid"]}} for r in rows]
 
 

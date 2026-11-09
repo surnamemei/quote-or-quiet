@@ -22,3 +22,9 @@ Recommendation. Do 1, 2 and 7 first: they use data we already have, take days at
 Do 3 next (GPU, a few hours) because it tests the one lever the matched-coverage result points to. Do 4 only after 1 to 3, because the project's earlier training attempts were negative
 and the cost is higher. 5 and 6 depend on the new sealed set. 8 is a paper of its own and does not change error rates.
 All of these are tested on design data first and certified only on sealed questions with a pre-declared rule.
+
+## Status update (2026-11-09, later)
+- Direction 3 (probes): already tested in S5, S7, S7b (docs/REPORT.md); tied with log-probability, lost correct answers as a gate. Downgraded.
+- Direction 7 (corroboration across pages): tested, docs/S26_RESULT.md; no separation (12.5% against 13.0% wrong). Stopped.
+- Direction 1 (question resolution): first look in docs/S27_RESOLUTION_ANALYSIS.md; at most 34% of the residual Mintaka errors; 28% are relation-mapping errors the gate does not check.
+- Evidence-side filters tried on the added releases: pinned pages, title retrieval, a 27B veto, corroboration; none moved the added error below 6%.

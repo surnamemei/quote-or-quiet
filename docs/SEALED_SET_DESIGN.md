@@ -26,3 +26,16 @@ Purpose. A second real benchmark for L2, power for L1, a test of the error-budge
 - Adjudication: about 150 pilot rows plus all system and baseline errors plus decoys, with the existing agent protocol.
 - Downloading the Wikidata query results is read-only; no bulk dump is needed.
 Open decision for the authors: the credit budget for web search, and whether the pilot adjudication should include a human subset.
+
+## Build record (2026-11-09; counts only, items not opened)
+Built by results/runs/s29/wd_build.py from the public QLever Wikidata endpoint (randomised queries, English labels, sitelink counts); subject names must have exactly one page in the local Wikipedia title index. Hashes in results/runs/s29/seal_hashes.txt.
+- Sealed: 3,959 questions: birth place 800, birth year 600, death year 400, founded 600, author 500 (literary works, "Who wrote X?"), director 600, head of government in a stated year 400, capital 59 (the pool after the uniqueness filter was small).
+  Popularity strata (sitelinks): low 1,820, mid 1,238, high 901, not the planned thirds because the high stratum pools are smaller.
+- Pilot: 144 questions, disjoint, different seed; to be adjudicated before the sealed run.
+- First build had no author items (the class "novel" has no item with 10 or more sitelinks and an author statement); the author relation was switched to literary works and the set rebuilt before any run. No sealed item was read.
+
+## Web source for the sealed run (decided 2026-11-09)
+The web evidence comes from the free-search-mcp keyless pool (DuckDuckGo, Bing, Yahoo! Japan, AnySearch merged by reciprocal rank fusion; results cached as URL lists in a separate cache directory), not from DuckDuckGo alone. Reason given by the user: Wikipedia need not be correct or current. Consequences written down now:
+- the system under test is the frozen S19 pipeline with one declared change (the search pool); the earlier SimpleQA certificate was obtained with DuckDuckGo and is not claimed for this configuration;
+- the verification gate still accepts spans only from the pinned Wikipedia snapshot (August 2025); the web pages enter the support vote, not the certificate; a gate that also accepts hash-pinned web pages is a separate variant to be designed on the pilot and DEV data first;
+- the pilot (144 questions) is run once with each search pool.

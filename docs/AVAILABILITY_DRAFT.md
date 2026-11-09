@@ -12,17 +12,16 @@ The pipeline (retrieval, readers, gate V1 to V5, veto, entity slot, derivation c
 ## Inventory (resources the analyses used)
 | resource | role | route | note |
 |---|---|---|---|
-| SimpleQA | FRESH-5 questions and design data | public (OpenAI simple-evals) | licence not re-checked here |
+| SimpleQA | FRESH-5 questions and design data | public (OpenAI simple-evals) | the repository README lists SimpleQA under its MIT licence (checked 2026-11-09); items are still not redistributed here |
 | SimpleQA Verified | exclusion list for FRESH-5 | public (arXiv 2509.07968; Kaggle) | |
 | Mintaka | transfer test and design data | public, CC BY 4.0 (HF AmazonScience/mintaka) | licence from the dataset card read on 2026-11-07 |
-| PopQA | transfer test and design data | public (HF akariasai/PopQA) | licence on the card still to be checked (docs/DATASET_SEARCH.md) |
+| PopQA | transfer test and design data | public (HF akariasai/PopQA) | code repository is MIT; the dataset card and README state no licence (checked 2026-11-09); items are not redistributed here |
 | FineWiki, August 2025 | local Wikipedia evidence | public (HF HuggingFaceFW/finewiki) | files checked against the official SHA-256 list |
 | web pages from DuckDuckGo | evidence | third-party, not redistributed | URLs released |
-| models | readers, veto, judge, embedder | public weights | Qwen3-4B-Instruct-2507 (Apache 2.0 per the model card), Phi-4, Qwen3.8-27B, Qwen3-Embedding-0.6B; licences of the last two to be confirmed |
+| models | readers, veto, judge, embedder | public weights | Qwen3-4B-Instruct-2507, Qwen3.8-27B and Qwen3-Embedding-0.6B: Apache 2.0; Phi-4: MIT (model cards read on 2026-11-09; the local Qwen3.8-27B file is a GGUF quantisation of the original) |
 | run records, adjudication, figures source numbers, synthetic generator | generated here | to be deposited | repository not yet created |
 
 ## Actions only the authors can do
 1. The public repository exists (https://github.com/surnamemei/quote-or-quiet, pushed 2026-11-09 without third-party benchmark items); a DOI-bearing deposit (for example Zenodo) is still to be made if the venue requires an identifier.
-2. Check redistribution terms for the SimpleQA and PopQA items inside the run records (the records contain question text and gold answers).
-3. Confirm the licences of Phi-4, Qwen3.8-27B and Qwen3-Embedding-0.6B before listing them with a licence.
+2. The PopQA dataset states no licence; before any run record containing PopQA items is released, ask its authors or keep the items out (the current repository has none).
 4. Decide whether the web-evidence passages (third-party text) stay out of the release; the URL lists and hashes suffice to rerun.

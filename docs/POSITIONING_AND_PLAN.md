@@ -38,6 +38,7 @@ B. New sealed real questions (needed for any further L2 or L1 claim): time-ancho
 C. Same-data baseline: our LTT baseline exists; a two-branch BalanceRAG-style calibration needs an LLM-only branch score we have not generated (one 27B or 4B no-retrieval run on the SimpleQA design sets).
 D. Package the system: a runnable repository (pipeline, gate, certificate protocol, hashes, generators of the synthetic sets) so the certification can be repeated on another distribution.
 Not now: Goal B, other languages, larger models as a headline.
+Learned post-processors tried on the added releases (27B veto S25, corroboration S26, trained checker S28): none removed more than a fifth of the wrong releases at a 5% cost in correct ones; docs/S28_RESULT.md.
 
 ## 5. Decisions that are yours
 1. Paper type and venue: empirical/methodology paper with a negative-results section (my recommendation) versus waiting for a stronger v2 result.

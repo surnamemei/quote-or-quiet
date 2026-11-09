@@ -1,0 +1,10 @@
+# S29 pilot blind adjudication (two agents, key withheld)
+
+system_wrong n=4 | A {'both acceptable': 3, 'gold wrong': 1} | B {'both acceptable': 3, 'gold wrong': 1} | both 'answer wrong' 0 | either 0 | verdict agreement 4
+system_right n=24 | A {'both acceptable': 24} | B {'both acceptable': 24} | both 'answer wrong' 0 | either 0 | verdict agreement 24
+decoy_injected_false n=12 | A {'answer wrong': 11, 'gold wrong': 1} | B {'answer wrong': 12} | both 'answer wrong' 11 | either 12 | verdict agreement 11
+
+[system_wrong] row 7: Where was Jordan Bos born? | gold Point Cook | ans Melbourne, Victoria, Australia | A: both acceptable (Wikipedia infobox gives birthplace Melbourne; Point Cook is the Melbourne suburb he grew up in; gold suburb no) | B: both acceptable (Point Cook is a suburb of Melbourne; answer is the containing city/state, gold the more specific suburb.)
+[system_wrong] row 11: In what year was Sigma-Aldrich founded? | gold 1976 | ans 1975 | A: gold wrong (Created by merger Aug 1975; predecessors 1935/1946/1951; no basis for 1976. Answer 1975 is correct.) | B: gold wrong (Sigma and Aldrich merged Aug 1975; no source for 1976. Answer 1975 correct.)
+[system_wrong] row 12: In what year was Herrenknecht founded? | gold 1977 | ans 1975 | A: both acceptable (Engineering office founded 1975; Herrenknecht GmbH incorporated 1977 (founding vs incorporation).) | B: both acceptable (Founded 1975 as engineering firm; became Herrenknecht GmbH in 1977. Both defensible.)
+[system_wrong] row 18: In what year was 4F founded? | gold 2007 | ans 2003 | A: both acceptable (Company history: 2003 first 4Fun stores, renamed 4F Sport Performance 2007, 4F in 2010; gold 2007 and answer 2) | B: both acceptable (Brand/business started 2003 as 4Fun; renamed 4F Sport Performance in 2007 (Wikidata date). Both defensible.)

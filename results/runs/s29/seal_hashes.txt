@@ -1,3 +1,5 @@
 69052d704200e03bdd8dd82c6bcee9729aa88907004d789479257ad603a939ff  sealed/items.jsonl
 1f810e87b2523ee07cdaace351c6cad578fd2ca22e7448e559ebfbb601677d31  pilot/items.jsonl
 cba68ee43c9344f4c1411255058c3e2a0300f2ab9114285e13a9a1fc956bfa9c  wd_build.py
+
+sealed without 'founded' (excluded after the pilot adjudication, 2026-11-09): n=3359 sha256(sorted ids joined by newline)=0c0906f259a30d19ae4f3347a452868f5e0f57d009b8083154a64df3a79db97b

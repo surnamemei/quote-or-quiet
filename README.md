@@ -1,6 +1,6 @@
-# Receipts or Silence
+# Quote or Quiet
 
-A small local model that answers with a quote you can check, or says nothing.
+A small local model that answers with a quote you can check, or stays quiet. (Answers with receipts, or silence.)
 On sealed SimpleQA questions it gave a wrong answer for 0.76% of all questions or fewer (97.5% upper bound), at 37% coverage.
 
 Most of what is below is how we measured that, and what we found when we tried to push it further.

@@ -1,0 +1,200 @@
+{"q": "In which city was the linguist Velnal Holby born?", "gold": ["Stoneham"], "state": "Verified", "docs": ["d000000", "d000001"], "id": "closed-101-00000"}
+{"q": "What is the name of Holdor Torberg's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000002"], "id": "closed-101-00001"}
+{"q": "In which city was the cartographer Brenshu Delton born?", "gold": ["Yewham"], "state": "Verified", "docs": ["d000003", "d000004"], "id": "closed-101-00002"}
+{"q": "What is the name of Galnal Wynby's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000005"], "id": "closed-101-00003"}
+{"q": "How old was Kalo Zanstein when they joined Quill Institute?", "gold": ["26", "25"], "state": "Derived", "docs": ["d000006"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00004"}
+{"q": "In which city was the historian Brensen Brenstein born?", "gold": ["Larkworth"], "state": "Verified", "docs": ["d000007", "d000008"], "id": "closed-101-00005"}
+{"q": "What is the name of Galnal Quiov's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000009"], "id": "closed-101-00006"}
+{"q": "Who directed Fathom Foundation in 1955?", "gold": ["Druvik Ostwick"], "state": "Verified", "docs": ["d000010"], "id": "closed-101-00007"}
+{"q": "In which city was Yorlo Druberg born?", "gold": ["Westmouth"], "state": "Verified", "docs": ["d000011"], "id": "closed-101-00008"}
+{"q": "How old was Marric Ostley when they joined Loom Works?", "gold": ["33", "32"], "state": "Derived", "docs": ["d000012"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00009"}
+{"q": "In which city was Torta Kafield born?", "gold": ["Birchworth"], "state": "Verified", "docs": ["d000013"], "id": "closed-101-00010"}
+{"q": "What is the name of Tamric Brenby's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000014"], "id": "closed-101-00011"}
+{"q": "In which city was Sordor Linman born?", "gold": ["Birchmouth"], "state": "Verified", "docs": ["d000015"], "id": "closed-101-00012"}
+{"q": "Who directed Kite Laboratories in 2015?", "gold": ["Velvik Pelson"], "state": "Verified", "docs": ["d000016"], "id": "closed-101-00013"}
+{"q": "In which city was the geologist Sorpen Marov born?", "gold": ["Pineport"], "state": "Verified", "docs": ["d000017", "d000018"], "id": "closed-101-00014"}
+{"q": "How old was Sorpen Linby when they joined Basalt Studio?", "gold": ["30", "29"], "state": "Derived", "docs": ["d000019"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00015"}
+{"q": "In which city was Linden Torwick born?", "gold": ["Marshwick"], "state": "Verified", "docs": ["d000020"], "id": "closed-101-00016"}
+{"q": "Who directed Keystone Press in 1978?", "gold": ["Pelshu Ravstein"], "state": "Verified", "docs": ["d000021"], "id": "closed-101-00017"}
+{"q": "How old was Marsen Galton when they joined Tundra Institute?", "gold": ["36", "35"], "state": "Derived", "docs": ["d000022"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00018"}
+{"q": "In which city was Ostek Torford born?", "gold": ["Dunfield", "Ironmere"], "state": "Qualified", "docs": ["d000023", "d000024"], "id": "closed-101-00019"}
+{"q": "In which city was Linmi Yorov born?", "gold": ["Ashgate", "Doveham"], "state": "Qualified", "docs": ["d000025", "d000026"], "id": "closed-101-00020"}
+{"q": "How old was Torlo Tamley when they joined Reef Institute?", "gold": ["23", "22"], "state": "Derived", "docs": ["d000027"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00021"}
+{"q": "Who directed Keystone Studio in 2003?", "gold": ["Quilo Tamhart"], "state": "Verified", "docs": ["d000028"], "id": "closed-101-00022"}
+{"q": "In which city was the composer Fenra Linov born?", "gold": ["Fairmere"], "state": "Verified", "docs": ["d000029", "d000030"], "id": "closed-101-00023"}
+{"q": "In which city was Velbel Sorford born?", "gold": ["Foxton"], "state": "Verified", "docs": ["d000031"], "id": "closed-101-00024"}
+{"q": "Who directed Quartz Works in 1986?", "gold": ["Linta Sorwick"], "state": "Verified", "docs": ["d000032"], "id": "closed-101-00025"}
+{"q": "Who directed Talon Studio in 1970?", "gold": ["Wyndor Galby"], "state": "Verified", "docs": ["d000033"], "id": "closed-101-00026"}
+{"q": "In which city was Ravgar Yorby born?", "gold": ["Baymouth"], "state": "Verified", "docs": ["d000034"], "id": "closed-101-00027"}
+{"q": "Who directed Flint Studio in 1964?", "gold": ["Torra Holley"], "state": "Verified", "docs": ["d000035"], "id": "closed-101-00028"}
+{"q": "In which city was the cartographer Velden Torson born?", "gold": ["Upperby"], "state": "Verified", "docs": ["d000036", "d000037"], "id": "closed-101-00029"}
+{"q": "In which city was Galnal Yorby born?", "gold": ["Marshworth"], "state": "Verified", "docs": ["d000038"], "id": "closed-101-00030"}
+{"q": "How old was Delric Velberg when they joined Isle Society?", "gold": ["25", "24"], "state": "Derived", "docs": ["d000039"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00031"}
+{"q": "In which city was the composer Fenra Fenford born?", "gold": ["Brookmere"], "state": "Verified", "docs": ["d000040", "d000041"], "id": "closed-101-00032"}
+{"q": "In which city was Ravshu Kaley born?", "gold": ["Stonewick"], "state": "Verified", "docs": ["d000042"], "id": "closed-101-00033"}
+{"q": "In which city was Tamden Zanby born?", "gold": ["Alderport"], "state": "Verified", "docs": ["d000043"], "id": "closed-101-00034"}
+{"q": "In which city was the linguist Quiric Quiby born?", "gold": ["Jaycombe"], "state": "Verified", "docs": ["d000044", "d000045"], "id": "closed-101-00035"}
+{"q": "Who directed Union Council in 1982?", "gold": ["Marlo Fenhart"], "state": "Verified", "docs": ["d000046"], "id": "closed-101-00036"}
+{"q": "In which city was the economist Linshu Wynson born?", "gold": ["Pikecombe"], "state": "Verified", "docs": ["d000047", "d000048"], "id": "closed-101-00037"}
+{"q": "Who directed Prism Studio in 2019?", "gold": ["Zanmi Sorfield"], "state": "Verified", "docs": ["d000049"], "id": "closed-101-00038"}
+{"q": "Who directed Nectar Foundation in 2011?", "gold": ["Druden Kaov"], "state": "Verified", "docs": ["d000050"], "id": "closed-101-00039"}
+{"q": "What is the name of Brenek Brenton's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000051"], "id": "closed-101-00040"}
+{"q": "In which city was Ostvik Torwick born?", "gold": ["Ironmere"], "state": "Verified", "docs": ["d000052"], "id": "closed-101-00041"}
+{"q": "In which city was Tamlo Ravman born?", "gold": ["Valemouth"], "state": "Verified", "docs": ["d000053"], "id": "closed-101-00042"}
+{"q": "In which city was Yorpen Linhart born?", "gold": ["Westport"], "state": "Verified", "docs": ["d000054"], "id": "closed-101-00043"}
+{"q": "In which city was Ravnal Delman born?", "gold": ["Greyfield"], "state": "Verified", "docs": ["d000055"], "id": "closed-101-00044"}
+{"q": "In which city was the architect Holta Brenley born?", "gold": ["Uppervale"], "state": "Verified", "docs": ["d000056", "d000057"], "id": "closed-101-00045"}
+{"q": "Who directed Union Institute in 1995?", "gold": ["Linmi Wynberg"], "state": "Verified", "docs": ["d000058"], "id": "closed-101-00046"}
+{"q": "How old was Kasen Marley when they joined Echo Studio?", "gold": ["40", "39"], "state": "Derived", "docs": ["d000059"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00047"}
+{"q": "In which city was Galshu Kason born?", "gold": ["Doveton"], "state": "Verified", "docs": ["d000060"], "id": "closed-101-00048"}
+{"q": "How old was Yorric Wynson when they joined Ivory Works?", "gold": ["34", "33"], "state": "Derived", "docs": ["d000061"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00049"}
+{"q": "Who directed Summit Works in 1962?", "gold": ["Holdor Holby"], "state": "Verified", "docs": ["d000062"], "id": "closed-101-00050"}
+{"q": "In which city was Fenpen Marman born?", "gold": ["Glenmouth"], "state": "Verified", "docs": ["d000063"], "id": "closed-101-00051"}
+{"q": "In which city was Brenvik Delson born?", "gold": ["Mossby"], "state": "Verified", "docs": ["d000064"], "id": "closed-101-00052"}
+{"q": "What is the name of Torsen Holford's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000065"], "id": "closed-101-00053"}
+{"q": "In which city was Fenric Linstein born?", "gold": ["Overmouth"], "state": "Verified", "docs": ["d000066"], "id": "closed-101-00054"}
+{"q": "How old was Holmi Ravfield when they joined Prism Foundation?", "gold": ["29", "28"], "state": "Derived", "docs": ["d000067"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00055"}
+{"q": "In which city was Zansen Linson born?", "gold": ["Thorngate"], "state": "Verified", "docs": ["d000068"], "id": "closed-101-00056"}
+{"q": "Who directed Lumen Laboratories in 1955?", "gold": ["Pelra Pelov"], "state": "Verified", "docs": ["d000069"], "id": "closed-101-00057"}
+{"q": "Who directed Argent Laboratories in 1994?", "gold": ["Quibel Fenby"], "state": "Verified", "docs": ["d000070"], "id": "closed-101-00058"}
+{"q": "In which city was Velvik Zanman born?", "gold": ["Jayport", "Baywick"], "state": "Qualified", "docs": ["d000071", "d000072"], "id": "closed-101-00059"}
+{"q": "Who directed Nectar Council in 1994?", "gold": ["Quisen Brenfield"], "state": "Verified", "docs": ["d000073"], "id": "closed-101-00060"}
+{"q": "In which city was the geologist Holdor Fenson born?", "gold": ["Lakeford"], "state": "Verified", "docs": ["d000074", "d000075"], "id": "closed-101-00061"}
+{"q": "What is the name of Holek Pelhart's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000076"], "id": "closed-101-00062"}
+{"q": "What is the name of Sorgar Sorby's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000077"], "id": "closed-101-00063"}
+{"q": "In which city was the painter Quipen Velstein born?", "gold": ["Ivymere"], "state": "Verified", "docs": ["d000078", "d000079"], "id": "closed-101-00064"}
+{"q": "Who directed Terrace Institute in 2008?", "gold": ["Yorden Holov"], "state": "Verified", "docs": ["d000080"], "id": "closed-101-00065"}
+{"q": "In which city was Drupen Ostberg born?", "gold": ["Dunhaven"], "state": "Verified", "docs": ["d000081"], "id": "closed-101-00066"}
+{"q": "In which city was Karic Druov born?", "gold": ["Ironmouth"], "state": "Verified", "docs": ["d000082"], "id": "closed-101-00067"}
+{"q": "How old was Wynlo Delstein when they joined Quill Works?", "gold": ["38", "37"], "state": "Derived", "docs": ["d000083"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00068"}
+{"q": "In which city was Pelgar Zanfield born?", "gold": ["Brookby"], "state": "Verified", "docs": ["d000084"], "id": "closed-101-00069"}
+{"q": "What is the name of Brenden Zanhart's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000085"], "id": "closed-101-00070"}
+{"q": "In which city was Velsen Tamberg born?", "gold": ["Baybury"], "state": "Verified", "docs": ["d000086"], "id": "closed-101-00071"}
+{"q": "In which city was Quira Sorson born?", "gold": ["Hollowby", "Fairstead"], "state": "Qualified", "docs": ["d000087", "d000088"], "id": "closed-101-00072"}
+{"q": "In which city was Zanra Zanov born?", "gold": ["Glenmere"], "state": "Verified", "docs": ["d000089"], "id": "closed-101-00073"}
+{"q": "How old was Marta Kason when they joined Quest Society?", "gold": ["37", "36"], "state": "Derived", "docs": ["d000090"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00074"}
+{"q": "How old was Fenbel Sorwick when they joined Summit Laboratories?", "gold": ["31", "30"], "state": "Derived", "docs": ["d000091"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00075"}
+{"q": "In which city was Velmi Wynton born?", "gold": ["Duncombe"], "state": "Verified", "docs": ["d000092"], "id": "closed-101-00076"}
+{"q": "Who directed Forge Foundation in 1996?", "gold": ["Linnal Yorson"], "state": "Verified", "docs": ["d000093"], "id": "closed-101-00077"}
+{"q": "In which city was Tormi Wynov born?", "gold": ["Quarrybury"], "state": "Verified", "docs": ["d000094"], "id": "closed-101-00078"}
+{"q": "What is the name of Linta Delwick's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000095"], "id": "closed-101-00079"}
+{"q": "In which city was Wynnal Galhart born?", "gold": ["Hartworth", "Glenbury"], "state": "Qualified", "docs": ["d000096", "d000097"], "id": "closed-101-00080"}
+{"q": "In which city was the surgeon Quivik Galford born?", "gold": ["Foxvale"], "state": "Verified", "docs": ["d000098", "d000099"], "id": "closed-101-00081"}
+{"q": "How old was Wynmi Linby when they joined Loom Institute?", "gold": ["24", "23"], "state": "Derived", "docs": ["d000100"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00082"}
+{"q": "What is the name of Wyngar Pelford's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000101"], "id": "closed-101-00083"}
+{"q": "In which city was Quiden Pelwick born?", "gold": ["Lakewick", "Kingsfield"], "state": "Qualified", "docs": ["d000102", "d000103"], "id": "closed-101-00084"}
+{"q": "In which city was Quiek Fenson born?", "gold": ["Netherstead"], "state": "Verified", "docs": ["d000104"], "id": "closed-101-00085"}
+{"q": "How old was Torra Velov when they joined Onyx Press?", "gold": ["36", "35"], "state": "Derived", "docs": ["d000105"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00086"}
+{"q": "In which city was Brenden Linby born?", "gold": ["Crowwick"], "state": "Verified", "docs": ["d000106"], "id": "closed-101-00087"}
+{"q": "In which city was Tamric Ostwick born?", "gold": ["Yewfield"], "state": "Verified", "docs": ["d000107"], "id": "closed-101-00088"}
+{"q": "What is the name of Linta Pelson's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000108"], "id": "closed-101-00089"}
+{"q": "What is the name of Fenpen Tamwick's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000109"], "id": "closed-101-00090"}
+{"q": "What is the name of Hollo Druov's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000110"], "id": "closed-101-00091"}
+{"q": "How old was Ravvik Marley when they joined Summit Society?", "gold": ["28", "27"], "state": "Derived", "docs": ["d000111"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00092"}
+{"q": "In which city was the botanist Tamra Quiov born?", "gold": ["Ashbury"], "state": "Verified", "docs": ["d000112", "d000113"], "id": "closed-101-00093"}
+{"q": "In which city was the composer Marpen Brenson born?", "gold": ["Kirkbury"], "state": "Verified", "docs": ["d000114", "d000115"], "id": "closed-101-00094"}
+{"q": "What is the name of Pelmi Tamby's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000116"], "id": "closed-101-00095"}
+{"q": "In which city was Marra Delman born?", "gold": ["Yewham"], "state": "Verified", "docs": ["d000117"], "id": "closed-101-00096"}
+{"q": "Who directed Garnet Foundation in 1969?", "gold": ["Holsen Velby"], "state": "Verified", "docs": ["d000118"], "id": "closed-101-00097"}
+{"q": "How old was Linta Velfield when they joined Orchid Institute?", "gold": ["35", "34"], "state": "Derived", "docs": ["d000119"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00098"}
+{"q": "In which city was Fenmi Holov born?", "gold": ["Thornham"], "state": "Verified", "docs": ["d000120"], "id": "closed-101-00099"}
+{"q": "In which city was the cartographer Velpen Pelhart born?", "gold": ["Jaygate"], "state": "Verified", "docs": ["d000121", "d000122"], "id": "closed-101-00100"}
+{"q": "What is the name of Drugar Fenman's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000123"], "id": "closed-101-00101"}
+{"q": "What is the name of Yorlo Quiby's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000124"], "id": "closed-101-00102"}
+{"q": "Who directed Harbor Institute in 2012?", "gold": ["Velden Yorberg"], "state": "Verified", "docs": ["d000125"], "id": "closed-101-00103"}
+{"q": "In which city was Brengar Sorton born?", "gold": ["Overby", "Kirkton"], "state": "Qualified", "docs": ["d000126", "d000127"], "id": "closed-101-00104"}
+{"q": "In which city was the historian Velra Brenhart born?", "gold": ["Eastworth"], "state": "Verified", "docs": ["d000128", "d000129"], "id": "closed-101-00105"}
+{"q": "In which city was Ostdor Fenfield born?", "gold": ["Fairton", "Foxcombe"], "state": "Qualified", "docs": ["d000130", "d000131"], "id": "closed-101-00106"}
+{"q": "In which city was Velshu Kaby born?", "gold": ["Hartton", "Valehaven"], "state": "Qualified", "docs": ["d000132", "d000133"], "id": "closed-101-00107"}
+{"q": "In which city was Kasen Yorwick born?", "gold": ["Lakegate"], "state": "Verified", "docs": ["d000134"], "id": "closed-101-00108"}
+{"q": "How old was Delvik Velby when they joined Quartz Foundation?", "gold": ["23", "22"], "state": "Derived", "docs": ["d000135"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00109"}
+{"q": "What is the name of Tamra Torley's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000136"], "id": "closed-101-00110"}
+{"q": "Who directed Wren Laboratories in 2019?", "gold": ["Yorbel Galman"], "state": "Verified", "docs": ["d000137"], "id": "closed-101-00111"}
+{"q": "In which city was Delric Tamby born?", "gold": ["Oakstead", "Pinebury"], "state": "Qualified", "docs": ["d000138", "d000139"], "id": "closed-101-00112"}
+{"q": "What is the name of Velshu Marfield's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000140"], "id": "closed-101-00113"}
+{"q": "In which city was Quishu Yorby born?", "gold": ["Brookmere"], "state": "Verified", "docs": ["d000141"], "id": "closed-101-00114"}
+{"q": "Who directed Drift Works in 1958?", "gold": ["Pelek Fenman"], "state": "Verified", "docs": ["d000142"], "id": "closed-101-00115"}
+{"q": "In which city was Sorgar Tamfield born?", "gold": ["Larkbury"], "state": "Verified", "docs": ["d000143"], "id": "closed-101-00116"}
+{"q": "Who directed Loom Institute in 1988?", "gold": ["Sorpen Druov"], "state": "Verified", "docs": ["d000144"], "id": "closed-101-00117"}
+{"q": "In which city was Torgar Brenman born?", "gold": ["Rookgate"], "state": "Verified", "docs": ["d000145"], "id": "closed-101-00118"}
+{"q": "In which city was Deldor Fenford born?", "gold": ["Thornton"], "state": "Verified", "docs": ["d000146"], "id": "closed-101-00119"}
+{"q": "How old was Ravra Holford when they joined Umber Press?", "gold": ["38", "37"], "state": "Derived", "docs": ["d000147"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00120"}
+{"q": "In which city was Tormi Yorton born?", "gold": ["Brookton", "Pinecombe"], "state": "Qualified", "docs": ["d000148", "d000149"], "id": "closed-101-00121"}
+{"q": "What is the name of Drushu Kaley's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000150"], "id": "closed-101-00122"}
+{"q": "What is the name of Ravric Ostov's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000151"], "id": "closed-101-00123"}
+{"q": "In which city was Sordor Delwick born?", "gold": ["Cedarmouth"], "state": "Verified", "docs": ["d000152"], "id": "closed-101-00124"}
+{"q": "How old was Kalo Linov when they joined Echo Works?", "gold": ["29", "28"], "state": "Derived", "docs": ["d000153"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00125"}
+{"q": "How old was Holgar Fenford when they joined Beacon Studio?", "gold": ["25", "24"], "state": "Derived", "docs": ["d000154"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00126"}
+{"q": "In which city was the botanist Pelgar Ostov born?", "gold": ["Southfield"], "state": "Verified", "docs": ["d000155", "d000156"], "id": "closed-101-00127"}
+{"q": "How old was Fendor Katon when they joined Isle Institute?", "gold": ["36", "35"], "state": "Derived", "docs": ["d000157"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00128"}
+{"q": "In which city was Holric Delton born?", "gold": ["Yewmere"], "state": "Verified", "docs": ["d000158"], "id": "closed-101-00129"}
+{"q": "How old was Ravlo Delov when they joined Lumen Studio?", "gold": ["30", "29"], "state": "Derived", "docs": ["d000159"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00130"}
+{"q": "What is the name of Galek Tamov's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000160"], "id": "closed-101-00131"}
+{"q": "What is the name of Linsen Wynov's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000161"], "id": "closed-101-00132"}
+{"q": "In which city was Holpen Galford born?", "gold": ["Thorngate"], "state": "Verified", "docs": ["d000162"], "id": "closed-101-00133"}
+{"q": "What is the name of Ostta Wynton's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000163"], "id": "closed-101-00134"}
+{"q": "In which city was the cartographer Wynek Yorhart born?", "gold": ["Ironton"], "state": "Verified", "docs": ["d000164", "d000165"], "id": "closed-101-00135"}
+{"q": "In which city was Galvik Linfield born?", "gold": ["Hollowfield"], "state": "Verified", "docs": ["d000166"], "id": "closed-101-00136"}
+{"q": "What is the name of Velgar Holby's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000167"], "id": "closed-101-00137"}
+{"q": "In which city was Holbel Druby born?", "gold": ["Elmford"], "state": "Verified", "docs": ["d000168"], "id": "closed-101-00138"}
+{"q": "In which city was Velek Zanby born?", "gold": ["Foxhaven"], "state": "Verified", "docs": ["d000169"], "id": "closed-101-00139"}
+{"q": "In which city was the cartographer Quisen Sorby born?", "gold": ["Quarrybury"], "state": "Verified", "docs": ["d000170", "d000171"], "id": "closed-101-00140"}
+{"q": "In which city was Kavik Ravson born?", "gold": ["Hollowdale"], "state": "Verified", "docs": ["d000172"], "id": "closed-101-00141"}
+{"q": "In which city was Brenpen Holberg born?", "gold": ["Westby", "Valeby"], "state": "Qualified", "docs": ["d000173", "d000174"], "id": "closed-101-00142"}
+{"q": "In which city was Wyngar Druman born?", "gold": ["Crowwick", "Clayworth"], "state": "Qualified", "docs": ["d000175", "d000176"], "id": "closed-101-00143"}
+{"q": "In which city was Quilo Yorov born?", "gold": ["Brookham"], "state": "Verified", "docs": ["d000177"], "id": "closed-101-00144"}
+{"q": "In which city was Tamlo Wynhart born?", "gold": ["Ashhaven", "Thorncombe"], "state": "Qualified", "docs": ["d000178", "d000179"], "id": "closed-101-00145"}
+{"q": "In which city was Wynmi Sorwick born?", "gold": ["Ashworth"], "state": "Verified", "docs": ["d000180"], "id": "closed-101-00146"}
+{"q": "What is the name of Ravmi Druman's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000181"], "id": "closed-101-00147"}
+{"q": "In which city was Pelden Yorley born?", "gold": ["Ashstead"], "state": "Verified", "docs": ["d000182"], "id": "closed-101-00148"}
+{"q": "How old was Tordor Wynfield when they joined Loom Laboratories?", "gold": ["28", "27"], "state": "Derived", "docs": ["d000183"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00149"}
+{"q": "In which city was Fenra Tamberg born?", "gold": ["Oakvale"], "state": "Verified", "docs": ["d000184"], "id": "closed-101-00150"}
+{"q": "How old was Ostra Torton when they joined Radian Foundation?", "gold": ["27", "26"], "state": "Derived", "docs": ["d000185"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00151"}
+{"q": "Who directed Forge Council in 1993?", "gold": ["Marra Torford"], "state": "Verified", "docs": ["d000186"], "id": "closed-101-00152"}
+{"q": "In which city was Linbel Yorley born?", "gold": ["Ivyfield"], "state": "Verified", "docs": ["d000187"], "id": "closed-101-00153"}
+{"q": "Who directed Dusk Works in 2014?", "gold": ["Fengar Kaby"], "state": "Verified", "docs": ["d000188"], "id": "closed-101-00154"}
+{"q": "In which city was the botanist Quimi Yorberg born?", "gold": ["Crowwick"], "state": "Verified", "docs": ["d000189", "d000190"], "id": "closed-101-00155"}
+{"q": "In which city was Linta Quiford born?", "gold": ["Upperwick", "Northworth"], "state": "Qualified", "docs": ["d000191", "d000192"], "id": "closed-101-00156"}
+{"q": "In which city was Wynlo Quiberg born?", "gold": ["Netherton", "Northvale"], "state": "Qualified", "docs": ["d000193", "d000194"], "id": "closed-101-00157"}
+{"q": "In which city was the surgeon Ravpen Galov born?", "gold": ["Tarnbury"], "state": "Verified", "docs": ["d000195", "d000196"], "id": "closed-101-00158"}
+{"q": "Who directed Indigo Laboratories in 1990?", "gold": ["Delden Brenov"], "state": "Verified", "docs": ["d000197"], "id": "closed-101-00159"}
+{"q": "What is the name of Wynvik Sorfield's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000198"], "id": "closed-101-00160"}
+{"q": "In which city was Delric Velfield born?", "gold": ["Greywick"], "state": "Verified", "docs": ["d000199"], "id": "closed-101-00161"}
+{"q": "Who directed Cinder Institute in 2011?", "gold": ["Druden Brenby"], "state": "Verified", "docs": ["d000200"], "id": "closed-101-00162"}
+{"q": "In which city was the geologist Velra Galhart born?", "gold": ["Crowworth"], "state": "Verified", "docs": ["d000201", "d000202"], "id": "closed-101-00163"}
+{"q": "Who directed Cobalt Institute in 2002?", "gold": ["Marra Sorby"], "state": "Verified", "docs": ["d000203"], "id": "closed-101-00164"}
+{"q": "How old was Kalo Pelberg when they joined Ivory Institute?", "gold": ["23", "22"], "state": "Derived", "docs": ["d000204"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00165"}
+{"q": "In which city was Marra Tamhart born?", "gold": ["Glenham"], "state": "Verified", "docs": ["d000205"], "id": "closed-101-00166"}
+{"q": "In which city was Druek Marley born?", "gold": ["Rookworth"], "state": "Verified", "docs": ["d000206"], "id": "closed-101-00167"}
+{"q": "How old was Wynvik Torson when they joined Delta Press?", "gold": ["37", "36"], "state": "Derived", "docs": ["d000207"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00168"}
+{"q": "In which city was Drupen Velley born?", "gold": ["Yewstead", "Foxbury"], "state": "Qualified", "docs": ["d000208", "d000209"], "id": "closed-101-00169"}
+{"q": "What is the name of Fenden Brenwick's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000210"], "id": "closed-101-00170"}
+{"q": "In which city was the linguist Delgar Quiov born?", "gold": ["Lakevale"], "state": "Verified", "docs": ["d000211", "d000212"], "id": "closed-101-00171"}
+{"q": "In which city was the painter Brenshu Druberg born?", "gold": ["Bayby"], "state": "Verified", "docs": ["d000213", "d000214"], "id": "closed-101-00172"}
+{"q": "How old was Deldor Ravhart when they joined Keystone Works?", "gold": ["38", "37"], "state": "Derived", "docs": ["d000215"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00173"}
+{"q": "Who directed Quartz Institute in 1980?", "gold": ["Tamshu Linstein"], "state": "Verified", "docs": ["d000216"], "id": "closed-101-00174"}
+{"q": "In which city was Marek Marby born?", "gold": ["Claygate", "Wolfhaven"], "state": "Qualified", "docs": ["d000217", "d000218"], "id": "closed-101-00175"}
+{"q": "What is the name of Linvik Galfield's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000219"], "id": "closed-101-00176"}
+{"q": "How old was Brenmi Fenson when they joined Helix Press?", "gold": ["32", "31"], "state": "Derived", "docs": ["d000220"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00177"}
+{"q": "In which city was Yorra Marstein born?", "gold": ["Foxport"], "state": "Verified", "docs": ["d000221"], "id": "closed-101-00178"}
+{"q": "In which city was Marbel Brenov born?", "gold": ["Crowmouth"], "state": "Verified", "docs": ["d000222"], "id": "closed-101-00179"}
+{"q": "Who directed Drift Press in 1962?", "gold": ["Marden Linov"], "state": "Verified", "docs": ["d000223"], "id": "closed-101-00180"}
+{"q": "In which city was the linguist Brenmi Druov born?", "gold": ["Doveport"], "state": "Verified", "docs": ["d000224", "d000225"], "id": "closed-101-00181"}
+{"q": "In which city was Tamric Kaby born?", "gold": ["Tarncombe"], "state": "Verified", "docs": ["d000226"], "id": "closed-101-00182"}
+{"q": "How old was Yorgar Fenford when they joined Kestrel Studio?", "gold": ["39", "38"], "state": "Derived", "docs": ["d000227"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00183"}
+{"q": "In which city was Yorden Sorford born?", "gold": ["Hartfield", "Stonefield"], "state": "Qualified", "docs": ["d000228", "d000229"], "id": "closed-101-00184"}
+{"q": "Who directed Yarrow Press in 1986?", "gold": ["Druvik Ravford"], "state": "Verified", "docs": ["d000230"], "id": "closed-101-00185"}
+{"q": "Who directed Orchid Laboratories in 1979?", "gold": ["Tamgar Fenstein"], "state": "Verified", "docs": ["d000231"], "id": "closed-101-00186"}
+{"q": "How old was Velnal Galson when they joined Zephyr Society?", "gold": ["37", "36"], "state": "Derived", "docs": ["d000232"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00187"}
+{"q": "In which city was the surgeon Karic Wynov born?", "gold": ["Elmhaven"], "state": "Verified", "docs": ["d000233", "d000234"], "id": "closed-101-00188"}
+{"q": "In which city was the surgeon Wynnal Brenman born?", "gold": ["Lakevale"], "state": "Verified", "docs": ["d000235", "d000236"], "id": "closed-101-00189"}
+{"q": "What is the name of Velric Tamford's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000237"], "id": "closed-101-00190"}
+{"q": "In which city was Galra Ravfield born?", "gold": ["Greyford"], "state": "Verified", "docs": ["d000238"], "id": "closed-101-00191"}
+{"q": "How old was Ostshu Zanby when they joined Terrace Studio?", "gold": ["35", "34"], "state": "Derived", "docs": ["d000239"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00192"}
+{"q": "Who directed Quill Works in 1984?", "gold": ["Brennal Galberg"], "state": "Verified", "docs": ["d000240"], "id": "closed-101-00193"}
+{"q": "In which city was Sorlo Quiov born?", "gold": ["Westport"], "state": "Verified", "docs": ["d000241"], "id": "closed-101-00194"}
+{"q": "How old was Zanmi Torley when they joined Quest Council?", "gold": ["32", "31"], "state": "Derived", "docs": ["d000242"], "note": "age at joining year; birth month not used, so the value is year difference or one less", "id": "closed-101-00195"}
+{"q": "In which city was Torric Holwick born?", "gold": ["Northstead", "Brookbury"], "state": "Qualified", "docs": ["d000243", "d000244"], "id": "closed-101-00196"}
+{"q": "What is the name of Pelden Tamwick's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000245"], "id": "closed-101-00197"}
+{"q": "In which city was Torpen Zanstein born?", "gold": ["Greyport"], "state": "Verified", "docs": ["d000246"], "id": "closed-101-00198"}
+{"q": "What is the name of Galbel Tamton's doctoral supervisor?", "gold": [], "state": "Unresolved", "docs": ["d000247"], "id": "closed-101-00199"}

@@ -1,0 +1,143 @@
+"""S6a-clean: rerun of S6a after the audit found that TriviaQA rows duplicate questions (17,944 rows, 9,960 distinct questions).
+Changes vs S6a: (1) training pool = distinct questions whose TEXT is not among S5's 2,000 questions (seed 7100, 3,000 questions);
+(2) evaluation rows = S5 test rows whose question text is not in S5's train rows (the probe's training set) -> no train/test text overlap anywhere;
+(3) extra untrained gate: mean log-probability of the plain greedy answer (from S5 gen.jsonl); (4) a second, denial-aware abstention detector
+reported side by side (the plain system writes denials such as 'None' or 'The passage does not provide...' that UNKNOWN_RE misses).
+Stages (venv_gpu): python -B -m vkg.s6a_clean gen_train | train | eval | analyze
+"""
+import json
+import random
+import re
+import sys
+
+import numpy as np
+import torch
+
+from . import s6_run as S
+from .probe_eval import correct, fit_layers, score_layers
+from .probe_gen import PROMPT, ROOT, load_questions
+
+OUT = ROOT / "results" / "runs" / "s6_clean"
+ADAPTER = ROOT / "models" / "s6_lora_abstain_clean"
+DENIAL = re.compile(r"^\W*(none|nothing|n/?a|no one|nobody)\b|(does|do|did) not (provide|contain|mention|exist|take place|occur|serve|attend|win|have)|"
+                    r"\bnever (served|existed|attended|won|took|happened|was|were)|no such\b|does not exist|not a real|fictional|no (record|information|evidence)\b", re.I)
+
+
+def is_unknown2(a):
+    return S.is_unknown(a) or bool(DENIAL.search(str(a)))
+
+
+def s5_texts():
+    qs = load_questions(2000, 6000)
+    return qs, [q["question"] for q in qs[:1500]], [q["question"] for q in qs[1500:2000]]
+
+
+def stage_gen_train():
+    import pandas as pd
+    df = pd.read_parquet(ROOT / "data" / "triviaqa" / "rc.nocontext" / "validation-00000-of-00001.parquet")
+    _, trq, teq = s5_texts()
+    banned = set(trq) | set(teq)
+    seen, pool = set(), []
+    for i in range(len(df)):
+        q = df.iloc[i].question
+        if q in banned or q in seen:
+            continue
+        seen.add(q)
+        pool.append(i)
+    idx = random.Random(7100).sample(pool, 3000)
+    recs = []
+    for i in idx:
+        r = df.iloc[i]
+        al = sorted({str(a) for a in list(r["answer"]["aliases"]) + [r["answer"]["value"]]})
+        recs.append({"qid": f"tqa-{r['question_id']}", "dataset": "trivia", "question": r["question"], "gold": al})
+    tok, m = S.tok_model()
+    ans = S.greedy(tok, m, S.chat_prompts(tok, [r["question"] for r in recs], PROMPT))
+    OUT.mkdir(parents=True, exist_ok=True)
+    with open(OUT / "train_labels.jsonl", "w", encoding="utf-8") as f:
+        for r, a in zip(recs, ans):
+            r["greedy_answer"] = a
+            r["correct"] = bool(correct(r, a))
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    print("clean pool", len(pool), "train questions", len(recs), "base greedy correct", sum(r["correct"] for r in recs) / len(recs))
+
+
+def stage_train():
+    S.OUT, S.ADAPTER = OUT, ADAPTER
+    S.stage_train()
+
+
+def stage_eval():
+    qs, trq, teq = s5_texts()
+    train_texts = {json.loads(l)["question"] for l in open(OUT / "train_labels.jsonl", encoding="utf-8")}
+    assert not (train_texts & (set(trq) | set(teq))), "training text overlaps S5"
+    gen = [json.loads(l) for l in open(ROOT / "results" / "runs" / "s5" / "gen.jsonl", encoding="utf-8")]
+    ev = [i for i in range(1500, 2000) if qs[i]["question"] not in set(trq)] + list(range(2000, 2500))
+    print("clean in-distribution eval rows", sum(i < 2000 for i in ev), "of 500; OOD", sum(i >= 2000 for i in ev))
+    old = {json.loads(l)["idx"]: json.loads(l) for l in open(ROOT / "results" / "runs" / "s6" / "eval_outputs.jsonl", encoding="utf-8")}
+    S.ADAPTER = ADAPTER
+    tok, tr = S.tok_model(adapter=True)
+    trained = S.greedy(tok, tr, S.chat_prompts(tok, [qs[i]["question"] for i in ev], PROMPT))
+    OUT.mkdir(parents=True, exist_ok=True)
+    with open(OUT / "eval_outputs.jsonl", "w", encoding="utf-8") as f:
+        for k, i in enumerate(ev):
+            f.write(json.dumps({"qid": qs[i]["qid"], "dataset": qs[i]["dataset"], "question": qs[i]["question"], "gold": qs[i]["gold"], "idx": i,
+                                "plain": gen[i]["greedy_answer"], "cautious": old[i]["cautious"], "trained": trained[k]}, ensure_ascii=False) + "\n")
+    print("eval outputs", len(ev))
+
+
+def analyze():
+    rows = [json.loads(l) for l in open(OUT / "eval_outputs.jsonl", encoding="utf-8")]
+    gen = [json.loads(l) for l in open(ROOT / "results" / "runs" / "s5" / "gen.jsonl", encoding="utf-8")]
+    F = np.load(ROOT / "results" / "runs" / "s5" / "feats_trained.npy")
+    yA = np.array([correct(r, r["greedy_answer"]) for r in gen], dtype=int)
+    j, C, ss, mdl, _ = fit_layers(F, yA, np.arange(0, 1500))
+    probe = score_layers(F, j, ss, mdl, np.arange(len(gen)))
+    lpm = np.array([g["lp_mean"] for g in gen])
+    rng = np.random.default_rng(0)
+    L = ["# S6a-clean: cautious prompt vs probe gate vs log-prob gate vs fine-tuned abstention (generated by vkg/s6a_clean.py analyze)", "",
+         "Clean protocol: no training/test question text overlaps anywhere. SER = wrong answers / all questions; yield = correct / all; coverage = answered / all. "
+         "'Strict' abstention = project UNKNOWN_RE; 'denial-aware' additionally treats 'None', 'does not provide', 'never served', 'fictional' etc. as abstentions.", ""]
+    for detector, isu in (("strict abstention detector", S.is_unknown), ("denial-aware abstention detector", is_unknown2)):
+        L += [f"# Detector: {detector}", ""]
+        for name, sel in (("In-distribution (TriviaQA test rows with no text overlap)", [r for r in rows if r["dataset"] == "trivia"]),
+                          ("Out-of-distribution (SimpleQA Verified pool, n=500)", [r for r in rows if r["dataset"] == "simpleqa"])):
+            n = len(sel)
+            L += [f"## {name}, n={n}", "", "| system | coverage | yield | SER | precision |", "|---|---|---|---|---|"]
+            res = {}
+            for sysname in ("plain", "cautious", "trained"):
+                ans = np.array([not isu(r[sysname]) for r in sel])
+                cor = np.array([a and bool(correct(r, r[sysname])) for a, r in zip(ans, sel)])
+                res[sysname] = (ans, cor, ans & ~cor)
+                L.append(f"| {sysname} | {ans.mean():.3f} | {cor.sum()/n:.3f} | {(ans & ~cor).sum()/n:.3f} | {(cor.sum()/max(1, ans.sum())):.3f} |")
+            plain_ans, plain_cor = res["plain"][0], res["plain"][1]
+            gates = {}
+            for gname, sc in (("probe gate", np.array([probe[r["idx"]] for r in sel])), ("log-prob gate (no training)", np.array([lpm[r["idx"]] for r in sel]))):
+                order = np.argsort(-sc)
+                k = int(res["trained"][0].sum())
+                mask = np.zeros(n, bool)
+                mask[order[:k]] = True
+                mask &= plain_ans
+                cor, wrong = mask & plain_cor, mask & ~plain_cor
+                gates[gname] = (mask, cor, wrong)
+                L.append(f"| {gname} (coverage matched to trained) | {mask.mean():.3f} | {cor.sum()/n:.3f} | {wrong.sum()/n:.3f} | {(cor.sum()/max(1, mask.sum())):.3f} |")
+            L += ["", "Paired differences, 95% bootstrap CI over questions:", ""]
+            def diff(a, b):
+                d = a.astype(float) - b.astype(float)
+                bs = sorted(rng.choice(d, n).mean() for _ in range(2000))
+                return d.mean(), bs[50], bs[1949]
+            for lab, a, b in (("SER: trained minus cautious", res["trained"][2], res["cautious"][2]),
+                              ("SER: trained minus probe gate", res["trained"][2], gates["probe gate"][2]),
+                              ("SER: trained minus log-prob gate", res["trained"][2], gates["log-prob gate (no training)"][2]),
+                              ("yield: trained minus cautious", res["trained"][1], res["cautious"][1]),
+                              ("yield: trained minus probe gate", res["trained"][1], gates["probe gate"][1]),
+                              ("SER: trained minus plain", res["trained"][2], res["plain"][2])):
+                m_, lo, hi = diff(a, b)
+                L.append(f"- {lab}: {m_:+.3f} [{lo:+.3f}, {hi:+.3f}]")
+            L.append("")
+    txt = "\n".join(L)
+    (OUT / "S6_clean_tables.md").write_text(txt, encoding="utf-8")
+    print(txt)
+
+
+if __name__ == "__main__":
+    {"gen_train": stage_gen_train, "train": stage_train, "eval": stage_eval, "analyze": analyze}[sys.argv[1]]()

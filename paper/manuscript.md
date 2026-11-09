@@ -1,0 +1,221 @@
+# A certified one-percent silent-error bound on SimpleQA with a small local pipeline, and where it stops transferring
+
+<!-- DRAFT v0.2, 2026-11-09. Rewritten around claims the evidence supports. All references were matched to their publisher or arXiv
+records on 2026-11-09; claim support is logged in docs/CLAIM_SOURCE_LOG.md (23 pairings checked). Numbers trace to results/runs/s19/S19_RESULT.md, results/runs/s21/S21_RESULT.md, docs/S22_DEV_FINDINGS.md,
+docs/L3_CERTIFICATES.md and results/runs/s22/mintaka_test_adj_result_strict.md. -->
+
+## Abstract
+
+A language model that answers a factual question wrongly and without qualification commits a silent error. We ask whether a small local system can keep its silent-error rate (SER, wrong answers over all questions) below 1% with statistical confidence while still answering a fixed share of questions. The system releases an answer only when three evidence sources agree, the answer is a verbatim, typed span of a hash-pinned page, and a second reader concurs; otherwise it abstains. On 1,526 sealed SimpleQA questions, run once under a pre-registered protocol, it answered 37.2% with 4 graded errors, a one-sided 97.5% upper bound on SER of 0.76% after correcting for grader false credit. The same frozen system missed the 35% coverage floor on Mintaka (31.0%) and PopQA (19.1%). On Mintaka, blind adjudication validated with decoys showed that 19 of its 28 errors were stale or wrong gold, or equally acceptable answers; the remaining 9 give an SER of 0.45% (upper bound 0.92%), so coverage, not precision, stops the transfer. Raising coverage cost precision: pinned pages and relaxed answer formats added answers at 5 to 6% error, title-based retrieval at 6.5%, and a larger veto did not catch them. At equal coverage the system made 4 errors against 9 for an agreement baseline on SimpleQA (not significant) and as many on the other two sets. On synthetic closed-evidence sets with exact gold (two sealed sets, two assignments of models to roles), the same machinery gave no wrong definite answer (upper bound 0.25%). The deductive check behaves as designed; the limits are coverage, source independence and benchmark gold.
+
+## 1. Introduction
+
+Large language models answer factual questions fluently whether or not they know the answer. For a user, the costly case is the silent error: a definite, unqualified answer that is wrong. Abstention avoids it, but a system that abstains on everything is useless, so a claim about silent errors needs two numbers. SER is the number of wrong definite answers divided by all questions, and coverage is the share of questions answered. Since SER equals coverage times the error rate among answered questions (selective risk), a bound on SER means something only together with a coverage floor.
+
+We pursued three levels of evidence. An empirical reduction of SER against a strong baseline at equal coverage (L1) is the common standard. A statistical guarantee (L2) asks for more: on a stated task distribution, the one-sided upper confidence bound on SER must fall below 1% while coverage stays above a pre-specified floor, on enough independent items for the bound to be informative. A deductive guarantee (L3) asks that every released claim provably satisfies a stated verification condition, given explicit assumptions.
+
+This paper reports an L2 result on one benchmark and measures what limits it on two others. Our contributions are:
+
+1. A pipeline that combines cross-source agreement, a deductive span gate and a second-reader veto, with every released answer tied to a verbatim span of a hash-pinned document.
+2. A pre-registered, single-run evaluation on 1,526 sealed SimpleQA questions in which the one-sided 97.5% upper bound on SER is 0.76% at 37.2% coverage.
+3. A pre-registered transfer test on Mintaka and PopQA in which the coverage floor is missed, and a blind, decoy-validated adjudication that separates system errors from benchmark gold errors on Mintaka.
+4. Measurements of what raising coverage costs (pinned pages, title-based retrieval, a larger veto), a comparison with an agreement baseline and with a Learn-then-Test threshold at equal coverage, and a derivation-certificate extension for computed answers that adds almost nothing.
+5. A synthetic closed-evidence benchmark with exact gold, on which the same machinery, including entity lists and certified computations, gave no wrong definite answer in two sealed sets under two assignments of models to roles.
+
+## 2. Related work
+
+Selective prediction trades coverage for risk by rejecting instances until a user-set risk level is met [@geifman2017selective]; conformal risk control controls the expected value of a monotone loss [@angelopoulos2024crc], and Learn-then-Test calibrates predictors with finite-sample statistical guarantees [@angelopoulos2021ltt]. These are statistical guarantees, the L2 level, and they inherit the quality of the score being thresholded. Our gate instead makes a deductive statement about each released answer and leaves the statistics to the evaluation.
+
+Risk-controlled abstention has recently reached retrieval-augmented question answering. BalanceRAG calibrates a pair of thresholds, one for an LLM-only branch and one for a retrieval fallback, so that the error rate among accepted answers stays at a target level [@jia2026balancerag], and a judge that routes uncertain verdicts to web evidence keeps the false discovery rate of accepted verdicts below a chosen level with Clopper-Pearson intervals [@badshah2026judge]. Both certify a calibrated confidence score at risk targets of 10 to 16% (BalanceRAG) and 5 to 30% (judge), validated on random splits of the same benchmark with gold matched by semantic similarity or reference labels; BalanceRAG states that its guarantee assumes calibration and deployment data share a distribution. These methods bound the error among accepted answers (selective risk), whereas we bound the error over all questions; on FRESH-5 our corrected 97.5% upper bound is 0.76% of all questions and 2.04% of released answers. We certify a frozen system whose releases pass a deductive gate on held-out questions, test transfer to other benchmarks, and audit the gold. Conformal factuality is fragile for retrieval-augmented models: it produces vacuous outputs at high factuality levels and does not survive distribution shift or distractors [@chen2026conformalrag], which is the pattern of our transfer to Mintaka and PopQA. Extractive systems avoid generated text by mapping queries to verbatim spans [@recski2026aclverbatim], and proof-carrying numbers mark LLM-emitted numbers as verified only after a verifier checks them against structured claims [@solatorio2025pcn]. We add typed span checks against hash-pinned pages, a statistical bound, and measured failure modes. Agreement across models is a weak signal when their errors are correlated [@denisov2026consensus], which is consistent with our finding that reader agreement filters as well as the gate on two of three sets.
+
+Attribution and citation work asks whether generated text is supported by a source [@rashkin2023ais; @gao2023alce]; retrieval-augmented and self-reflective generation improve factuality and citation accuracy [@asai2024selfrag]. Uncertainty methods detect likely confabulations from sampling disagreement [@manakul2023selfcheckgpt; @farquhar2024semantic]. We use agreement too, but across evidence sources rather than samples, and we add a verbatim-span requirement.
+
+SimpleQA [@wei2024simpleqa] measures short-form factuality with questions written to have a single, stable answer. Mintaka [@sen2022mintaka] collects questions naturally elicited from crowd workers and annotated with Wikidata entities. PopQA [@mallen2023popqa] templates questions from Wikidata triples over entities of varying popularity. The three differ in the properties our assumptions touch: entity ambiguity, answer stability over time, and gold provenance. Benchmark noise is known: SimpleQA Verified filtered and re-verified the original after finding incorrect labels, topical bias and redundant questions [@haas2025simpleqaverified], PAT-Questions regenerates its gold answers from knowledge-graph queries so that they stay current [@meem2024pat], and AmbigDocs studies questions about entities that share a name [@lee2024ambigdocs]. We measure how much of the error on Mintaka and PopQA comes from stale gold and shared names.
+
+## 3. System
+
+**Evidence.** For each question the pipeline gathers three passages: up to eight web pages returned by a DuckDuckGo search on the question alone, with pages that quote the benchmark question removed; the five highest-ranked articles from a local copy of English Wikipedia (FineWiki, August 2025) under a hybrid lexical and dense retriever; and a combined passage that ranks chunks of both by reciprocal-rank fusion.
+
+**Readers.** Qwen3-4B-Instruct-2507, the updated non-thinking release of the Qwen3 family [@qwen3; @qwen3card], answers from each passage under a plain and a cautious prompt (the cautious prompt permits "unknown"), giving six candidate answers. The candidate supported by the most sources is selected; release requires support from all three sources.
+
+**Deductive gate.** The selected answer must appear verbatim in one of the pinned Wikipedia articles, and the span must pass five checks: the document is in the corpus with the recorded hash (V1); the released string is that span (V2); the span matches the answer type the question asks for, including whole numbers and year-month granularity (V3); a year in the article title agrees with the question (V4); and a counted unit matches the counted noun (V5).
+
+**Veto.** Phi-4 [@abdin2024phi4] answers the combined passage under the cautious prompt; the answer is released only if the two readers agree after normalisation.
+
+![Figure 1](figures/fig1_pipeline.png)
+
+**Figure 1. A released answer is a verbatim span in a hash-pinned page that three evidence sources and a second reader support.** Three passages (web, local Wikipedia top five, and a rank-fusion combination of both) are read by Qwen3-4B under a plain and a cautious prompt. Release requires, in order, support from all three sources (exit 1), a span that passes checks V1 to V5 (exit 2) and agreement from the Phi-4 veto reader (exit 3). Failing any exit gives Unresolved. The deductive claim covers the span; the three assumptions listed at lower left lie outside it.
+
+An answer that clears all three exits is Verified. Every other question is Unresolved. The system makes one claim per released answer, and that claim is deductive: the released string equals a span of a hash-pinned document accepted by V1 to V5. Whether that span is true, and whether it answers the question that was meant, rests on three assumptions outside the proof: the source is correct (A_S), the question was mapped to the right entity and relation (A_M), and the benchmark gold is correct.
+
+## 4. Evaluation protocol
+
+**Test sets.** FRESH-5 contains all 1,526 original SimpleQA questions that remained after removing SimpleQA Verified [@haas2025simpleqaverified] and earlier test pools. For the transfer test we drew 2,000 Mintaka questions of the "generic" type and 2,100 PopQA questions, 700 from each popularity tercile, after setting aside design sets of 200 and 300. Test files were sealed with recorded hashes before any system design that could use them, and each was evaluated once.
+
+**Grading.** An LLM judge (Qwen3.8-27B under a fixed prompt) graded each answer. Its false-credit rate was measured on blind human labels: 1 of 677 truly wrong answers was credited, a one-sided 97.5% upper bound of f = 0.82%. For Mintaka and PopQA, which list several acceptable answers, an answer counts as correct if the judge accepts it against any of up to nine gold aliases; for single-gold items this rule equals the original grader.
+
+**Decision rule.** With k graded-wrong releases among n questions, we inflate the error count to E = ⌈k / (1 − f)⌉ to cover wrong answers the judge may have credited, and declare L2 met if the Clopper-Pearson [@clopper1934] one-sided 97.5% upper bound on E/n is below 1% and coverage is at least 35%. This allows k ≤ 6 at n = 1,526 and k ≤ 10 at n = 2,000.
+
+**Pre-registration.** Before each test we fixed the code, models, prompts, decision rule and predictions with prior probabilities, and recorded file hashes, which were checked again after the run. Sections 5.1 and 5.2 report these pre-registered endpoints. Sections 5.3 to 5.6 are post hoc analyses on test sets that had already been unsealed, which therefore served as design data; they are descriptive. Section 5.7 followed its own protocol: code frozen with hashes, predictions with prior probabilities, a new sealed set for each configuration, one run each.
+
+**Blind adjudication.** To separate system errors from benchmark errors on Mintaka we built a sheet of 251 rows, each showing only a question, the gold answer and one answer: 63 system errors, 63 wrong answers from the single-pass reader on unreleased questions, 63 correct system answers, and 62 injected-false answers (the answer replaced by another item's gold of the same type). The 28 errors of the frozen system are a subset of the 63. Two adjudicators worked independently, each as four fresh language-model agents with web search and no access to the pipeline, choosing among: gold wrong, answer wrong, both acceptable, matches gold, ambiguous question, and cannot tell. An error is removed only when both adjudicators judge gold wrong, both acceptable or matches gold and each supplies a quote that occurs verbatim in the page it cites; every other verdict keeps it. The adjudication is valid only if at least 95% of injected-false answers are called wrong. The reference date was 8 November 2026.
+
+**Deviations.** In the FRESH-5 run one query received a search-engine error page twice and was recorded as having no web results, and the run was restarted from cached stages after out-of-memory failures. In the transfer run one 201,455-character web passage exceeded the reader's memory cap, which was raised from 0.65 to 0.88 of GPU memory before resuming.
+
+## 5. Results
+
+### 5.1 The bound holds on sealed SimpleQA questions
+
+On FRESH-5 the system released 568 answers (coverage 37.2%) with k = 4 graded errors, a raw SER of 0.26% and a corrected upper bound of 0.76%, which meets the pre-registered L2 criterion (Table 1). The single-pass reader on the combined passage answered 87.5% of questions with an SER of 10.0%. Selective risk among released answers was 0.7%.
+
+All four errors are stated on their pinned pages. Two are disagreements between source and gold (an exhibition year and a date of death, each one unit apart), one gives an incomplete name where the full name was asked, and one ignores an "as of 2022" qualifier. None is an answer the reader made up.
+
+**Table 1.** Frozen system on the three sealed test sets (gold-relative, alias-aware grading).
+
+| set | n | coverage | k | SER | upper bound (97.5%, corrected) | L2 | single-pass reader coverage / SER |
+|---|---|---|---|---|---|---|---|
+| FRESH-5 (SimpleQA) | 1,526 | 0.372 | 4 | 0.26% | 0.76% | met | 0.875 / 10.0% |
+| Mintaka | 2,000 | 0.310 | 28 | 1.40% | 2.08% | not met | 0.888 / 12.9% |
+| PopQA | 2,100 | 0.191 | 17 | 0.81% | 1.35% | descriptive | 0.743 / 24.1% |
+
+### 5.2 Coverage does not transfer
+
+On Mintaka the system answered 31.0% of questions, below the 35% floor, with 28 graded errors (SER 1.40%, upper bound 2.08%), so L2 was not met on either condition. This matched the pre-registered expectation (prior probability of meeting L2, about 12%). Coverage ranged from 0.25 on history and politics questions to 0.41 on books and video games. On PopQA the system answered 19.1% (SER 0.81%); coverage was highest for the least popular tercile (0.25, against 0.17 for the most popular), contrary to our prediction.
+
+Per question, the system's SER was about 9 times (Mintaka) and 30 times (PopQA) lower than that of the single-pass reader, but the reader answered three to four times as many questions (Fig. 2a). Per released answer, selective risk against the gold was 4.5% on Mintaka and 4.2% on PopQA, compared with 0.7% on FRESH-5.
+
+An extension that also released answers on which the two readers agreed answered more and erred more: 75.8% coverage with 8.5% SER on Mintaka and 56.7% with 14.3% on PopQA. Its second tier contributed 142 of its 170 Mintaka errors. Reader agreement, which had worked on SimpleQA (3.0% SER at 70.9% coverage), did not carry over.
+
+![Figure 2](figures/fig2_coverage_ser.png)
+
+**Figure 2. Only the frozen system on SimpleQA reaches the L2 region, and adding coverage moves points out of it.** **a**, Coverage and silent-error rate against the gold on the three sealed test sets for the frozen system, an extension that also releases answers on which the two readers agree, and the single-pass reader on the combined passage. The open square marks the frozen system on Mintaka after blind adjudication (9 of 28 errors kept, Section 5.3). **b**, Frozen system and the variant with pinned pages and a format-relaxed gate on SimpleQA (FRESH-5, errors against the gold) and Mintaka (errors after strict adjudication). Added releases and their errors are given beside each arrow. In both panels the dotted line marks the 35% coverage floor and the shaded band the raw error rates allowed by the L2 rule at 35% coverage or more (0.39% at n = 1,526, 0.50% at n = 2,000); the error axis is logarithmic.
+
+### 5.3 On Mintaka most graded errors are not the system's
+
+Blind adjudication removed 19 of the 28 Mintaka errors: 16 had wrong or stale gold and 3 had a second answer that is equally acceptable. The remaining 9 are 3 answers judged wrong, 2 ambiguous questions and 4 that the adjudicators could not settle. Taking all 9 as errors, SER is 0.45% and the corrected upper bound is 0.92%, below 1% (Table 2).
+
+The removed errors are mostly questions about the present asked in 2021: "Who is the current president of Kenya?", the governor of Arkansas, career totals that have since changed. The gold was correct when written and the 2025 snapshot is correct now. Both adjudicators called all 62 injected-false answers wrong and recognised 61 of the 63 correct system answers as matching the gold. The single-pass reader's wrong answers were removed less often (20 of 63, 32%, against 54% of the system's), which suggests that gold errors concentrate where several sources agree on a current fact.
+
+**Table 2.** Mintaka test, frozen system, before and after blind adjudication (post hoc).
+
+| | errors | SER | upper bound (97.5%, corrected) | coverage |
+|---|---|---|---|---|
+| against the gold | 28 | 1.40% | 2.08% | 0.310 |
+| after adjudication | 9 | 0.45% | 0.92% | 0.310 |
+
+Precision on Mintaka is therefore compatible with the 1% bound; coverage is not (Fig. 2a, open square). The corrected count depends on the adjudication rule. Of the 63 errors of the combination system in Section 5.4, a single adjudicator under a looser rubric removed 54, while two adjudicators under the stricter rubric, both required to agree, removed 34. We report the strict rule.
+
+The composition of the errors differs by benchmark (Fig. 3). On PopQA, which we read but did not adjudicate, 8 of the 17 errors were ambiguous subjects: the template names an entity by a label that several entities share, such as a town called Lima in the United States whose country the gold gives, while the system answered for the Peruvian capital. Six were gold that lists one acceptable answer among several (occupations, a district versus its city), one was an ill-posed template, and two were plausible errors by the system.
+
+![Figure 3](figures/fig3_error_composition.png)
+
+**Figure 3. Gold and ambiguity account for most graded errors on Mintaka and PopQA, and half of those on SimpleQA.** Composition of the frozen system's errors against the gold on each sealed set. Mintaka classes come from the strict blind adjudication (n = 28). SimpleQA (n = 4) and PopQA (n = 17) classes come from the authors' reading of each error against its pinned page. For these two sets the ill-posed PopQA template is counted with ambiguous questions, the source-versus-gold disagreements on SimpleQA with gold errors, and the incomplete name and the ignored "as of 2022" qualifier with answers judged wrong.
+
+### 5.4 Raising coverage costs precision
+
+On the Mintaka design set, the largest group of abstentions (85 of 200 questions) were candidates supported by two sources rather than three. These are effectively single-source: in 70 of the 85 the agreeing readers were the web and combined passages, and the combined passage contains the web pages. Admitting them through the same gate and veto added 19 releases of which 8 were wrong. In 69 of the 85, the web results already named an English Wikipedia article that exists in the local snapshot but was not among the five articles the local retriever returned. Answer-format losses at the gate (full-sentence answers, date formats) accounted for a further 12% of the design set, all with correct candidates.
+
+Two changes address these losses. Pinning places the web-named Wikipedia articles first in the wiki evidence, and a format-relaxed gate tries every agreeing surface form, longest first, with era years and full dates accepted for "when" questions. Claims stay verbatim and typed. A time-sensitivity rule keeps questions about incumbents, "current" or "latest" records, and all-time records out of the Verified state, and a subject-ambiguity rule withholds answers whose question names an entity with several pages. Applied to the Mintaka test set, the combination of the original releases and the pinned releases that pass both rules reached coverage 0.502 (1,005 of 2,000), against 0.310.
+
+The added answers were less reliable (Table 3, Fig. 2b). On Mintaka, 385 releases were added and 20 more errors survived strict adjudication, 5.2%; the frozen part contributed 9 of 620, 1.5%. On FRESH-5 the same pipeline added 159 releases and 10 errors against the gold (6.3%); eight of the errors were among the 126 pinned releases, and they were real: Callisto given for Jupiter's third-largest moon, 1886 given for 1868, a wrong high school. On a benchmark with clean gold the added precision is poor because a pinned page is often the page the web reader had already seen, so a third supporting source is no longer independent. The variant would have failed L2 on FRESH-5 (14 errors against an allowance of 6), so it was not run on sealed data.
+
+A retrieval path that finds the pages without web results keeps the sources independent. It matches the question's entity mentions against the Wikipedia title index and re-ranks the BM25 results by title overlap with the question. On the Mintaka and PopQA design sets, where both variants ran, pinning added 53 releases with 11 errors (21%) and title-based retrieval added 31 with 2 (6.5%); on SimpleQA design data it added 18 with 1. The relaxed format gate added a further 24 releases with 2 errors. Pooled over the three design sets the 73 added releases had 5 errors (6.8%), above the 3% we had set as the condition for running the variant on FRESH-5, so we did not. Replacing the Phi-4 veto with Qwen3.8-27B did not help: over the pinned and title-based variants the wrong added releases were 18 with Phi-4, 18 with the larger model and 16 when both had to agree, while the correct added releases stayed at 122, 133 and 121, so the added errors are ones that every reader reads the same way.
+
+**Table 3.** Cost of the coverage gain (post hoc; errors after strict adjudication on Mintaka, against the gold on FRESH-5).
+
+| set | frozen system: releases / errors | pinned + format gate: releases / errors | added releases / added errors | error rate of added releases |
+|---|---|---|---|---|
+| Mintaka test | 620 / 9 | 1,005 / 29 | 385 / 20 | 5.2% |
+| FRESH-5 | 568 / 4 | 727 / 14 | 159 / 10 | 6.3% |
+
+At 50% coverage on 2,000 Mintaka questions, 29 surviving errors (SER 1.45%) exceed the allowance of 10. Of the 29, about 9 are answers we judge wrong, about 9 are ambiguous questions, and about 11 are cases where the two adjudicators disagreed or one could not verify the answer (the authors' reading).
+
+### 5.5 Against an agreement baseline at equal coverage
+
+We asked whether the pipeline produces fewer errors than a strong baseline spending the same compute. The baseline ranks the single-pass reader's answers by how many of the system's reader outputs (six from the 4B model, one from Phi-4) agree with them, and answers the top-ranked share that matches the system's coverage. At equal coverage the system's errors against the gold were 4 against 9 on FRESH-5 (ratio 0.44), 28 against 26 on Mintaka (1.08) and 17 against 19 on PopQA (0.89). The FRESH-5 ratio is a point estimate, not a significant difference (exact binomial test on the 13 errors, one-sided p = 0.13), and on the other two sets the gate and veto do about as well as agreement alone. The contribution of the gate is therefore the certificate, a verbatim span in a pinned page, and not fewer errors than agreement at equal coverage.
+
+A calibrated selective baseline gives the same picture on SimpleQA. We selected a threshold on the same agreement score with Learn-then-Test [@angelopoulos2021ltt]: fixed-sequence testing from the strictest threshold, with H0 "SER at least 1%" rejected at 2.5% on 2,500 SimpleQA design items (dev, fresh and the two S18 pools) and the same false-credit correction. Only the strictest threshold passed; it keeps answers on which all six other reader outputs agree (880 released, 7 errors on the calibration items). On FRESH-5 it answered 552 questions (36.2%) with 9 errors (SER 0.59%, corrected upper bound 1.20%), against 568 answers and 4 errors for the system. The baseline's observed SER is below 1%, but its error count is higher than the calibration predicted (0.28% of questions), and the pre-declared rule is not met.
+
+### 5.6 Derived answers add almost nothing
+
+Some answers are not a span of any page but a computation over spans, such as an age from a birth year and a reference date. We built derivation certificates for these: each fact is a quote that must occur verbatim in a pinned page, values are parsed from the quotes by deterministic code, and the answer is the output of a fixed operation (age at a date, years between, difference, sum). A language model proposes the quotes and the operation and never supplies a value. On the Mintaka test set, 224 questions were numerical-answer candidates; 12 received a certificate, 4 were correct and only one of those (Einstein's age at death) had not already been released. The 8 wrong certificates were 6 present-tense "how old is X" questions whose gold was written in 2021, and 2 correct computations on the wrong quantity (an NFL roster size and a count for the Lincoln Memorial). The verbatim check worked: in a first run with web snippets as evidence, all 61 specifications that quoted text absent from the pinned page were rejected. Of the 2,000 questions, 27 (1.4%) are stable computations whose answer is not already on the pinned page, so the ceiling of the approach on this benchmark is low.
+
+### 5.7 With exact gold, the deductive machinery gave no wrong answer
+
+In this section an answer is Verified when it is a verbatim span, Derived when it is the output of a certified computation, and Qualified when it is a list with one answer per candidate entity; every definite answer to a question that has no unique answer is a silent error. The Mintaka and PopQA errors mix system failures with benchmark failures. To remove the benchmark from the measurement, we built a closed-evidence set with exact gold: invented people and organisations described in short documents, with namesake pairs, questions about facts no document states, and questions that need a computation. The system used the same components with the corpus as its only evidence: BM25 retrieval, two 4B reader prompts that must agree, the Phi-4 veto, the verbatim-span gate, the entity slot, an entity-by-entity list when a name is shared, and derivation certificates for computed answers. Harness changes were made on a 200-item development set. The code was then frozen, predictions were written down, and a 1,500-item test set (seed fixed, items not inspected) was run once.
+
+The system gave no wrong definite answer in 1,500 items (corrected 97.5% upper bound 0.25%) and answered 54.2% (Table 4), so the output-level L2 rule was met on this corpus. All 240 questions with no answer in the corpus were left Unresolved. Of 150 namesake questions, 56 received a list with the right answer under each entity and 94 were left Unresolved. Of 240 computed questions, 217 received a certified correct age and 23 were left Unresolved. The loss is coverage, not error: tenure questions ("who directed X in year Y") were answered 12 times in 240, because the 4B reader mishandles the interval, and the gate refused the wrong answers it produced. All six predictions written beforehand held.
+
+**Table 4.** Closed-evidence test, frozen system, one run (n = 1,500).
+
+| item type | n | correct definite answer | left Unresolved | wrong definite answer |
+|---|---|---|---|---|
+| lookup, unique or qualified name | 630 | 528 | 102 | 0 |
+| tenure | 240 | 12 | 228 | 0 |
+| computed age | 240 | 217 | 23 | 0 |
+| namesake, list per entity | 150 | 56 | 94 | 0 |
+| fact not in the corpus | 240 | 0 | 240 (correct) | 0 |
+
+To test whether the rules depend on the 4B, we swapped the roles: Phi-4 as the two readers and Qwen3.8-27B as the veto, with everything else unchanged. A second sealed set (new seed, 1,500 items) was run once under the same procedure. The system again gave no wrong definite answer (upper bound 0.25%) and answered 56.9% (Table 5). Six of seven predictions written beforehand held; the namesake list was right for 46.7% of namesake questions against a predicted range of 10 to 45%.
+
+**Table 5.** Closed-evidence test, configuration B (Phi-4 readers, Qwen3.8-27B veto), one run (n = 1,500).
+
+| item type | n | correct definite answer | left Unresolved | wrong definite answer |
+|---|---|---|---|---|
+| lookup, unique or qualified name | 630 | 526 | 104 | 0 |
+| tenure | 240 | 32 | 208 | 0 |
+| computed age | 240 | 226 | 14 | 0 |
+| namesake, list per entity | 150 | 70 | 80 | 0 |
+| fact not in the corpus | 240 | 0 | 240 (correct) | 0 |
+
+The corpus is synthetic and regular, there is no web source, and the system configuration differs from the frozen S19 system, so these results test the verification machinery and say little about natural-language difficulty.
+
+## 6. Discussion
+
+**What the findings establish.** On SimpleQA, whose questions were written to have a single stable answer, a deductive gate placed behind cross-source agreement and a second-reader veto yields a silent-error bound below 1% at 37% coverage with a 4B reader. The bound rests on a division of labour: the gate turns each release into a checkable statement about a pinned page, agreement and veto decide which statements reach the gate, and the statistics measure how often the assumptions outside the proof fail. There they failed four times in 1,526 questions.
+
+**Where it stops.** The assumptions fail more often elsewhere, and for different reasons. On PopQA, templated questions break the mapping from question to entity (A_M), and the gate cannot detect this because the span is genuinely on a page, just the wrong page. On Mintaka, time-dependent questions break the agreement between source and gold in a direction no evidence pipeline can fix: a system reading a 2025 snapshot will contradict 2021 gold whenever the world has changed. A certified error rate is therefore relative to a date, and a benchmark's gold needs one too. After blind adjudication the frozen system's Mintaka precision is within the bound (upper bound 0.92%); the 35% coverage floor is what it misses.
+
+**Why coverage is hard to buy.** The coverage lost on Mintaka and PopQA traces to retrieval: the right article was often named by web search and absent from the local top five. Pinning that article restores the evidence, but the pinned page and the web reader's page are then the same page, and the extra answers carry the precision of a single source, a 5 to 6% error rate on two benchmarks with different gold quality. Finding the page without web help lowered the error rate of the added answers on design data from 21% to 6.5%, which is still above what the bound tolerates. Coverage and precision trade at this operating point, and reaching a higher floor under the same bound needs a source that is independent of the web reader, not the same page read twice. The equal-coverage comparison points the same way: agreement among readers is as good a filter as the gate on two of three sets, so the gate's role is to make the claim checkable.
+
+**Implications.** An output state between Verified and Unresolved would turn the failures we measured into checkable statements. A question whose entity or date is ambiguous could be released as "assuming Lima, Peru" or "as of the snapshot date", and a time-sensitive question could carry its reference date. On the synthetic closed-evidence sets such lists were right for 37% and 47% of the namesake questions and never wrong. Derivation certificates extend the deductive statement to computed numbers, with the same assumptions outside the proof; they certified 90% and 94% of the computed questions on the synthetic sets, but their coverage on a general benchmark is too small to change a deployed system.
+
+**Scope.** The L2 result holds for SimpleQA-style questions with one reader family, one Wikipedia snapshot and English text, each test set evaluated once. Mintaka and PopQA figures are descriptive. The adjudicated Mintaka figures come from language-model adjudicators with web access, validated by decoys, not from human experts. The judge's false-credit rate is corrected for in the bound while its misses are not, so the error counts are conservative. The 35% coverage floor is a programme choice. The closed-evidence results are synthetic and test the verification machinery, not natural-language difficulty. FRESH-5 served as design data in Section 5.4, so the L2 result cannot be repeated on fresh SimpleQA questions.
+
+## 7. Conclusion
+
+A small local pipeline can carry a statistically certified silent-error rate below 1% on SimpleQA-style questions while answering more than a third of them, with every answer tied to a span of a pinned document. On naturally worded and templated questions the answers it gives are mostly right and its remaining errors are mostly ambiguous questions and stale gold, but it answers too few of them, and the ways we found of answering more cost precision at about 5 to 6% error on the added answers. Neither a retrieval path that does not use the web nor a larger veto removed the added errors, which come from questions that every reader reads the same way. On a synthetic corpus with exact gold the same machinery, with entity lists and certified computations, gave no wrong definite answer. The next gain probably needs question-level handling of entity and date, with an output state that names what an answer assumes, and new sealed questions with current, checked gold to test it.
+
+## Data availability
+
+All questions come from public benchmarks: SimpleQA (OpenAI), SimpleQA Verified (Google DeepMind; used only to exclude its items from FRESH-5), Mintaka (Amazon Science, CC BY 4.0, Hugging Face AmazonScience/mintaka) and PopQA (Hugging Face akariasai/PopQA). The local Wikipedia source is the August 2025 English dump as processed in HuggingFaceFW/finewiki. Web evidence was retrieved with DuckDuckGo search; the retrieved pages are third-party content and are not redistributed, and the URLs kept for each question are part of the released run records. The sealed samples are defined by their item identifiers and SHA-256 hashes, which are part of the released run records, together with every system output, release decision, grade, adjudication sheet and verdict, and the numbers behind all figures and tables. The closed-evidence benchmark is generated by a seeded program; the generator, the seeds (101 for development, 202 and 303 for the two test sets) and the hashes of the generated files are released with it. <!-- TODO author: repository and identifier, see docs/AVAILABILITY_DRAFT.md -->
+
+## Code availability
+
+The pipeline (retrieval, readers, gate V1 to V5, veto, entity slot, derivation certificates), the evaluation and adjudication scripts, the synthetic-benchmark generator and the figure scripts are in [repository and identifier to be added by the authors]. Models used: Qwen3-4B-Instruct-2507, Qwen3-Embedding-0.6B and Qwen3.8-27B (Qwen), and Phi-4 (Microsoft), run locally.
+
+## References
+- [@geifman2017selective] Geifman Y, El-Yaniv R. Selective classification for deep neural networks. Advances in Neural Information Processing Systems 30, 4878-4887 (2017). arXiv:1705.08500.
+- [@angelopoulos2024crc] Angelopoulos AN, Bates S, Fisch A, Lei L, Schuster T. Conformal risk control. International Conference on Learning Representations (2024). arXiv:2208.02814.
+- [@angelopoulos2021ltt] Angelopoulos AN, Bates S, Candès EJ, Jordan MI, Lei L. Learn then test: calibrating predictive algorithms to achieve risk control. arXiv:2110.01052 (2021).
+- [@rashkin2023ais] Rashkin H, et al. Measuring attribution in natural language generation models. Computational Linguistics 49, 777-840 (2023). doi:10.1162/coli_a_00486.
+- [@gao2023alce] Gao T, Yen H, Yu J, Chen D. Enabling large language models to generate text with citations. Proceedings of EMNLP 2023, 6465-6488.
+- [@asai2024selfrag] Asai A, Wu Z, Wang Y, Sil A, Hajishirzi H. Self-RAG: learning to retrieve, generate, and critique through self-reflection. International Conference on Learning Representations (2024).
+- [@manakul2023selfcheckgpt] Manakul P, Liusie A, Gales MJF. SelfCheckGPT: zero-resource black-box hallucination detection for generative large language models. Proceedings of EMNLP 2023, 9004-9017. doi:10.18653/v1/2023.emnlp-main.557.
+- [@farquhar2024semantic] Farquhar S, Kossen J, Kuhn L, Gal Y. Detecting hallucinations in large language models using semantic entropy. Nature 630, 625-630 (2024). doi:10.1038/s41586-024-07421-0.
+- [@wei2024simpleqa] Wei J, et al. Measuring short-form factuality in large language models. arXiv:2411.04368 (2024).
+- [@haas2025simpleqaverified] Haas L, Yona G, D'Antonio G, Goldshtein S, Das D. SimpleQA Verified: a reliable factuality benchmark to measure parametric knowledge. arXiv:2509.07968 (2025).
+- [@sen2022mintaka] Sen P, Aji AF, Saffari A. Mintaka: a complex, natural, and multilingual dataset for end-to-end question answering. Proceedings of COLING 2022, 1604-1619.
+- [@mallen2023popqa] Mallen A, Asai A, Zhong V, Das R, Khashabi D, Hajishirzi H. When not to trust language models: investigating effectiveness of parametric and non-parametric memories. Proceedings of ACL 2023.
+- [@qwen3] Yang A, et al. (Qwen Team). Qwen3 technical report. arXiv:2505.09388 (2025).
+- [@qwen3card] Qwen Team. Qwen3-4B-Instruct-2507 (model card). Hugging Face, 2025. https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507
+- [@abdin2024phi4] Abdin M, et al. Phi-4 technical report. arXiv:2412.08905 (2024).
+- [@clopper1934] Clopper CJ, Pearson ES. The use of confidence or fiducial limits illustrated in the case of the binomial. Biometrika 26, 404-413 (1934). doi:10.1093/biomet/26.4.404.
+- [@jia2026balancerag] Jia Z, Ye Y, Jia S, Qian Y, Wang H, Chen B, Tang D, Yu J, Wang Z. BalanceRAG: joint risk calibration for cascaded retrieval-augmented generation. arXiv:2605.20084 (2026).
+- [@badshah2026judge] Badshah S, Emami A, Sajjad H. Judge, retrieve, or abstain: uncertainty-guarded LLM judging with provable risk guarantees. Conference on Language Modeling 2026. arXiv:2608.17994.
+- [@chen2026conformalrag] Chen Y, Chen D, Chikodikar SM, Yin CH, Vinayak RK. Is conformal factuality for RAG-based LLMs robust? Novel metrics and systematic insights. arXiv:2603.16817 (2026).
+- [@recski2026aclverbatim] Recski G, Tóth S, Verdha N, Boros I, Kovács Á. ACL-Verbatim: hallucination-free question answering for research. arXiv:2605.21102 (2026).
+- [@solatorio2025pcn] Solatorio AV. Proof-carrying numbers (PCN): a protocol for trustworthy numeric answers from LLMs via claim verification. arXiv:2509.06902 (2025).
+- [@denisov2026consensus] Denisov-Blanch Y, Kazdan J, Chudnovsky J, Schaeffer R, Guan S, Adeshina S, Koyejo S. Consensus is not verification: why crowd wisdom strategies fail for LLM truthfulness. arXiv:2603.06612 (2026).
+- [@meem2024pat] Meem JA, Rashid MS, Dong Y, Hristidis V. PAT-Questions: a self-updating benchmark for present-anchored temporal question-answering. Findings of ACL 2024. arXiv:2402.11034.
+- [@lee2024ambigdocs] Lee Y, Ye X, Choi E. AmbigDocs: reasoning across documents on different entities under the same name. arXiv:2404.12447 (2024).

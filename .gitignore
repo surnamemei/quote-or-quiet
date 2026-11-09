@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.log
+results/cache/
+models/
+data/
+venv*/

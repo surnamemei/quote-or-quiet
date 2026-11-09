@@ -22,7 +22,7 @@ The pipeline (retrieval, readers, gate V1 to V5, veto, entity slot, derivation c
 | run records, adjudication, figures source numbers, synthetic generator | generated here | to be deposited | repository not yet created |
 
 ## Actions only the authors can do
-1. Create the public repository and a DOI-bearing deposit (for example GitHub plus Zenodo); no repository exists yet, so the Code availability sentence carries a placeholder.
+1. The public repository exists (https://github.com/surnamemei/quote-or-quiet, pushed 2026-11-09 without third-party benchmark items); a DOI-bearing deposit (for example Zenodo) is still to be made if the venue requires an identifier.
 2. Check redistribution terms for the SimpleQA and PopQA items inside the run records (the records contain question text and gold answers).
 3. Confirm the licences of Phi-4, Qwen3.8-27B and Qwen3-Embedding-0.6B before listing them with a licence.
 4. Decide whether the web-evidence passages (third-party text) stay out of the release; the URL lists and hashes suffice to rerun.

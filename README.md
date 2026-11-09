@@ -43,4 +43,4 @@ See `docs/REPRODUCE.md`. The synthetic benchmark (generator, seeds, hashes, gene
 Research code and a paper draft, not a product. One real benchmark carries the 1% result, from a single run, graded by a language model whose false-credit rate was measured on human labels. The second real benchmark needs new sealed questions (docs/SEALED_SET_DESIGN.md). Comparison with calibrated-cascade methods in the literature is in different risk regimes and has not been run on the same data (docs/RELATED_WORK_2026-11-09.md).
 
 ## Licence and data
-No licence has been chosen yet. Third-party benchmark items and web page text are not redistributed. See docs/AVAILABILITY_DRAFT.md.
+Code: MIT (see `LICENSE`). Paper text and documentation: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Third-party benchmark items and web page text are not redistributed, and the terms of the benchmarks and models used remain their own. See docs/AVAILABILITY_DRAFT.md.

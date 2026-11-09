@@ -1,4 +1,4 @@
-# A certified one-percent silent-error bound on SimpleQA with a small local pipeline, and where it stops transferring
+# Receipts or Silence: Small Local Models That Answer With a Quote, or Not at All
 
 <!-- DRAFT v0.2, 2026-11-09. Rewritten around claims the evidence supports. All references were matched to their publisher or arXiv
 records on 2026-11-09; claim support is logged in docs/CLAIM_SOURCE_LOG.md (23 pairings checked). Numbers trace to results/runs/s19/S19_RESULT.md, results/runs/s21/S21_RESULT.md, docs/S22_DEV_FINDINGS.md,

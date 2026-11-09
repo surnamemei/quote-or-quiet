@@ -1,7 +1,10 @@
-# Cite or Abstain
+# Receipts or Silence
 
-A local question-answering system that releases an answer only when it can point to a checkable source, and a careful measurement of how often it is still silently wrong.
-(Internal programme name: VKG, Verifiable Knowledge Generation.)
+A small local model that answers with a quote you can check, or says nothing.
+On sealed SimpleQA questions it gave a wrong answer for 0.76% of all questions or fewer (97.5% upper bound), at 37% coverage.
+
+Most of what is below is how we measured that, and what we found when we tried to push it further.
+(Internal programme name: VKG, Verifiable Knowledge Generation. The paper draft is `paper/manuscript.md`.)
 
 **中文简介：** 目标是让模型别胡说：能联网、能核对来源时才给确定答案，核对不了就明说"无法确认"，而不是让用户每次都要二次确认。这个仓库放的是系统、论文草稿和全部评估记录。结论很克制：在 SimpleQA 封存题上，所有问题里"给出错误答案"的占比上界为 0.76%（覆盖率 37.2%）；换到另外两个基准，覆盖率不够，并且发现那里很多"错误"其实是基准自己的金标准过时或问题有歧义。这不是"消除了幻觉"。
 

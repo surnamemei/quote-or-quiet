@@ -1,0 +1,11 @@
+# Independent recomputation of the manuscript's numbers (2026-11-09)
+Done by me with fresh code written separately from the code that produced the numbers (results/runs/s24/verify_gold.py, verify_scores.py, verify_stats.py). It is not an independent person; a reader who did not write the pipeline should still repeat it.
+
+| item | check | result |
+|---|---|---|
+| Table 1 counts (FRESH-5 568/1,526, k = 4; Mintaka 620, 592 correct, k = 28; PopQA 401, k = 17) | read from the raw result files results/runs/s19/S19_RESULT.md and s21/S21_RESULT.md | agree |
+| every bound, rate and test quoted in the manuscript | recomputed from counts by binomial-tail inversion (root finding) instead of the beta quantile used earlier; 35 values | 27 found verbatim; 8 not found in that format are not errors (selective-risk upper bounds for Mintaka and PopQA appear only in docs/SCORECARD.md and RELATED_WORK; Mintaka pin coverage is written 0.502; pin added error is written 21%; selective risks are written 0.7%, 4.5%, 4.2%) |
+| Table 2 and 3 inputs | strict verdicts counted again from adj2_comb.csv and the keys: 63 system rows, 29 kept; frozen 28: 16 gold wrong, 3 both acceptable, 3 answer wrong, 2 ambiguous, 4 cannot tell, 9 kept; added kept errors 20; release files: Mintaka 1,005 releases (697 + 308) with 63 wrong; FRESH-5 727 (601 + 126) with 14 wrong | agree |
+| synthetic gold (3,200 items in closed_dev, closed_test, closed_test2) | every gold answer re-derived from the document text alone (cities, ages from the two dates, tenure intervals, no document states a supervisor) | 0 mismatches; a first run reported 448 because my checker compared the namesake distractor document with a missing gold, fixed and rerun |
+| Tables 4 and 5 | simpler release rule (reader outputs agree by normalised equality and the string is verbatim in a retrieved document; ages recomputed from the dates quoted in the specification) applied to the raw generations | every cell reproduced: A lookup 528, tenure 12, computed 217, namesake 56, unanswerable 0, wrong 0; B 526, 32, 226, 70, 0, wrong 0 |
+Not rechecked: the false-credit rate itself (1 of 677 credited, from human labels made earlier), the grading labels for FRESH-5, Mintaka and PopQA, and the FRESH-5 pinned-page error list.

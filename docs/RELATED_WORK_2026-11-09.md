@@ -82,3 +82,13 @@ Consequences. (1) Our LTT baseline matches this logic; the difference is the ris
 (2) In their metric our results are: FRESH-5 frozen system selective risk 0.70%, corrected 97.5% upper bound 2.04% (SER bound 0.76%); Mintaka frozen 4.52% (upper 6.65%), adjudicated 1.45% (2.95%);
 PopQA 4.24% (7.00%); LTT baseline at t = 6 on FRESH-5 1.63% (3.31%). At a 1% selective-risk target none of these certifies, including the system's; the SER bound is certifiable at 37% coverage because it is
 the selective risk times the coverage. The published methods operate at 5 to 30% selective risk. This must be stated whenever the 0.76% figure is compared with theirs.
+
+
+## Title and novelty check (2026-11-09, found while choosing a title)
+- "When Benchmarks Age: Temporal Misalignment through Large Language Model Factuality Evaluation" (Jiang, Chang, McAuley, Xu; arXiv 2510.07238; EACL 2026 Main): tests five factuality benchmarks against eight LLMs with an
+  up-to-date retrieval pipeline; the abstract says a considerable portion of benchmark samples is outdated. The general observation that stale gold inflates apparent hallucination is therefore not new; our contribution
+  is the quantification inside a certification (blind, decoy-validated adjudication of a certified system's errors, 19 of 28 on Mintaka). Abstract read; full text not read.
+- Title family: "Attribute or Abstain: Large Language Models as Long Document Assistants" (arXiv 2407.07799) and "Don't Hallucinate, Abstain" (arXiv 2402.00367) exist; "Cite or Abstain" is not an exact match but sits in a crowded pattern.
+  Searches for the exact phrases "Receipts or Silence" and "Quote or Quiet" found no paper with those titles (search results only, not an exhaustive check).
+- HalluLens (arXiv 2504.17550) reports incorrect gold answers in TruthfulQA; PARALLAX (arXiv 2605.17028) and HalluHard (arXiv 2602.01031) concern construction artifacts and separating hallucination from stale information. Seen in snippets, not opened.
+To do: read these before the related-work paragraph on benchmark noise is finalised; cite 2510.07238 there.

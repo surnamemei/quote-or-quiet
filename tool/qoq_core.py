@@ -6,6 +6,7 @@
              Wikipedia page) and be confirmed by Phi-4 (cautious prompt on the combined passage)
 Returns Verified with the quote and its page, or Unresolved with the reason. Nothing here is tuned beyond the frozen system."""
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -16,7 +17,7 @@ os.environ.setdefault("VKG_EMB", "hf")
 os.environ.setdefault("VKG_WEB", "ddg")
 os.environ.setdefault("OLLAMA_HOST_URL", os.environ.get("VKG_OLLAMA_URL", "http://127.0.0.1:11535"))
 
-from vkg import evidence_fast as E, pod, websearch as W, localwiki as LW, l3_checks2 as C, s17_eval as S   # noqa: E402
+from vkg import evidence_fast as E, pod, websearch as W, localwiki as LW, l3_checks2 as C, s17_eval as S, l3_verify as V   # noqa: E402
 from vkg.lite import CAUTIOUS, PLAIN, parse   # noqa: E402
 from vkg.llm import chat                      # noqa: E402
 from vkg.s12_run import agree                 # noqa: E402
@@ -59,6 +60,35 @@ def answer(question):
     text = LW.page_text(rec["doc"])
     i, j = rec["start"], rec["end"]
     ctx = text[max(0, text.rfind("\n", 0, i) + 1):(text.find("\n", j) if text.find("\n", j) != -1 else len(text))]
-    return {**base, "status": "Verified", "answer": str(rel), "quote": ctx.strip()[:400], "span": rec["span"], "source_title": rec["doc"],
-            "source_url": "https://en.wikipedia.org/wiki/" + rec["doc"].replace(" ", "_"), "snapshot": "FineWiki, English Wikipedia, August 2025",
-            "page_sha256": rec["doc_sha256"], "second_reader": p, "seconds": round(time.time() - t0, 1)}
+    doc, quote, sha = rec["doc"], ctx.strip()[:400], rec["doc_sha256"]
+    best = _support_sentence(question, str(rel), [rec["doc"]] + [t for t in wiki["titles"] if t != rec["doc"]])
+    if best:                                     # display only: a verbatim sentence of a pinned page that links the answer to the question
+        doc, quote, sha = best
+    return {**base, "status": "Verified", "answer": str(rel), "quote": quote, "span": rec["span"], "gate_page": rec["doc"], "gate_context": ctx.strip()[:400],
+            "source_title": doc, "source_url": "https://en.wikipedia.org/wiki/" + doc.replace(" ", "_"), "snapshot": "FineWiki, English Wikipedia, August 2025",
+            "page_sha256": sha, "second_reader": p, "seconds": round(time.time() - t0, 1)}
+
+
+STOP = set("what which who whom whose when where why how was were is are did does the and for with from that this into play born year name "
+           "film book novel song city country".split())
+
+
+def _support_sentence(question, answer, docs):
+    """Best verbatim sentence (from the pinned pages already used) that contains the answer and the most content words of the question."""
+    kw = {w for w in re.findall(r"[A-Za-z0-9']+", question.casefold()) if len(w) > 3 and w not in STOP}
+    names = {w.casefold() for w in re.findall(r"[A-Za-z0-9']+", question)[1:] if w[:1].isupper() or w.isdigit()}   # names and years count double
+    a = answer.casefold()
+    best, score = None, 0
+    for d in docs:
+        text = LW.page_text(d)
+        if not text:
+            continue
+        for s in re.split(r"(?<=[.!?])\s+|\n+", text):
+            s = s.strip()
+            if not (20 <= len(s) <= 400) or s.startswith("#") or a not in s.casefold():
+                continue
+            ws = set(re.findall(r"[A-Za-z0-9']+", s.casefold()))
+            k = len(kw & ws) + len(names & ws)
+            if k > score:
+                best, score = (d, s, V.doc_hash(text)), k
+    return best

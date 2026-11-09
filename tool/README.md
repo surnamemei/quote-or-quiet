@@ -2,18 +2,26 @@
 
 Give any local model (or Claude Code, or any MCP client) a fact-checking tool that answers a short factual question only when it can quote the answer, and otherwise says so.
 
-Output format (illustration; real outputs from the end-to-end test will replace it):
+Real output from the end-to-end test (2026-11-10: an MCP client over stdio, the service on this machine, public PopQA and Mintaka questions):
 
 ```
-quote_or_quiet("Who directed the film Rec 4: Apocalypse?")
--> Verified: Jaume Balagueró
-   Quote: "[REC] 4: Apocalypse is a 2014 Spanish horror film directed by Jaume Balagueró ..."
-   Source: [REC] 4: Apocalypse (https://en.wikipedia.org/wiki/...), FineWiki, English Wikipedia, August 2025, page sha256 ...
+quote_or_quiet("What is the distance between bases on a baseball diamond?")
+-> Verified: 90 feet
+   Quote: "Thus, although the "points" of the bases are 90 feet apart, the physical distance between each successive pair of base markers is closer to 88 feet (26.8 m)."
+   Source: Baseball field (https://en.wikipedia.org/wiki/Baseball_field), FineWiki, English Wikipedia, August 2025, page sha256 c12bd4d473af...
    Support: all 3 evidence sources and a second reader agree.
 
-quote_or_quiet("<a question the sources disagree on>")
--> Unresolved: only 2 of 3 evidence sources support the candidate. (Unverified candidate, do not state as fact: ...)
+quote_or_quiet("Who won the most Popular TV Program Award in the first Emmy Award Show in 1949?")
+-> Verified: Pantomime Quiz
+   Quote: "Most Popular Television Program: Pantomime Quiz Time"
+   Source: 1st Primetime Emmy Awards (https://en.wikipedia.org/wiki/1st_Primetime_Emmy_Awards), FineWiki, English Wikipedia, August 2025, page sha256 3c4b3bbf6479...
+   Support: all 3 evidence sources and a second reader agree.
+
+quote_or_quiet("Who was the composer of Happy New Year?")
+-> Unresolved: only 2 of 3 evidence sources support the candidate. (Unverified candidate, do not state as fact: Vishal–Shekhar)
 ```
+
+The last question is ambiguous (several works share the title), and the tool declines rather than guessing. The quote shown is a verbatim sentence from a pinned page that contains the answer and the most words of the question; the release decision itself is the deductive gate's span (returned as `span`, `gate_page` and `gate_context` in the JSON part of the reply).
 
 It is the frozen system from the paper, one question at a time: web pages (free-search-mcp pool), local Wikipedia (FineWiki, Aug 2025) and a combined passage, read by Qwen3-4B-Instruct-2507 with two prompts each; an answer is released only if all three sources support it, it is a verbatim, type-checked span of a hash-pinned Wikipedia page, and Phi-4 confirms it. On the sealed SimpleQA-style test this answered 37% of questions with a silent-error rate whose 97.5% upper bound was 0.76%.
 
@@ -21,7 +29,7 @@ It is the frozen system from the paper, one question at a time: web pages (free-
 - For: short factual questions with one answer (who, when, where, how many, which year).
 - Not for: explanations, opinions, advice, multi-step reasoning, code, or anything not in Wikipedia. Those come back Unresolved.
 - It answers about a third to a half of factual questions. Unresolved means "no verified answer", not "false".
-- Each question takes tens of seconds (web search, page fetching, seven model readings).
+- Speed: in the test the first question took 17 s with the models loaded and its pages not yet fetched; questions whose pages were already fetched took 2 to 5 s. A live web search adds several seconds (the test questions' URL lists were already cached).
 
 ## Parts
 | file | runs in | role |

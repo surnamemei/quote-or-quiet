@@ -2,7 +2,7 @@
 # S40 (docs/S40_PLAN.md): after S39 frees the GPU and the S40 prefetch is done: frozen pipeline gen -> Phi-4 -> alias -> closed-book B0/B1 + judge,
 # then CPU scoring, the version 2 cell, the merge and the review sheets. Headroom gate and check-after-write lock as before; idle priority.
 cd "/f/Projects/AI hallucinations"
-until grep -qE 'S39_DONE|FAILED' results/runs/s39/run_s39.log 2>/dev/null && grep -q '^done sealed' results/runs/s40/prefetch.log; do sleep 300; done
+until grep -qE 'S39_DONE|FAILED' results/runs/s39/run_s39.log 2>/dev/null && grep -q '^PREFETCH_COMPLETE' results/runs/s40/prefetch.log; do sleep 300; done
 export PYTHONIOENCODING=utf-8 VKG_EMB=hf VKG_WEB=ddg VKG_POD_HOST=local VKG_OLLAMA_URL=http://127.0.0.1:11535 S29_SEARCH=fsm
 LOCK=results/gpu_lock.txt; ME="vkg-main s40 $$"
 headroom_ok() { ram=$(powershell -c "[math]::Floor((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory/1MB)" | tr -d '\r'); vram=$(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | awk -F', ' '{printf "%d", ($2-$1)/1024}'); [ "${ram:-0}" -ge 16 ] && [ "${vram:-0}" -ge 10 ]; }

@@ -92,3 +92,25 @@ the selective risk times the coverage. The published methods operate at 5 to 30%
   Searches for the exact phrases "Receipts or Silence" and "Quote or Quiet" found no paper with those titles (search results only, not an exhaustive check).
 - HalluLens (arXiv 2504.17550) reports incorrect gold answers in TruthfulQA; PARALLAX (arXiv 2605.17028) and HalluHard (arXiv 2602.01031) concern construction artifacts and separating hallucination from stale information. Seen in snippets, not opened.
 To do: read these before the related-work paragraph on benchmark noise is finalised; cite 2510.07238 there.
+
+
+## Prior-work check for S42 (2026-11-10; abstracts read on arxiv.org, full texts not read)
+- HALO, "Zero Hallucination, by Construction: Hallucination-Aware Layered Oversight for Trustworthy Enterprise AI" (Raduta, Velicu, Preda,
+  Chiricescu; arXiv 2607.17883). Six layers: grounded generation, constrained execution, LLM judge plus evidence checks, calibrated abstention,
+  traceability, oversight. The abstract treats hallucination as containable, not eliminable, and gives no bound or residual rate; the workload is
+  enterprise claims extraction. Same stance as our restated claim (a property the system enforces). What we add: the enforced property is stated
+  exactly (a machine-checked verbatim quote for every release), and the residual has a sealed-test upper bound. Cite for the framing.
+- RefusalBench (Muhamed, Ribeiro, Dreyer, Smith, Diab; arXiv 2510.10390): 176 perturbation strategies in six categories build unanswerable
+  variants; refusal accuracy of frontier models falls below 50% on multi-document tasks. E4 does not rebuild this; it is one relation-swap attack
+  aimed at our gate. Cite as the benchmark for this failure mode; running RefusalBench-NQ through the system is a possible later test (needs a download).
+- Selective Abstraction (Goren, Galil, El-Yaniv; arXiv 2602.11908): replaces uncertain atomic claims by less specific ones instead of removing
+  them; better risk-coverage than claim removal (AURC up to 35.61%). Close to our Qualified state in purpose (a third option between assert and
+  abstain). Different mechanism: we keep the specific value and attribute it to a quoted sentence; they generalise the value. E2 shows our verifier
+  already accepts coarser true answers ("France" where the release is "Lille, France"). Cite in the Qualified section.
+- VeriFY (Altinisik et al.; arXiv 2602.02018): training-time self-verification; hallucination down 9.7 to 53.3% with recall down 0.4 to 5.7%.
+  Model-internal and without a certificate; relevant as the cost comparison (our E1 cost is much larger: 42% of right answers withheld).
+- "Knowing What's Missing" (Jain, Garimella; arXiv 2512.06476): identify-then-verify sufficiency judgment. "When Absence Is Evidence" / CROWN-QA
+  (Min et al.; arXiv 2608.04591): models over-close on partial evidence. Disagreement across prompting regimes as an abstention signal
+  (Madhwal et al.; arXiv 2602.04853): same idea as our plain/cautious reader agreement, closed book. Cite; nothing to redo.
+Consequence for S42: none of these measures what happens to each wrong answer of the raw model (E1), tests a quote-based release function against
+hostile generators (E2), or reports an attributed-quote state on a sealed set (E3). E4 overlaps RefusalBench in purpose and is kept small.

@@ -9,6 +9,8 @@ os.chdir(ROOT)
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "results/runs/s22"))
 import psutil
 psutil.Process().nice(psutil.IDLE_PRIORITY_CLASS)
+sys.path.insert(0, str(ROOT / "results/runs/s20"))
+import no_retrieval2  # noqa: F401,E402  (keeps the unused 37 GB embedding table out of RAM; any use of vkg.retrieval2 raises)
 from abstain_dev import grade
 from vkg import s17_eval as S, l3_checks2 as C, localwiki as LW
 from vkg.s12_run import agree

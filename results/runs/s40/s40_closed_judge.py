@@ -5,6 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 os.environ["OLLAMA_HOST_URL"] = os.environ.get("VKG_OLLAMA_URL", "http://127.0.0.1:11535")
+sys.path.insert(0, str(ROOT / "results/runs/s20"))
+import no_retrieval2  # noqa: F401,E402  (keeps the unused 37 GB embedding table out of RAM; any use of vkg.retrieval2 raises)
 from vkg import pod                       # noqa: E402
 from vkg.s21_judge import needed, J       # noqa: E402
 gold = {r["id"]: (r["q"], r["gold"]) for r in map(json.loads, open(ROOT / "results/runs/s40/sealed/items.jsonl", encoding="utf-8"))}

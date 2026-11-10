@@ -27,5 +27,15 @@ Why: on the S29 sealed set the two-source cell (V2) passed its registered second
 - L1-a met; L1-b met; original L1 not met.
 If any prediction fails it is reported as failed.
 
+## Secondary analyses added 2026-11-10 10:20 (still before any S40 run; from docs/S42_CLAIM_AUDIT_AND_PLAN.md)
+Version 2 and the five endpoints above are unchanged. Two rules are applied to the same outputs afterwards and reported separately.
+- Rule Q (Qualified state). A question that version 2 does not release is Qualified if its max-support candidate passes the deductive gate. The output is the page title and the quoted sentence, with the cross-check that failed; the system asserts the quote, not the answer. Reported: count, share of Qualified items whose quoted answer matches the reference answer, overall and by relation. On S29 (post hoc, frozen rule as base): 384 Qualified (11.4 points), 81.0% match, 47% for questions with a year. Predictions for S40: Qualified adds 4 to 10 points on top of version 2; match 78 to 92% (S40 has fewer questions with a year: 4.6% against 11.9%).
+- Rule T (time frame). A released answer to a question that names a year is moved to Qualified unless the quoted sentence holds that year or a year range that covers it. Designed on S29's one wrong release, so post hoc there: it moves 9 of the 11 releases on year questions (8 match the reference, 1 is the wrong one). Prediction for S40: at most 10 releases moved; they are listed with their review verdicts.
+
 ## Order
 After S39 finishes (GPU free): prefetch done -> frozen pipeline generation on S40 -> Phi-4 -> alias -> closed-book B0/B1 -> scoring -> review sheets -> blind reviews -> decisions. Version 2 is not changed between now and the run.
+
+Run note 2026-11-10 10:19 (before any S40 run): s40_run.py (phi4 and alias stages only), s40_score.py, s40_v2.py and
+s40_closed_judge.py now import the no_retrieval2 stub first. These stages do no retrieval, and without the stub each
+loaded the 37 GB embedding table into RAM. The stub raises on any use of vkg.retrieval2, so no output can change. The
+gen stage is untouched and still loads the table, as in S19 and S29.

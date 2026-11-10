@@ -12,6 +12,10 @@ for x in rng.sample(kept, 20):
     pool = [y for y in kept if y["type"] == x["type"] and y["person"] != x["person"] and y["value_clean"].casefold() != x["value_clean"].casefold()] or \
            [y for y in kept if y["person"] != x["person"] and y["value_clean"].casefold() != x["value_clean"].casefold()]
     rows.append(({**x, "value_clean": rng.choice(pool)["value_clean"]}, "decoy"))
+if (D / "qualified.jsonl").exists():   # added 2026-11-10 before verified.jsonl existed: up to 40 random Qualified slots (rule Q), drawn after the registered draws
+    have = {x["id"] for x, k in rows}
+    q = [x for x in (json.loads(l) for l in open(D / "qualified.jsonl", encoding="utf-8")) if x["id"] not in have]
+    rows += [(x, "qualified") for x in rng.sample(q, min(40, len(q)))]
 rng.shuffle(rows)
 half = (len(rows) + 1) // 2
 parts = (("1", rows[:half]), ("2", rows[half:]))

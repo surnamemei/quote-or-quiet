@@ -35,6 +35,8 @@ def gen(name):
 
 
 def phi4(name):
+    sys.path.insert(0, str(ROOT / "results/runs/s20"))
+    import no_retrieval2  # noqa: F401  (this stage does no retrieval; keeps the 37 GB embedding table out of RAM)
     os.environ["OLLAMA_HOST_URL"] = os.environ.get("VKG_OLLAMA_URL", "http://127.0.0.1:11535")
     from vkg.lite import CAUTIOUS, parse
     from vkg.llm import chat
@@ -60,6 +62,8 @@ def phi4(name):
 
 
 def alias(name):
+    sys.path.insert(0, str(ROOT / "results/runs/s20"))
+    import no_retrieval2  # noqa: F401  (this stage does no retrieval; keeps the 37 GB embedding table out of RAM)
     os.environ["OLLAMA_HOST_URL"] = os.environ.get("VKG_OLLAMA_URL", "http://127.0.0.1:11535")
     from vkg import pod
     from vkg.s21_judge import needed, J

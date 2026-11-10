@@ -33,6 +33,10 @@ out = ["# S41: long-form end-to-end on the design biographies", "",
        f"Decoys called wrong by both: {nd}/{len(dec)} ({'VALID' if nd >= 18 else 'INVALID'}). Random dropped slots called wrong by both: {sum(r['err'] for r in dr)}/{len(dr)}, by either {sum(r['either'] for r in dr)}.",
        f"False kept (both reviewers): {k}/{n} = {100*k/max(1,n):.1f}%; cluster-bootstrap 97.5% upper {100*bs[int(0.975*len(bs))]:.1f}%; wrong by either {sum(r['either'] for r in kept)}.",
        "", "Retention by type (types with at least 20 slots):", ""]
+ql = [r for r in rows if r["kind"] == "qualified"]
+if ql:
+    out[6:6] = [f"Rule Q (secondary): reviewed Qualified slots {len(ql)}; value called wrong by both {sum(r['err'] for r in ql)}, by either {sum(r['either'] for r in ql)}, "
+                f"correct for both {sum(all(v.startswith('correct') for v in r['v']) for r in ql)}."]
 out += [f"- {t}: {tk[t]}/{c} ({100*tk[t]/c:.0f}%)" for t, c in ta.most_common() if c >= 20]
 out += ["", "False kept (both):", ""] + [f"- [{r['person']}] {r['question']} | {r['answer']} | {r['v']}" for r in kept if r["err"]]
 out += ["", "Wrong by one reviewer:", ""] + [f"- [{r['person']}] {r['question']} | {r['answer']} | {r['v']}" for r in kept if r["either"] and not r["err"]]

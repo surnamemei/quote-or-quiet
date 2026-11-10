@@ -30,6 +30,23 @@ Per released answer, the SimpleQA bound is 2.04% (observed 0.70%): about one wro
 - Derivation certificates for computed answers are sound but cover under 2% of questions.
 - Most of the "errors" on Mintaka were stale or wrong benchmark gold (19 of 28), found with a blind, decoy-validated adjudication.
 
+## Does the quote say it? (added 2026-11-10; paper sections 5.10 to 5.17)
+A quote that exists on its page can still fail to state the answer, and then a person who re-checks the release is misled. We measured that with two blind reviewers per row (language models that see only the quote) and tried to remove it.
+
+| setting | what was done | result (misleading quote or false claim, both reviewers; 97.5% upper bound) |
+|---|---|---|
+| templated short questions (Wikidata relations) | quote chosen among all accepted spans by a frame check, a subject link and a quote-only reader (rule W1) | 2 of 1,017 fresh releases misleading (0.20%, 0.71%) against 12.5% for the first accepted span; coverage 49% against 52.5% |
+| biographies written by a 4B model | claims verified against the subject's own page (rule W4) | closed-book drafts: 4.7% false and 4.7% misleading among kept claims (failed its sealed test); drafts written from the page: 61% of claims kept, 1 of 400 false and 1 of 400 misleading on 50 fresh subjects |
+| names that several films or people share | one answer per reading, each with its own quote | 0 false and 0 misleading among 250 readings (1.5%) |
+| open questions, no relation frames (rule R) | sentence quote, question numbers present, quote-only judge with a swapped-answer control | 1.0% misleading (3.7%) against 11.3% for the displayed quote; withholds 35% of the releases |
+| web pages that are not Wikipedia | rule R unchanged | 3.8% misleading (7.3%) against 11.3%; predictions failed |
+| two-hop questions (birth place, country) | two checked quotes and a same-place check | 1 of 55 chains misleading, none false (pilot, 71 items, wide bounds) |
+| a small judge | 0.6B model trained on 4,595 reviewer labels | AUROC 0.988 on held-out questions; 2.6% not 'states' among accepted against 8.8% for the prompted 4B judge |
+
+What these numbers are not: they are not rates of false answers (the reviewers judge whether the quote says it), the reviewers are language models, most rows come from design data, and the page can be out of date (August 2025 snapshot).
+Every plan and prediction is written before the run and dated in `docs/` (`S42_CLAIM_AUDIT_AND_PLAN.md`, `S43_LONGFORM_AND_AMBIGUITY_PLAN.md`, `S48` to `S51`); failed predictions are marked as failed.
+`tool/` is the system as a local service and an MCP server with three tools: `quote_or_quiet` (short questions), `quote_or_quiet_bio` (a person's claims, each quoted) and `quote_or_quiet_readings` (names with several readings); see `tool/README.md`.
+
 ## Layout
 - `paper/` manuscript draft, figures and the figure script.
 - `vkg/` pipeline code: evidence, readers, the gate (`l3_verify.py`, `l3_checks2.py`), judge and metrics.

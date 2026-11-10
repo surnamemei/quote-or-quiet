@@ -140,6 +140,33 @@ elif MODE == "judge":
     json.dump(res, open(OUT / "q_judge.json", "w", encoding="utf-8"), ensure_ascii=False)
     print("judge done", flush=True)
 
+elif MODE == "judge27":
+    os.environ.setdefault("OLLAMA_HOST_URL", "http://127.0.0.1:11540")
+    from vkg.llm import chat
+    S = [json.loads(l) for l in open(OUT / "q_cands.jsonl", encoding="utf-8")]
+    PF = OUT / "q_judge27.json"; res = json.load(open(PF, encoding="utf-8")) if PF.exists() else {}
+    for s in S:
+        n = 0
+        for k, c in enumerate(s["cands"]):
+            if c["sent"] and c["N"] and c["swap"] and n < 6:
+                n += 1
+                for tag, ans_ in (("J", s["answer"]), ("JS", c["swap"])):
+                    key = f"{tag}|{s['id']}|{k}"
+                    if key in res:
+                        continue
+                    for t in range(20):
+                        try:
+                            res[key] = str(chat("qwen3.8-27b", [{"role": "user", "content": JP.format(t=c["doc"], s=c["quote"], q=s["question"], a=ans_)}], temperature=0.0, seed=0, max_tokens=4,
+                                                think=False, json_mode=False, num_ctx=4096, timeout=600)); break
+                        except Exception as e:
+                            print("retry", t, repr(e)[:100], flush=True); time.sleep(30)
+                    else:
+                        raise SystemExit("gave up")
+        if len(res) % 200 < 2:
+            json.dump(res, open(PF, "w", encoding="utf-8"), ensure_ascii=False)
+    json.dump(res, open(PF, "w", encoding="utf-8"), ensure_ascii=False)
+    print("judge27 done", len(res), flush=True)
+
 elif MODE == "small":
     import numpy as np
     import torch
@@ -171,10 +198,11 @@ elif MODE == "sheet":
     S = [json.loads(l) for l in open(OUT / "q_cands.jsonl", encoding="utf-8")]
     J = json.load(open(OUT / "q_judge.json", encoding="utf-8")); SM = json.load(open(OUT / "q_small.json", encoding="utf-8"))
     from vkg.lite import parse
+    J27 = json.load(open(OUT / "q_judge27.json", encoding="utf-8")) if (OUT / "q_judge27.json").exists() else {}
     yes = lambda o: str(o or "").strip().upper().startswith("YES")
     said = lambda o: (lambda v: v if ans(v) and not str(v).upper().startswith("NONE") else None)(str(parse(o) or "").strip().strip("'\"."))
     for s in S:
-        s["w1"] = s["r"] = s["sj"] = None
+        s["w1"] = s["r"] = s["sj"] = s["r27"] = None
         for k, c in enumerate(s["cands"]):
             g = J.get(f"G|{s['id']}|{k}")
             if s["w1"] is None and g is not None and c["sent"] and c["F"] and c["S"] and said(g) and agree(s["answer"], said(g)):
@@ -183,14 +211,16 @@ elif MODE == "sheet":
                 s["r"] = k
             if s["sj"] is None and c["sent"] and SM.get(f"{s['id']}|{k}", 0) >= 0.5:
                 s["sj"] = k
+            if J27 and s["r27"] is None and f"J|{s['id']}|{k}" in J27 and yes(J27[f"J|{s['id']}|{k}"]) and not yes(J27[f"JS|{s['id']}|{k}"]):
+                s["r27"] = k
     S = [s for s in S if s["cands"]]
-    for name in ("w1", "r", "sj"):
+    for name in ("w1", "r", "sj", "r27"):
         print(name, "keeps", sum(s[name] is not None for s in S), "of", len(S), f"({100*sum(s[name] is not None for s in S)/len(S):.1f}%)")
-    json.dump({s["id"]: {"w1": s["w1"], "r": s["r"], "sj": s["sj"]} for s in S}, open(OUT / "q_decisions.json", "w"))
+    json.dump({s["id"]: {"w1": s["w1"], "r": s["r"], "sj": s["sj"], "r27": s["r27"]} for s in S}, open(OUT / "q_decisions.json", "w"))
     rng = random.Random(5302); sample = rng.sample(S, min(300, len(S))); rows = []
     for s in sample:
         seen = set()
-        for kind, k in (("displayed", 0), ("w1", s["w1"]), ("r", s["r"]), ("sj", s["sj"])):
+        for kind, k in (("displayed", 0), ("w1", s["w1"]), ("r", s["r"]), ("sj", s["sj"]), ("r27", s["r27"])):
             if k is None or s["cands"][k]["quote"] in seen:
                 continue
             seen.add(s["cands"][k]["quote"]); rows.append(dict(kind=kind, s=s, answer=s["answer"], c=s["cands"][k]))
@@ -234,7 +264,7 @@ elif MODE == "unblind":
         n = len(vs); m = sum(v == ["not", "not"] for v in vs); s_ = sum(v == ["states", "states"] for v in vs)
         return f"| {name} | {n} | {m} ({100*m/max(1,n):.1f}%, upper {up(m,n):.1f}%) | {s_} ({100*s_/max(1,n):.1f}%) |"
     out.append(row("Displayed quote (first accepted span), the sampled releases", [vq(i, 0) for i in ids]))
-    for name, key in (("W1", "w1"), ("R", "r"), ("SJ", "sj")):
+    for name, key in (("W1", "w1"), ("R", "r"), ("SJ", "sj"), ("R27", "r27")):
         kept = [i for i in ids if Dn[i][key] is not None]
         out.append(row(f"Displayed quote, the {len(kept)} releases kept by {name}", [vq(i, 0) for i in kept]))
         out.append(row(f"{name} quote, kept releases", [vq(i, Dn[i][key]) for i in kept]))

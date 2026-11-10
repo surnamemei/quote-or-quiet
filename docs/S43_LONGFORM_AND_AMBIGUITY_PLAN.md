@@ -146,3 +146,74 @@ output cannot be offered as 'every claim re-checks'; it can be offered with a st
 retention of 13 to 20%. A further rule (first candidate only, verbatim value, restricted types) is a hypothesis for a new fresh set of
 subjects, not a result.
 
+## Part D. Grounded drafts (S45; written 2026-11-10 16:15, before any S45 draft exists)
+
+Diagnosis from S44: a closed-book 4B draft is about 37% false or unsupported by claim (kept 317 at about 5% false; dropped sample 45% false;
+a rough estimate, not a measurement), so verification after the fact can only keep what happens to be both true and quotable (13 to 20%).
+The cheaper fix is to change what is verified: the model writes the biography from the subject's own page, and the same verifier (rule W4,
+unchanged, frozen 14:57) checks every claim against that page. This is retrieval-augmented generation followed by claim verification, which
+is standard (the verifier and the witness choice are what the programme adds), so the test is whether it brings retention up at the same
+low error, not whether it is new.
+Design: the 50 S44 subjects (design data now). Phi-4 (Ollama 11540, greedy, 350 tokens) receives the first 14,000 characters of the subject's
+page and the instruction to use only that text (results/runs/s45/lf_draft_rag.py). Decomposition is the unchanged S37 version-2 code.
+W4 is applied unchanged (candidate sentences of the subject's page, quote-only 4B judge with swap control, number check, 75% value
+coverage). Review: a random 300 of the kept slots, 40 dropped, 30 decoys, two blind reviewers as before.
+Predictions: kept slots 40 to 65% of all slots; false for both reviewers among kept at most 3%; misleading quote at most 3%; false among a
+random dropped sample at most 25% (grounded drafts are mostly true). If kept is above 40% with false at most 3% and misleading at most 3%,
+the rule is frozen and tested on 50 fresh subjects (seed 4445) drafted the same way. If misleading or false stays near 5%, the cause is the
+verifier and not the drafts, and the next change is to the verifier (first candidate only), tested on a fresh set.
+
+## Result, part D on the 50 S44 subjects (S45; design data; results/runs/s45/R4_result.md)
+
+Grounded drafts (Phi-4 with the first 14,000 characters of the subject's page), decomposed by the unchanged S37 code into 1,770 slots;
+rule W4 unchanged kept 1,149 (64.9%; 50 of 50 subjects), against 20.5% for closed-book drafts of the same subjects. The judge said YES to a
+swapped value for 4 of 2,761 candidates (0.14%). Blind review of 470 rows (400 random kept, 40 dropped, 30 decoys; decoys 30 of 30; the
+reviewers agreed on the quote verdict in 416 of 430 rows and on the truth verdict in 465 of 470):
+
+| Rows | n | claim false for both | quote misleading for both | quote 'states' for both |
+|---|---|---|---|---|
+| Kept (random 400 of 1,149) | 400 | 4 (1.0%, 97.5% upper 2.5%; cluster bootstrap upper 2.3%) | 2 (0.5%, upper 1.8%) | 364 (91.0%) |
+| Random dropped | 40 | 5 (12.5%) | | |
+
+Against the predictions: kept 40 to 65% of slots: met (64.9%, at the upper edge). Kept false at most 3%: met. Kept misleading at most 3%:
+met. Dropped false at most 25%: met (12.5%). Control: met. Three of the four false kept claims are out of date against the current
+state of the world (the page is an August 2025 snapshot: a coach's role, a driver's number of children); the fourth is an institute
+the page names for a different period. The two misleading quotes are years of an event whose sentence does not hold the year.
+Reading: when the model writes from the subject's page, the same verifier keeps two thirds of the claims at about 1% false and 0.5%
+misleading on the design set. The earlier failure of rule W4 (S44) was mostly a failure of closed-book drafts (45% of their dropped claims
+were false), not of the verifier. This is a design-set result: the 50 subjects were used by S44. Next: freeze (no change to the rule,
+the prompt or the code) and test on 50 fresh subjects (seed 4445, not among the S37 or S44 subjects), drafts grounded the same way,
+before any of their slots is seen.
+Predictions for the fresh set, written 18:08; the 50 names were drawn at 18:06 and no draft or slot of them existed yet: kept slots 45 to 70% of all slots; false for both reviewers among kept at most 3%;
+misleading quote at most 3%; control YES at most 10%; decoys at least 27 of 30.
+
+## Result, sealed test of grounded drafts with rule W4 (S47; 18:42; results/runs/s47/F5_result.md)
+
+50 fresh subjects (none among the S37 or S44 subjects), drafts written by Phi-4 from the subject's page (first 14,000 characters), split by the
+unchanged S37 code into 1,691 slots, rule W4 unchanged (frozen 14:57; no change to the prompt, the code or the rule since). Kept 1,034
+(61.1%; 50 of 50 subjects). Judge YES to a swapped value for 5 of 2,714 candidates (0.18%). Blind review of 470 rows (random 400 of the kept
+slots, 40 random dropped slots, 30 decoys; decoys 30 of 30; the reviewers agreed on the quote verdict in 425 of 430 rows and on the truth
+verdict in 464 of 470):
+
+| Rows | n | claim false for both | quote misleading for both | quote 'states' for both |
+|---|---|---|---|---|
+| Kept (random 400 of 1,034) | 400 | 1 (0.2%, 97.5% upper 1.4%; cluster bootstrap upper 0.8%) | 1 (0.2%, upper 1.4%) | 381 (95.2%) |
+| Random dropped | 40 | 4 (10.0%) | | |
+
+All predictions met: kept 45 to 70% of slots (61.1%); false at most 3% (0.2%); misleading at most 3% (0.2%); control at most 10% (0.18%);
+decoys at least 27 of 30 (30). The one false kept claim answers 'what ring name did he adopt' with 'his current ring name'; the one misleading
+quote is a political claim whose sentence does not name the party criticised. Four kept slots are false for one reviewer only.
+Limits: (1) reviewers saw the question, the value, the page title and the quote, not the draft sentence, so the check does not say whether a
+slot reflects its draft sentence; (2) the page is an August 2025 snapshot, so a claim that has since changed is supported by its page (S45
+had three such cases among four false kept claims; S47 had none among 400); (3) the review sample is 400 of 1,034 kept slots; (4) 39% of the
+slots are not kept and are not covered by the statement: a dropped slot is false in 10% of a sample of 40; (5) the drafts are grounded in the
+subject's page, so the guarantee concerns what is said about a subject whose page is available; a claim about a subject without a page is
+dropped; (6) the reviewers are language models.
+Compared with the closed-book drafts (S44: 20.5% kept, 4.7% false and 4.7% misleading among kept), the difference is the draft, not the
+verifier: the verifier was the same in both tests.
+
+Forced-lookup recheck of S47 (results/runs/s47/F5_recheck_*; 100 random kept slots, two reviewers who had to give a source URL and a quote for every
+row and to judge as of 10 November 2026): wrong for both 0 of 100 (97.5% upper 3.6%); wrong for either 3 of 100 (3.0%, upper 8.5%): a full
+name given where the common name is meant, a job title that was out of date (the person has retired), and a film year that differs between two
+sources (1967 and 1968). All three are of the kinds in limits (2) and the 'unsure source' cases; none is a claim the page contradicts.
+

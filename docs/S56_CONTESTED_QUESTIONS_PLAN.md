@@ -31,3 +31,8 @@ The decoy check is INVALID: only 16 of 30 flipped-party statements were judged m
 can accept the flipped statement as well. The reviewers' verdicts on 'opposite' are therefore not validated, and 'no reversal observed' is not evidence of no reversal; what the data show is that reversals were rare in the drafts (1 of 300 for the naive display) and that the common failure was an unsupported or vague statement.
 Nonsense, as far as measured here: 272 of the 479 statements (56.8%) have no sentence of the page that the 27B accepts for them, a lower bound on the unsupported content of the draft (the 27B may reject some supported statements; no review of the rejected statements was done).
 
+
+## Follow-up: reversal control by construction (2026-11-11; results/runs/s56/e12_reversal_control.py, E12b_result.md; cached 27B verdicts, no reviewers, not registered beforehand)
+
+Usable candidates are page sentences that contain the statement's party word (supporters, critics, ...) and not its opposite, so the flipped statement is not reported by them whatever else they say: 152 candidates in 46 statements. The 27B accepted the flipped statement for 6 of 152 candidates (3.9%, 97.5% upper bound 8.4%) and for 3 of 46 statements (6.5%, upper 17.9%); it accepted the original statement for 45 of 152 (29.6%).
+Rule A requires NO to the flipped statement, so those acceptances are rejected where a control exists. But only 39 of the 207 kept statements have a flippable party word and hence a control; 168 (81%) are kept on the YES alone. The sample of 135 reviewed kept statements showed no reversal, and the reviewers' 'opposite' verdict was not validated (decoys 16 of 30), so for those 168 the absence of reversals is not established.

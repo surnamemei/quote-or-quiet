@@ -1,3 +1,5 @@
+> Superseded in part by docs/S42_RELATED_WORK_v2.md (2026-11-10, second pass, 62 pages opened). Corrections: GopherCite does gate by a learned reward model and declines below a threshold; CAMS has a verifier and a human study; DocAttriBench is a visual-QA benchmark; SURE-RAG works on the evidence set; the Perez et al. 31.1% and 74.6% figures are human ratings.
+
 # S42 related work: has quote sufficiency been done? (2026-11-10)
 
 Question: has anyone already (a) measured that a correct answer is shown with a verbatim quote that does not state it,

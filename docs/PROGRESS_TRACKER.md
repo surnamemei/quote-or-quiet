@@ -1,7 +1,7 @@
 # Progress tracker (2026-11-11)
 
 ```
-Overall [###############.........................] 18/48 (38%)
+Overall [##################......................] 21/48 (44%)
 ```
 
 Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson upper bound of the gate's error share is at or below the threshold. N: the evaluated sample has at least the minimum size. V: the test was registered with predictions before it ran, on data not used in the design, with decoy checks valid (at least 27 of 30 decoys caught). A criterion counts only when met in full. Progress = criteria met / all criteria. The bar is full at 48 of 48.
@@ -15,14 +15,14 @@ Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson up
 | G2 | Short facts, templated questions: shown quote does not state the answer | upper bound <=3% | >=250 reviewed releases | YYY | S40: W1 2 of 267 (0.7%, upper 2.7%); R27 0.7% | docs/S40_QUOTE_ANALYSIS_RESULT.md |
 | G7 | Long-form biographies: kept claim false or quote not stating it | upper bound <=3% for both | >=300 reviewed claims | YYY | fresh 50 subjects: 1 of 400 false, 1 of 400 misleading (upper 1.4% each), decoys 30 of 30 | results/runs/s47/F5_result.md |
 
-## Stage 1: close the measurement gaps (natural questions, ambiguity, chains): [########............] 5/12 (42%)
+## Stage 1: close the measurement gaps (natural questions, ambiguity, chains): [#############.......] 8/12 (67%)
 
 | Gate | Area | T (threshold) | N (minimum sample) | T N V | Now | Evidence |
 |---|---|---|---|---|---|---|
 | G3 | Natural questions: shown quote does not state the answer | upper bound <=3% | >=250 reviewed releases | YYY | S57: R27 on 705 unseen Mintaka releases: 2 of 367 witnesses misleading (0.5%, upper 2.0%), decoys 30 of 30; 52.1% of releases kept | docs/S57_G3_NATURAL_QUESTIONS_PLAN.md |
 | G4 | Natural questions: released answer wrong at usable coverage | upper bound <1% at coverage >=35% | >=1000 sealed questions | --- | Mintaka and PopQA missed the 35% coverage floor (Section 5.9) | paper/manuscript.md 5.9 |
 | G5 | Ambiguous names: false answer or misleading quote per reading | upper bound <=3% | >=250 readings | YY- | 0 of 250 readings (upper 1.5%), decoys 20 of 20; design data only | results/runs/s46/E9_result.md |
-| G6 | Two-hop questions: quote chain misleading or answer wrong | upper bound <=3% | >=150 reviewed chains | --- | 1 of 55 (upper 9.7%), rule revised after a failed first version | paper/manuscript.md 5.16 |
+| G6 | Two-hop questions: quote chain misleading or answer wrong | upper bound <=3% | >=150 reviewed chains | YYY | S57: C2' on 1,400 fresh persons: 0 of 209 accepted chains misleading or wrong (upper 1.7%), decoys 58 of 60; birth place to country only | docs/S57_G6_CHAINS_PLAN.md |
 
 ## Stage 2: new kinds of text and attribution: [###.................] 2/12 (17%)
 

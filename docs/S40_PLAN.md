@@ -46,3 +46,6 @@ Run note 2026-11-10 10:19 (before any S40 run): s40_run.py (phi4 and alias stage
 s40_closed_judge.py now import the no_retrieval2 stub first. These stages do no retrieval, and without the stub each
 loaded the 37 GB embedding table into RAM. The stub raises on any use of vkg.retrieval2, so no output can change. The
 gen stage is untouched and still loads the table, as in S19 and S29.
+
+## Disclosure (2026-11-11 10:0x)
+While checking the format of results/runs/s40/quote_analysis/q_cands.jsonl for the S57 chain test (gate G6), the question and answer of one sealed item (w3-00000) were printed to the console. The S40 run and all its analyses were complete; nothing was changed because of it.

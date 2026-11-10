@@ -22,7 +22,7 @@ def line(name, sel):
     n = len(sel); f = sum(r["false"] for r in sel); m = sum(r["mis"] for r in sel); s = sum(r["states"] for r in sel)
     return f"| {name} | {n} | {f} ({100*f/max(1,n):.1f}%, upper {up(f,n):.1f}%) | {m} ({100*m/max(1,n):.1f}%, upper {up(m,n):.1f}%) | {s} ({100*s/max(1,n):.1f}%) |"
 out = ["# S46 part B: one answer per reading of an ambiguous name (rule W1 per reading page)", "",
-       f"Decoys misleading or false for both reviewers: {nd}/{len(dec)} ({'VALID' if nd >= 18 else 'INVALID'}).", "",
+       f"Decoys misleading or false for both reviewers: {nd}/{len(dec)} ({'VALID' if nd >= 27 else 'INVALID'}).", "",
        "| Rows | n | answer false for both | quote misleading for both | quote 'states' for both |", "|---|---|---|---|---|",
        line("All readings with a witness", rd), line("Film readings (director)", [r for r in rd if items[r["id"]]["relation"] == "director"]),
        line("Person readings (birth year)", [r for r in rd if items[r["id"]]["relation"] == "birth_year"])]

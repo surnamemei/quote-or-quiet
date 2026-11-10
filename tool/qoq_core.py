@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 os.environ.setdefault("VKG_EMB", "hf")
 os.environ.setdefault("VKG_WEB", "ddg")
-os.environ.setdefault("OLLAMA_HOST_URL", os.environ.get("VKG_OLLAMA_URL", "http://127.0.0.1:11535"))
+os.environ.setdefault("OLLAMA_HOST_URL", os.environ.get("VKG_OLLAMA_URL", "http://127.0.0.1:11540"))
 
 from vkg import evidence_fast as E, pod, websearch as W, localwiki as LW, l3_checks2 as C, s17_eval as S, l3_verify as V   # noqa: E402
 from vkg.lite import CAUTIOUS, PLAIN, parse   # noqa: E402
@@ -61,11 +61,19 @@ def answer(question):
     i, j = rec["start"], rec["end"]
     ctx = text[max(0, text.rfind("\n", 0, i) + 1):(text.find("\n", j) if text.find("\n", j) != -1 else len(text))]
     doc, quote, sha = rec["doc"], ctx.strip()[:400], rec["doc_sha256"]
-    best = _support_sentence(question, str(rel), [rec["doc"]] + [t for t in wiki["titles"] if t != rec["doc"]])
-    if best:                                     # display only: a verbatim sentence of a pinned page that links the answer to the question
-        doc, quote, sha = best
+    quote_checked = False
+    import qoq_extra as X
+    w = X.witness(question, str(rel), wiki["titles"])      # rule W1 (docs/S42): for the seven templated relations the shown quote must state the answer
+    if isinstance(w, dict):
+        doc, quote, sha, quote_checked = w["doc"], w["quote"], w["sha"], True
+    elif w is None:
+        return {**base, "status": "Unresolved", "candidate": str(rel), "reason": "the answer is on a pinned page but no sentence of it states the answer to this question (rule W1)", "seconds": round(time.time() - t0, 1)}
+    else:                                        # not a templated question: no frame check exists; show the best supporting sentence and say that it was not checked
+        best = _support_sentence(question, str(rel), [rec["doc"]] + [t for t in wiki["titles"] if t != rec["doc"]])
+        if best:
+            doc, quote, sha = best
     return {**base, "status": "Verified", "answer": str(rel), "quote": quote, "span": rec["span"], "gate_page": rec["doc"], "gate_context": ctx.strip()[:400],
-            "source_title": doc, "source_url": "https://en.wikipedia.org/wiki/" + doc.replace(" ", "_"), "snapshot": "FineWiki, English Wikipedia, August 2025",
+            "quote_checked": quote_checked, "source_title": doc, "source_url": "https://en.wikipedia.org/wiki/" + doc.replace(" ", "_"), "snapshot": "FineWiki, English Wikipedia, August 2025",
             "page_sha256": sha, "second_reader": p, "seconds": round(time.time() - t0, 1)}
 
 

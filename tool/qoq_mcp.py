@@ -45,6 +45,15 @@ async def _search(question):
         f.write_text(json.dumps(urls[:8]), encoding="utf-8")
 
 
+def _post(path, payload):
+    req = urllib.request.Request(f"{SERVICE}{path}", data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=1800) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception as ex:
+        return {"status": "Unresolved", "reason": f"the local Quote or Quiet service is not reachable at {SERVICE} ({type(ex).__name__}). Start tool/start_service.sh."}
+
+
 def _format(r):
     if r.get("status") == "Verified":
         return (f"Verified: {r['answer']}\nQuote: \"{r['quote']}\"\nSource: {r['source_title']} ({r['source_url']}), {r['snapshot']}, "
@@ -71,6 +80,33 @@ async def quote_or_quiet(question: str) -> str:
     except Exception as ex:
         return f"Unresolved: the local Quote or Quiet service is not reachable at {SERVICE} ({type(ex).__name__}). Start tool/start_service.sh."
     return _format(r) + "\n\n" + json.dumps({k: v for k, v in r.items() if k not in ("readers",)}, ensure_ascii=False)
+
+
+@mcp.tool(description="Long-form: a short biography of a person as a list of claims, each with a verbatim sentence from that person's own pinned Wikipedia page "
+                      "that states it. Claims without such a sentence are left out (not marked false). Slow (a minute or more). The name must be the exact page title.")
+async def quote_or_quiet_bio(name: str) -> str:
+    r = _post("/bio", {"name": name.strip()})
+    if r.get("status") != "Verified claims":
+        return f"Unresolved: {r.get('reason', 'no claim could be quoted')}."
+    nl = chr(10)
+    lines = [f"- {c['question']} -> {c['value']}{nl}  Quote: \"{c['quote']}\"" for c in r["claims"]]
+    return (f"{r['name']}: {r['kept']} quoted claims (of {r['checked']} checked){nl}" + nl.join(lines) +
+            f"{nl}Source: {r['claims'][0]['source_url']}, {r['snapshot']}, page sha256 {r['claims'][0]['page_sha256'][:12]}...{nl}{r['note']}")
+
+
+@mcp.tool(description="Names that several films or people share: one answer per reading, each with its own quote. relation is one of director, birth_year, "
+                      "birth_place, death_year, author. All readings are listed; which one you meant is not decided.")
+async def quote_or_quiet_readings(name: str, relation: str = "birth_year") -> str:
+    r = _post("/readings", {"name": name.strip(), "relation": relation})
+    if r.get("status") != "Readings":
+        return f"Unresolved: {r.get('reason', 'no readings')}."
+    nl = chr(10); out = []
+    for x in r["readings"]:
+        if x["status"] == "Verified":
+            out.append(f"- {x['reading']}: {x['answer']}{nl}  Quote: \"{x['quote']}\"{nl}  Source: {x['source_url']}")
+        else:
+            out.append(f"- {x['reading']}: Unresolved ({x['reason']})")
+    return nl.join(out) + nl + r["note"]
 
 
 if __name__ == "__main__":

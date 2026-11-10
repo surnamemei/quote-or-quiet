@@ -37,7 +37,7 @@ It is the frozen system from the paper, one question at a time: web pages (free-
 | `qoq_core.py` | project environment | the pipeline for one question |
 | `qoq_service.py` | project environment | local HTTP service on 127.0.0.1:18100 |
 | `qoq_mcp.py` | free-search-mcp environment (MCP SDK 2.x) | MCP server: web search, then asks the service |
-| `start_service.sh` / `stop_service.sh` | Git Bash | start or stop the 4B server (port 18000), Ollama with Phi-4 (11535) and the service |
+| `start_service.sh` / `stop_service.sh` | Git Bash | start or stop the 4B server (port 18000), Ollama with Phi-4 (11540) and the service |
 
 The two environments are kept apart because the MCP SDK lives in the free-search-mcp environment and the models in the project one; no extra installation is needed.
 
@@ -56,3 +56,16 @@ The two environments are kept apart because the MCP SDK lives in the free-search
 ## Differences from the paper's runs
 - The generation server's memory cap is 45% of the card here (68% in the batch runs); generation is greedy, so answers do not change, only batch size.
 - Search results for a new question are fetched live; a question asked before reuses the cached URL list.
+
+
+## Additions after the S42 to S47 experiments (paper sections 5.10 to 5.13)
+Three changes, all in `qoq_extra.py` and wired into the service and the MCP server. They were self-tested end to end on 2026-11-10 (`tool/selftest.sh`, log in `tool/selftest.log`); that test shows the code runs, not accuracy. The accuracy figures are those of the paper's experiments, which used the same code and thresholds except where stated.
+
+| tool | input | output | measured in the paper |
+|---|---|---|---|
+| `quote_or_quiet` (changed) | a short question | Verified with a quote that states the answer, or Unresolved. For the seven templated relations (birth year and place, death year, director, author, capital, head of government in a year) the quote is chosen by rule W1: the first sentence of a pinned page that passes a frame check, a subject link and a quote-only reader; if no sentence does, Unresolved. For other questions the old best-sentence quote is shown with `quote_checked: false` | 0.20% of 1,017 quotes misleading (upper bound 0.71%), coverage about 3.5 points lower (section 5.11) |
+| `quote_or_quiet_bio` (new) | a person's exact page title | a list of claims, each with a sentence of the person's own page that states it; claims without one are left out | with drafts written from the page: 61% of claims kept, 1 of 400 false and 1 of 400 quotes not stating the claim (section 5.12) |
+| `quote_or_quiet_readings` (new) | a name and a relation (director, birth_year, birth_place, death_year, author) | one answer per page that bears the name, each with its quote | 250 readings, none false or misleading (section 5.13) |
+
+Differences from the tested rules, so that the paper's numbers are not claimed for them: (1) W1 here also requires the quote to be a sentence, not a table row, heading or list line (the test did not; this is stricter and its coverage cost was not measured; with it the tool returns Unresolved for 'who was the head of government of Saudi Arabia in 1933', whose only quote was a row of a list of Italian ambassadors); (2) in `bio` the swapped value of the control comes from another claim of the same biography, or a fixed value of the same type, instead of another subject's claim; (3) the Ollama port is 11540 (Windows now reserves 11437 to 11536).
+Known gap: the local Wikipedia top five for a question does not always contain the person's own page (for 'In what year was Tina Fey born?' it held a list page, so the answer is Unresolved); the tool then says nothing instead of quoting a list line.

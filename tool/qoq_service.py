@@ -1,5 +1,5 @@
 """Local HTTP service for Quote or Quiet (main project environment). POST /answer {"question": "..."} -> JSON result of qoq_core.answer.
-Needs the 4B generation server on 127.0.0.1:18000 and Ollama with phi4 on VKG_OLLAMA_URL (default 127.0.0.1:11535); see tool/README.md.
+Needs the 4B generation server on 127.0.0.1:18000 and Ollama with phi4 on VKG_OLLAMA_URL (default 127.0.0.1:11540); see tool/README.md.
 python -B tool/qoq_service.py [port=18100]"""
 import json
 import sys
@@ -9,18 +9,27 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import qoq_core  # noqa: E402
+import qoq_extra  # noqa: E402
 
 LOCK = threading.Lock()     # one question at a time (GPU memory)
 
 
 class H(BaseHTTPRequestHandler):
     def do_POST(self):
-        if self.path != "/answer":
+        if self.path not in ("/answer", "/bio", "/readings"):
             self.send_error(404); return
-        q = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}").get("question", "").strip()
+        req = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
+        q = (req.get("question") or req.get("name") or "").strip()
         try:
             with LOCK:
-                res = qoq_core.answer(q) if q else {"status": "Unresolved", "reason": "empty question"}
+                if not q:
+                    res = {"status": "Unresolved", "reason": "empty input"}
+                elif self.path == "/bio":
+                    res = qoq_extra.bio(q)
+                elif self.path == "/readings":
+                    res = qoq_extra.readings(q, req.get("relation", "birth_year"))
+                else:
+                    res = qoq_core.answer(q)
             code = 200
         except Exception as ex:                       # never invent an answer on failure
             res, code = {"status": "Unresolved", "reason": f"pipeline error: {type(ex).__name__}: {ex}"}, 500

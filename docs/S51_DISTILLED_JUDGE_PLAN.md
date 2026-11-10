@@ -13,7 +13,7 @@ share the Wikipedia domain; the test questions are disjoint from the training qu
 
 ## Result (22:04; results/runs/s51/D_result.md; local data only)
 
-Table: 4,714 rows, 4,595 with agreed labels ('states' 3,635, 'incomplete' 311, 'not' 649). Training 3,656 rows, test 939 rows (153 questions groups hash mod 5 = 0 removed from training), 'states' share of the test 80.1%.
+Table: 4,714 rows, 4,595 with agreed labels ('states' 3,635, 'incomplete' 311, 'not' 649). Training 3,656 rows, test 939 rows (questions whose group hash mod 5 = 0, removed from training), 'states' share of the test 80.1%.
 Training took 253 s on the GPU (LoRA on the 0.6B embedding model).
 
 | Judge | AUROC | Accepted, and not 'states' among accepted |

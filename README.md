@@ -41,7 +41,7 @@ A quote that exists on its page can still fail to state the answer, and then a p
 | open questions, no relation frames (rule R) | sentence quote, question numbers present, quote-only judge with a swapped-answer control | SimpleQA-style: 1.0% misleading (3.7%) against 11.3% for the displayed quote, withholds 35%. Natural Mintaka questions: failed, 24.0% misleading (30.6%) against 43.0% displayed; a small judge trained on reviewer labels gave 5.2% (10.0%) there |
 | web pages that are not Wikipedia | rule R unchanged | 3.8% misleading (7.3%) against 11.3%; predictions failed |
 | two-hop questions (birth place, country) | two checked quotes and a same-place check | 1 of 55 chains misleading, none false (pilot, 71 items, wide bounds) |
-| a small judge | 0.6B model trained on 4,595 reviewer labels | AUROC 0.988 on held-out questions; 2.6% not 'states' among accepted against 8.8% for the prompted 4B judge; AUROC 0.897 on the Mintaka rows it never saw |
+| a small judge | 0.6B model trained on 4,595 reviewer labels | AUROC 0.988 on held-out questions; 2.6% not 'states' among accepted against 8.8% for the prompted 4B judge; AUROC 0.897 on the Mintaka rows it never saw; a 27B prompted judge did better still (1.1% on held-out rows, 1.9% on the Mintaka rows) |
 
 What these numbers are not: they are not rates of false answers (the reviewers judge whether the quote says it), the reviewers are language models, most rows come from design data, and the page can be out of date (August 2025 snapshot).
 Every plan and prediction is written before the run and dated in `docs/` (`S42_CLAIM_AUDIT_AND_PLAN.md`, `S43_LONGFORM_AND_AMBIGUITY_PLAN.md`, `S48` to `S51`); failed predictions are marked as failed.

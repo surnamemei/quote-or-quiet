@@ -13,5 +13,7 @@ call bio '{"name":"Tina Fey"}'
 call answer '{"question":"In what year was Tina Fey born?"}'
 call answer '{"question":"Who was the head of government of Saudi Arabia in 1933?"}'
 call answer '{"question":"In what year did Albert Einstein die?"}'
+call answer '{"question":"Who was the doctoral advisor of Andreas Speiser?"}'
+call answer '{"question":"What year was the first MBTI manual published?"}'
 bash tool/stop_service.sh >> $LOG 2>&1
 echo "SELFTEST_DONE $(date)" >> $LOG

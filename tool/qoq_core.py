@@ -63,12 +63,12 @@ def answer(question):
     doc, quote, sha = rec["doc"], ctx.strip()[:400], rec["doc_sha256"]
     quote_checked = False
     import qoq_extra as X
-    w = X.witness(question, str(rel), wiki["titles"])      # rule W1 (docs/S42): for the seven templated relations the shown quote must state the answer
+    w = X.witness(question, str(rel), wiki["titles"])      # rule W1 (docs/S42) for the seven templated relations, rule R (docs/S48) for any other question: the shown quote must state the answer
     if isinstance(w, dict):
         doc, quote, sha, quote_checked = w["doc"], w["quote"], w["sha"], True
     elif w is None:
         return {**base, "status": "Unresolved", "candidate": str(rel), "reason": "the answer is on a pinned page but no sentence of it states the answer to this question (rule W1)", "seconds": round(time.time() - t0, 1)}
-    else:                                        # not a templated question: no frame check exists; show the best supporting sentence and say that it was not checked
+    else:                                        # not reachable since rule R handles untemplated questions; kept as a fallback
         best = _support_sentence(question, str(rel), [rec["doc"]] + [t for t in wiki["titles"] if t != rec["doc"]])
         if best:
             doc, quote, sha = best

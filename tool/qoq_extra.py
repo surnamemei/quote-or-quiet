@@ -111,10 +111,10 @@ def relation_of(question):
 # ---------------------------------------------------------------- rule W1 (short answers)
 def witness(question, answer, titles, rel=None):
     """Returns {'doc','quote','sha','span'} for the first accepted span whose sentence passes F, S and the quote-only reader, or None.
-    Returns 'untemplated' when the question is not one of the seven templated relations (no frame check exists for it)."""
+    A question that is not one of the seven templated relations goes to witness_free (rule R of S48)."""
     rel = rel or relation_of(question)
     if rel is None:
-        return "untemplated"
+        return witness_free(question, answer, titles)
     cands = []
     for d in titles:
         text = LW.page_text(d)
@@ -139,6 +139,53 @@ def witness(question, answer, titles, rel=None):
     for c, o in zip(pick, outs):
         g = _said(parse(o[0]))
         if g and agree(str(answer), g):
+            return c
+    return None
+
+
+SHAPE_POOL = {"year": ["1912", "1987", "1956"], "number": ["7", "23", "112"], "phrase": ["the United States", "John Smith", "Paris"]}
+
+
+def _shape(a):
+    a = str(a).strip()
+    if re.fullmatch(r"1[0-9]{3}|20[0-9]{2}", a):
+        return "year"
+    return "number" if re.fullmatch(r"[\d,.]+", a) else "phrase"
+
+
+def witness_free(question, answer, titles):
+    """Rule R of S48 (docs/S48_RELATION_FREE_PLAN.md), for any question: the first accepted span whose quote is a sentence, holds every number, year and ordinal
+    word of the question, and which the quote-only 4B judge accepts for the answer and rejects for a swapped answer of the same shape. None if there is none."""
+    nm = [w for w in E7L.toks(question) if re.fullmatch(r"\d+(st|nd|rd|th)?", w) or w in ORD]
+    cands = []
+    for d in titles:
+        text = LW.page_text(d)
+        if not text:
+            continue
+        h = V.doc_hash(text)
+        for k, (i, j) in enumerate(V.locate(str(answer), text)):
+            if len(cands) >= 30 or k >= 600:
+                break
+            ok, _ = V.verify(question, {"answer": str(answer), "doc": d, "doc_sha256": h, "start": i, "end": j}, LW.page_text)
+            if ok:
+                ok, _ = C.extra(question, text, i, j)
+            if not ok:
+                continue
+            q, o1, o2 = _window(text, i, j); qt = set(E7L.toks(q))
+            if q.lstrip().startswith(("#", "-", "*", "|", "=")) or len(q) < 40 or not all(w in qt or re.sub(r"\D", "", w) in qt for w in nm):
+                continue
+            sw = next((x for x in SHAPE_POOL[_shape(answer)] if x.casefold() not in q.casefold() and x.casefold() != str(answer).casefold()), None)
+            if sw:
+                cands.append({"doc": d, "quote": q, "span": text[i:j], "sha": h, "swap": sw})
+    cands = cands[:6]
+    if not cands:
+        return None
+    prompts = []
+    for c in cands:
+        prompts += [JP.format(t=c["doc"], s=c["quote"], q=question, a=answer), JP.format(t=c["doc"], s=c["quote"], q=question, a=c["swap"])]
+    outs = [str(o[0]).strip().upper() for o in pod.gen(prompts, 4)]
+    for n, c in enumerate(cands):
+        if outs[2 * n].startswith("YES") and not outs[2 * n + 1].startswith("YES"):
             return c
     return None
 

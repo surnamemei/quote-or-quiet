@@ -1,4 +1,4 @@
-# S46 part B: one answer per reading of an ambiguous name (rule W1 per reading page)
+# S57 gate G5: one answer per reading on 150 new ambiguous names (rule W1 per reading page)
 
 Decoys misleading or false for both reviewers: 30/30 (VALID).
 

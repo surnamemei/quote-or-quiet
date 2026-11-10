@@ -62,10 +62,12 @@ def answer(question):
     ctx = text[max(0, text.rfind("\n", 0, i) + 1):(text.find("\n", j) if text.find("\n", j) != -1 else len(text))]
     doc, quote, sha = rec["doc"], ctx.strip()[:400], rec["doc_sha256"]
     quote_checked = False
+    quote_rule = None
     import qoq_extra as X
     w = X.witness(question, str(rel), wiki["titles"])      # rule W1 (docs/S42) for the seven templated relations, rule R (docs/S48) for any other question: the shown quote must state the answer
     if isinstance(w, dict):
         doc, quote, sha, quote_checked = w["doc"], w["quote"], w["sha"], True
+        quote_rule = "W1" if X.relation_of(question) else "R"      # R held on SimpleQA-style questions (1.0% misleading) and failed on natural Mintaka questions (24%)
     elif w is None:
         return {**base, "status": "Unresolved", "candidate": str(rel), "reason": "the answer is on a pinned page but no sentence of it states the answer to this question (rule W1)", "seconds": round(time.time() - t0, 1)}
     else:                                        # not reachable since rule R handles untemplated questions; kept as a fallback
@@ -73,7 +75,7 @@ def answer(question):
         if best:
             doc, quote, sha = best
     return {**base, "status": "Verified", "answer": str(rel), "quote": quote, "span": rec["span"], "gate_page": rec["doc"], "gate_context": ctx.strip()[:400],
-            "quote_checked": quote_checked, "source_title": doc, "source_url": "https://en.wikipedia.org/wiki/" + doc.replace(" ", "_"), "snapshot": "FineWiki, English Wikipedia, August 2025",
+            "quote_checked": quote_checked, "quote_rule": quote_rule, "source_title": doc, "source_url": "https://en.wikipedia.org/wiki/" + doc.replace(" ", "_"), "snapshot": "FineWiki, English Wikipedia, August 2025",
             "page_sha256": sha, "second_reader": p, "seconds": round(time.time() - t0, 1)}
 
 

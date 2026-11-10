@@ -18,7 +18,7 @@ D. **Distilled judge and labels.** About 4,500 two-reviewer labels of 'does this
 
 ## A in detail (frozen now)
 
-Input: the 601 releases of the frozen system on FRESH-5 (results/runs/s22/fresh5_releases.jsonl, source s19), question, answer, local Wikipedia titles.
+Input: 601 releases on FRESH-5 (the part of the later combination rule, with its format gate, that comes from the frozen system; the frozen system itself released 568) (results/runs/s22/fresh5_releases.jsonl, source s19), question, answer, local Wikipedia titles.
 Candidates: every span the gate accepts (same code as S42 E7), at most 30 per item; each with its sentence window (at most 300 characters).
 Rule R (no relation frames, no training): the first candidate in page order such that (1) the quote is a sentence (not a table row, heading or list
 line; at least 40 characters), (2) every number, year and ordinal word of the question occurs in the quote, (3) the 4B judge, shown only the page
@@ -36,7 +36,7 @@ single-sentence witnesses. FRESH-5 is design data (used in S22 to S25); a sealed
 
 ## Result A (run 20:08 to 20:11; results/runs/s48/A_result.md; design data)
 
-601 releases of the frozen system on FRESH-5. Rule R kept a witness for 394 of 601 (65.6%); in the random 300 that were reviewed it kept 195 (65.0%).
+601 releases on FRESH-5 (the S19 part of the combination rule with the format gate, not the 568 frozen releases). Rule R kept a witness for 394 of 601 (65.6%); in the random 300 that were reviewed it kept 195 (65.0%).
 The judge said YES to a swapped answer for 1 of 864 candidates (0.12%). Blind quote-only review of 360 rows (300 frozen display quotes, 30 witnesses
 of rule R that differ from them, 30 decoys, two of which drew the same release as another decoy, so 28 distinct decoys, all 28 caught by both reviewers). The truth verdict planned for the review was not collected: the answers of FRESH-5 were audited against the facts in S22, and this test is about the quote:
 

@@ -3,7 +3,7 @@
 Limit to remove: the corpus is Wikipedia. The method does not use anything specific to it: a stored page, a sentence of that page, a quote-only reader. Test:
 the same frozen rule R (docs/S48_RELATION_FREE_PLAN.md, unchanged) on web pages that are not Wikipedia, which are messier (navigation text, lists, comments,
 repeated names).
-Data: the 601 FRESH-5 releases of the frozen system. For each, the pages the system fetched (cached text, pinned by its sha-256 here), excluding Wikipedia
+Data: the 601 FRESH-5 releases of the S19 part of the combination rule with the format gate (the frozen system released 568). For each, the pages the system fetched (cached text, pinned by its sha-256 here), excluding Wikipedia
 and its mirrors (domains containing 'wiki', explained.today, alchetron, grokipedia, dbpedia, kiddle, britannica), that contain the released answer as a whole
 word (up to 10 occurrences per page, 20 per release). 475 releases have at least one such page (1,184 pages). No gate, no typing: any occurrence is a candidate.
 The page 'title' shown to the judge and the reviewers is the domain name (cached text has no title).

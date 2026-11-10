@@ -217,3 +217,34 @@ row and to judge as of 10 November 2026): wrong for both 0 of 100 (97.5% upper 3
 name given where the common name is meant, a job title that was out of date (the person has retired), and a film year that differs between two
 sources (1967 and 1968). All three are of the kinds in limits (2) and the 'unsure source' cases; none is a claim the page contradicts.
 
+## Note on part B (E9), 2026-11-10 18:49, before any E9 verdict exists
+The first E9 run produced no witness for any film reading: the gate check V4 rejects an answer when the page title names a year that is not in the
+question, and the question was the bare 'Who directed the film Heat?'. That is the check working as designed, and it is the mechanism of the
+method: a reading is asked about with its own title ('Who directed the film Heat (1986 film)?'). The film questions are therefore put to each
+reading with its title and qualifier; person questions are unchanged. Everything else (readers, rule W1, sheet) is as planned. The first run's
+reader step (273 of 280 readings answered) is discarded and re-run with the new questions.
+Disclosure: the person readings of the first run were scored before this note (114 of 138 readings with a witness, 49 questions with two or more witnessed readings, 36 of them with different answers), so the predictions below for persons are informed by that run; the film readings are new. Predictions (fixed now, for the re-run): readings with a witness 60 to 85% of readings; quote 'states' for both reviewers at least 90%; false
+for both reviewers at most 3%; among questions with two or more witnessed readings, at least 60% have different answers for different readings.
+
+## Result, part B (E9; 19:04; results/runs/s46/E9_result.md)
+
+120 questions with ambiguous names (60 films with two or more films of that name, 60 people with two or more people of that name; up to four
+readings each, the longest pages), 280 readings. Each reading was asked with its own title; the 4B reader answered from its page, the answer
+had to pass the gate and rule W1 (frame check, subject link, quote-only reader). 250 of 280 readings (89.3%) kept an answer with a witness
+(films 136 of 142, 95.8%; people 114 of 138, 82.6%). Questions with two or more witnessed readings: films 56 of 60, people 49 of 60; of these,
+52 and 36 have different answers for different readings (92.9% and 73.5%; 88 of 105 together, 83.8%). Blind review of 270 rows (250 readings and
+20 decoys, answer swapped for another reading's answer; decoys 20 of 20; four reviewers, each had to look rows up):
+
+| Rows | n | answer false for both | quote misleading for both | quote 'states' for both |
+|---|---|---|---|---|
+| All readings with a witness | 250 | 0 (upper 1.5%) | 0 (upper 1.5%) | 250 (100%) |
+| Films (director) | 136 | 0 (upper 2.7%) | 0 | 136 |
+| People (birth year) | 114 | 0 (upper 3.2%) | 0 | 114 |
+
+Predictions: readings with a witness 60 to 85%: EXCEEDED (89.3%; not a failure of the check, a wrong guess about coverage). Quote 'states' at
+least 90%: met (100%). False at most 3%: met (0%, upper 1.5%). At least 60% of questions with two or more witnessed readings have different
+answers: met (83.8%). The task is the easy end: templated relations, one kind of page per name, the reading is named by the page title, and
+which reading the user meant is not decided (all are listed). The result shows that a name that several things share can be answered reading
+by reading, each with its own quote, without a wrong or misleading answer in this set; it does not show how often the intended reading is in
+the list for natural questions, nor ambiguity across kinds (a film and a song with one name).
+

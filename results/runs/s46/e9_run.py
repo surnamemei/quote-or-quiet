@@ -79,7 +79,12 @@ def window(text, i, j):
     return text[a:b], i - a, j - a
 
 
-R = [(x, t) for x in items for t in x["readings"]]
+def reading_q(x, t):
+    """The question as it is asked of one reading: for films the title with its qualifier (so that the year in the title is in the question, as gate check V4 requires)."""
+    return f"Who directed the film {t}?" if x["relation"] == "director" else x["question"]
+
+
+R = [(dict(x, question=reading_q(x, t)), t) for x in items for t in x["readings"]]
 t0 = time.time()
 # stage A: reader answers from the reading page
 pa = []
@@ -91,7 +96,7 @@ res = []
 for n, (x, t) in enumerate(R):
     a1, a2 = parse(oa[2 * n]), parse(oa[2 * n + 1])
     a = a1 if (ans(a1) and ans(a2) and agree(a1, a2)) else None
-    res.append({"id": x["id"], "reading": t, "answer": a and str(a1).strip()})
+    res.append({"id": x["id"], "reading": t, "question": x["question"], "answer": a and str(a1).strip()})
 print("answered readings", sum(bool(r["answer"]) for r in res), "of", len(res), f"{time.time()-t0:.0f}s", flush=True)
 # stage B: candidates (accepted spans) and the quote-only reader checks
 rng = random.Random(4602)

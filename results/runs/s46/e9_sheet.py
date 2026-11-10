@@ -39,11 +39,11 @@ for x in items.values():
 print(dict(tot))
 W = [r for r in res if r["k"] is not None]
 rng = random.Random(4603)
-rows = [dict(kind="reading", r=r, q=items[r["id"]]["question"], a=r["answer"]) for r in W]
+rows = [dict(kind="reading", r=r, q=r["question"], a=r["answer"]) for r in W]
 for _ in range(20):
     r = rng.choice(W); rel = items[r["id"]]["relation"]
     pool = [y["answer"] for y in W if items[y["id"]]["relation"] == rel and not agree(y["answer"], r["answer"])]
-    rows.append(dict(kind="decoy", r=r, q=items[r["id"]]["question"], a=rng.choice(pool)))
+    rows.append(dict(kind="decoy", r=r, q=r["question"], a=rng.choice(pool)))
 rng.shuffle(rows)
 P = 2; key = {}
 for p in range(P):

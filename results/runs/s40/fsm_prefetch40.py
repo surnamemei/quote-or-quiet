@@ -43,7 +43,8 @@ async def main(which):
                 print("stopped after repeated failures (bot checks are never bypassed)"); break
         if (n_ok + n_err) % 25 == 0:
             print(n_ok, n_err, f"{time.time()-t0:.0f}s", flush=True)
-        await asyncio.sleep(float(__import__("os").environ.get("FSM_GAP", "2")))
+        rng = __import__("os").environ.get("FSM_GAP_RANGE")        # "lo,hi": random gap in seconds between queries
+        await asyncio.sleep(__import__("random").uniform(*map(float, rng.split(","))) if rng else float(__import__("os").environ.get("FSM_GAP", "2")))
     print("done", which, "ok", n_ok, "errors", n_err, f"{time.time()-t0:.0f}s")
 
 asyncio.run(main(sys.argv[1]))

@@ -8,3 +8,10 @@ Order of work. GPU jobs run one at a time under the shared lock; reviewer rounds
 4. G12 (people check the reviewers; CPU now): refresh the human audit sheet so that it covers the kinds of verdict the gates now rest on (quote states the answer; attribution on contested topics; long-form claims), 180 rows, Chinese and English instructions, no answer key in the folder; the gate needs two people.
 5. Tool v2 (after G15; design first): the service still uses the 4B judge for rule R. Put the validated 27B rules in: R27 for open questions (G3, G11), Q2 for natural-question coverage (G4, if it passes), W4-27 for /bio (G8), A3 for a new /views endpoint (G9, G10), the G14 check for drafts of any model (/check). Memory: the 27B (about 20 GB) cannot sit beside the 4B server and Phi-4 with the desktop's share, so v2 loads models in turn (readers, then the judge) or drops Phi-4 where a rule does not use it. After v2: rerun G15 on v2 (registered as a second stress test).
 6. Paper and release after each result: tracker, sections, abstract, release push.
+
+## Phase 2 (G12 stays open for now; G16 needs an outside person)
+7. Cross-family reviewer check (not counted for G12): Gemma 3 12B or Mistral Nemo re-reviews a sample of every gate's sheets with the same instructions; agreement with the Claude reviewers is reported per gate.
+8. Judge robustness: G3, G11 and G14 rerun once, registered, with another judge family in place of the 27B Qwen (e.g. Gemma 3 12B).
+9. Paper pass to version 0.5: structure around the gates and the tracker, every number checked against its result file, an anti-defensive style pass.
+10. Release cleanup: README with the tracker table, tool v2 documentation and limits, a fresh-clone check against docs/REPLICATION.md.
+11. New scope (user permission given 2026-11-12, "feel free to do that"; download of the Chinese Wikipedia snapshot): the quote check on Chinese questions, as a new gate.

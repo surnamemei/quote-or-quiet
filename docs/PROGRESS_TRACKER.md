@@ -20,7 +20,7 @@ Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson up
 | Gate | Area | T (threshold) | N (minimum sample) | T N V | Now | Evidence |
 |---|---|---|---|---|---|---|
 | G3 | Natural questions: shown quote does not state the answer | upper bound <=3% | >=250 reviewed releases | YYY | S57: R27 on 705 unseen Mintaka releases: 2 of 367 witnesses misleading (0.5%, upper 2.0%), decoys 30 of 30; 52.1% of releases kept | docs/S57_G3_NATURAL_QUESTIONS_PLAN.md |
-| G4 | Natural questions: released answer wrong at usable coverage | upper bound <1% at coverage >=35% | >=1000 sealed questions | --- | Mintaka and PopQA missed the 35% coverage floor (Section 5.9) | paper/manuscript.md 5.9 |
+| G4 | Natural questions: released answer wrong at usable coverage | upper bound <1% at coverage >=35% | >=1000 sealed questions | --- | frozen system 31.0% coverage on Mintaka; rule Q2 (quote-first, 27B witness, two readers agree) designed on spent data: 35.8% and 36.3% coverage, few real errors by hand; sealed test of 1,200 questions registered (S58), running | docs/S58_G4_PLAN.md |
 | G5 | Ambiguous names: false answer or misleading quote per reading | upper bound <=3% | >=250 readings | YYY | S57: 150 new ambiguous names, 315 readings with a witness: 0 misleading (upper 1.2%), 2 of 309 wrong by look-up (upper 2.3%), decoys 30 of 30 and 20 of 20 | docs/S57_G5_AMBIGUITY_PLAN.md |
 | G6 | Two-hop questions: quote chain misleading or answer wrong | upper bound <=3% | >=150 reviewed chains | YYY | S57: C2' on 1,400 fresh persons: 0 of 209 accepted chains misleading or wrong (upper 1.7%), decoys 58 of 60; birth place to country only | docs/S57_G6_CHAINS_PLAN.md |
 

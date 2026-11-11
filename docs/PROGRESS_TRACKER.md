@@ -1,7 +1,7 @@
 # Progress tracker (2026-11-11)
 
 ```
-Overall [###########################.............] 32/48 (67%)
+Overall [############################............] 33/48 (69%)
 ```
 
 Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson upper bound of the gate's error share is at or below the threshold. N: the evaluated sample has at least the minimum size. V: the test was registered with predictions before it ran, on data not used in the design, with decoy checks valid (at least 27 of 30 decoys caught). A criterion counts only when met in full. Progress = criteria met / all criteria. The bar is full at 48 of 48.
@@ -33,12 +33,12 @@ Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson up
 | G10 | Contested topics: view moved to another party or reversed | upper bound <=3% by an independent check with valid decoys | >=250 checked statements | YYY | S63: 2 of 300 credited to another party or reversed (upper 2.4%); decoys with specific named parties 30 of 30 (a first decoy set with generic parties was invalid) | docs/S63_G9_G10_PLAN.md |
 | G11 | Pages that are not Wikipedia: shown quote does not state the answer | upper bound <=3% | >=250 reviewed releases | YYY | S61: R27 on non-Wikipedia pages of 705 Mintaka releases: 1 of 523 witnesses misleading (upper 1.1%), decoys 30 of 30; rule R with the 4B judge had 3.8% (S49) | docs/S61_G11_WEB_PLAN.md |
 
-## Stage 3: independent validity: [#######.............] 2/6 (33%)
+## Stage 3: independent validity: [##########..........] 3/6 (50%)
 
 | Gate | Area | T (threshold) | N (minimum sample) | T N V | Now | Evidence |
 |---|---|---|---|---|---|---|
 | G12 | Reviewers: people agree with the reviewers (the checks above are by language models) | kappa >=0.8 and >=90% of 'not' rows also 'not' by people | >=180 rows, 2 people | --- | open; a third language-model reviewer gave kappa 0.76 to 0.81 and 96.2% on 'not' rows, which does not count | results/runs/s54/Audit_external_result.md |
-| G13 | Baselines: the quote rule beats the standard checkers on held-out rows | lower misleading share than every baseline at equal acceptance | >=900 held-out rows | YY- | better than MiniCheck-Flan-T5-Large; HHEM and AlignScore not run | results/runs/s54/MiniCheck_result.md |
+| G13 | Baselines: the quote rule beats the standard checkers on held-out rows | lower misleading share than every baseline at equal acceptance | >=900 held-out rows | YYY | S64: at equal acceptance the 27B judge lets through fewer not-stating quotes than MiniCheck and HHEM (held-out 1.1% vs 3.1%/4.3%; Mintaka 1.9% vs 7.4%/9.9%; registered confirmatory set 0.4% vs 3.0%/2.1%); AlignScore not run (pickle) | docs/S64_G13_BASELINES_PLAN.md |
 
 ## Stage 4: apply to existing models: [....................] 0/9 (0%)
 

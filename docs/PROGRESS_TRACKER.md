@@ -1,7 +1,7 @@
 # Progress tracker (2026-11-11)
 
 ```
-Overall [############################............] 33/48 (69%)
+Overall [##############################..........] 36/48 (75%)
 ```
 
 Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson upper bound of the gate's error share is at or below the threshold. N: the evaluated sample has at least the minimum size. V: the test was registered with predictions before it ran, on data not used in the design, with decoy checks valid (at least 27 of 30 decoys caught). A criterion counts only when met in full. Progress = criteria met / all criteria. The bar is full at 48 of 48.
@@ -40,10 +40,10 @@ Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson up
 | G12 | Reviewers: people agree with the reviewers (the checks above are by language models) | kappa >=0.8 and >=90% of 'not' rows also 'not' by people | >=180 rows, 2 people | --- | open; a third language-model reviewer gave kappa 0.76 to 0.81 and 96.2% on 'not' rows, which does not count | results/runs/s54/Audit_external_result.md |
 | G13 | Baselines: the quote rule beats the standard checkers on held-out rows | lower misleading share than every baseline at equal acceptance | >=900 held-out rows | YYY | S64: at equal acceptance the 27B judge lets through fewer not-stating quotes than MiniCheck and HHEM (held-out 1.1% vs 3.1%/4.3%; Mintaka 1.9% vs 7.4%/9.9%; registered confirmatory set 0.4% vs 3.0%/2.1%); AlignScore not run (pickle) | docs/S64_G13_BASELINES_PLAN.md |
 
-## Stage 4: apply to existing models: [....................] 0/9 (0%)
+## Stage 4: apply to existing models: [#######.............] 3/9 (33%)
 
 | Gate | Area | T (threshold) | N (minimum sample) | T N V | Now | Evidence |
 |---|---|---|---|---|---|---|
-| G14 | Applied to other models: drafts of 3 or more different models | upper bound <=3% quote and <1% answer for each model | >=250 releases per model, sealed | --- | only Phi-4 and Qwen drafts tested | tool/README.md |
+| G14 | Applied to other models: drafts of 3 or more different models | upper bound <=3% quote and <1% answer for each model | >=250 releases per model, sealed | YYY | S65: the quote check after Llama 3.1 8B, Gemma 3 12B, Mistral Nemo 12B on 2,001 sealed PopQA questions: drafts 52 to 68% wrong; released 305 to 330 answers each with 0 errors after a look-up truth check (bound 0.18%) and 0.3 to 1.0% misleading quotes (upper bounds 1.8 to 2.9%) | docs/S65_G14_OTHER_MODELS_PLAN.md |
 | G15 | Tool stress test | 0 releases without a machine-checked quote in the run | >=1000 mixed queries | --- | selftest only | tool/selftest.sh |
 | G16 | Replication by someone else | headline numbers reproduced within the intervals | >=1 independent run of the release | --- | not done |  |

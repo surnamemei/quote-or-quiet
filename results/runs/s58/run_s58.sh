@@ -14,7 +14,16 @@ trap cleanup EXIT
 start_ollama() { if ! netstat -ano | grep -q "127.0.0.1:11540 .*LISTEN"; then powershell -c "\$env:OLLAMA_MODELS='F:\Projects\AI hallucinations\models\ollama_store'; \$env:OLLAMA_HOST='127.0.0.1:11540'; \$env:OLLAMA_CONTEXT_LENGTH='32768'; \$env:OLLAMA_NUM_PARALLEL='2'; \$env:OLLAMA_MAX_LOADED_MODELS='1'; Start-Process -WindowStyle Hidden -FilePath 'C:\Users\mei\AppData\Local\Programs\Ollama\ollama.exe' -ArgumentList 'serve'" > /dev/null 2>&1; for t in $(seq 1 30); do curl -s -m 3 localhost:11540/api/tags > /dev/null && break; sleep 5; done; fi; }
 start_podgen() { if ! netstat -ano | grep -q "127.0.0.1:18000 .*LISTEN"; then VKG_MEM_FRAC=0.68 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True nohup venv_gpu/Scripts/python.exe vkg/podgen_server.py models/qwen3-4b-instruct-2507 models/qwen3-embedding-0.6b >> results/runs/s58/podgen.log 2>&1 & for t in $(seq 1 30); do netstat -ano | grep -q "127.0.0.1:18000 .*LISTEN" && break; sleep 10; done; sleep 20; fi; }
 start_ollama
-start_podgen; python -B results/runs/s58/s58_run.py m58 gen || { echo "gen FAILED"; exit 1; }
+vram_free() { nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | awk -F', ' '{printf "%d", ($2-$1)/1024}'; }
+ok=0
+for att in 1 2 3 4 5; do
+  until [ "$(vram_free)" -ge 24 ] || netstat -ano | grep -q "127.0.0.1:18000 .*LISTEN"; do sleep 60; done
+  start_podgen
+  if python -B results/runs/s58/s58_run.py m58 gen; then ok=1; break; fi
+  echo "gen attempt $att failed $(date +%H:%M); waiting for 24 GB free VRAM"; killport 18000; sleep 120
+  until [ "$(vram_free)" -ge 24 ]; do sleep 60; done
+done
+[ $ok = 1 ] || { echo "gen FAILED"; exit 1; }
 killport 18000; sleep 10
 OLLAMA_HOST_URL=http://127.0.0.1:9 G4SET=s58 python -B results/runs/s57/g4/g4_design.py cands || { echo "cands FAILED"; exit 1; }
 start_ollama; OLLAMA_HOST_URL=http://127.0.0.1:11540 G4SET=s58 python -B results/runs/s57/g4/g4_design.py judge || { echo "judge FAILED"; exit 1; }

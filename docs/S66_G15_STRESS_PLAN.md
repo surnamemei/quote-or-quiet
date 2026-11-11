@@ -7,3 +7,5 @@ Check (results/runs/s66/g15_run.py check, independent of the service): every rel
 Also reported: HTTP 500 errors, timeouts (900 s), latency median and 95th percentile, releases on invented, hostile and opinion inputs (each is reported and inspected; a release there is not a violation if it passes the check, but is listed).
 Predictions: 0 violations; at most 1% HTTP 500 or timeouts; median latency 5 to 30 s for /answer; no release for empty or control-character inputs; releases on invented names at most 2.
 Pacing: /answer requests at least 10 s apart (live web search; bot checks are never bypassed).
+
+Note (2026-11-11 18:2x): a first G15 run started at 17:57 when the G4 run had failed; it was stopped by me (to let the G4 run go first) and its service processes were ended; responses already received are kept (the driver resumes). Inputs and checks are unchanged.

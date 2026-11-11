@@ -8,9 +8,9 @@ killport() { PID=$(netstat -ano | grep "127.0.0.1:$1 .*LISTENING" | awk '{print 
 cleanup() { killport 18000; curl -s -m 30 localhost:11540/api/generate -d '{"model":"phi4","keep_alive":0}' > /dev/null; curl -s -m 30 localhost:11540/api/generate -d '{"model":"qwen3.8-27b","keep_alive":0}' > /dev/null; killport 11540; grep -q "^$ME " $LOCK 2>/dev/null && rm -f $LOCK; }
 start_ollama() { if ! netstat -ano | grep -q "127.0.0.1:11540 .*LISTEN"; then powershell -c "\$env:OLLAMA_MODELS='F:\Projects\AI hallucinations\models\ollama_store'; \$env:OLLAMA_HOST='127.0.0.1:11540'; \$env:OLLAMA_CONTEXT_LENGTH='32768'; \$env:OLLAMA_NUM_PARALLEL='2'; \$env:OLLAMA_MAX_LOADED_MODELS='1'; Start-Process -WindowStyle Hidden -FilePath 'C:\Users\mei\AppData\Local\Programs\Ollama\ollama.exe' -ArgumentList 'serve'" > /dev/null 2>&1; for t in $(seq 1 30); do curl -s -m 3 localhost:11540/api/tags > /dev/null && break; sleep 5; done; fi; }
 
-trap cleanup EXIT
 echo "--- G15 $(date)"
 until grep -qE "G14_DONE|G14 FAILED" results/runs/s65/run_g14.log 2>/dev/null; do sleep 120; done
+until grep -qE "S58_DONE|FAILED" results/runs/s58/run_s58c.log 2>/dev/null; do sleep 120; done   # G4 (S58) first
 while true; do while [ -e $LOCK ] || ! headroom_ok; do sleep 60; done; echo "$ME $(date +%H:%M)" > $LOCK; sleep 15; grep -q "^$ME " $LOCK && break; done
 echo "lock taken $(date)"
 trap 'grep -q "^$ME " $LOCK 2>/dev/null && rm -f $LOCK; bash tool/stop_service.sh > /dev/null 2>&1' EXIT   # lock first, so that stop_service also frees the 4B server and Ollama

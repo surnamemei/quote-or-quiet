@@ -21,3 +21,7 @@ Grading: alias-aware 27B judge with the grader 6.1 veto (as S21). Adjudication o
 Primary: adjudicated errors e among the 1,200 questions; G4 T met when coverage >= 35% and the 97.5% upper bound of e/1200 is below 1% (e at most 5). N met (1,200). V met when the adjudication is valid.
 Predictions: coverage 33 to 40% (so a real chance of missing 35%); gold-wrong releases 1.2 to 3.5% of questions; adjudicated errors 2 to 6; probability of passing about one half. Secondary, reported: the frozen rule's coverage on the same questions (expected 28 to 34%), and the share of Q2 releases whose quote states the answer is not reviewed here (G3 covers it).
 A failure is reported as failed; the rule is not changed on these data.
+
+Note (2026-11-11 16:5x): the first run stopped with a CUDA out-of-memory error at the reader stage (other processes held about 21 GB at that moment); the evidence stages (web, wiki, combo) had finished and are kept. The run is resumed with the 4B server capped at 45% of the card instead of 68% (generation is greedy, so only batch size changes, as in the tool). No other change.
+
+Note (2026-11-11 18:1x): the resumed run also stopped (out of memory inside the 45% cap: one batch of long web passages needs more). The cap goes back to 68% as registered and in S40; the reader stage now waits for at least 24 GB of free memory before each of up to five attempts (cached stages are kept). No change to any rule.

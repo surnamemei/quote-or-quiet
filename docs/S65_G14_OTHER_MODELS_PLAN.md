@@ -7,3 +7,15 @@ Procedure (results/runs/s65/g14.py): each model answers closed-book (short answe
 Review per model: quotes of the releases (all, or a random 300) with 10 decoys, two blind quote-only reviewers (misleading = both 'not'); every release whose answer does not match the gold is checked for truth by two reviewers who must look it up and give a source, with 8 gold-matching releases and up to 4 decoys (another release's answer) per model mixed in; such a release counts as an error unless both reviewers judge it right.
 Predictions: each model answers 40 to 90% of questions, of which 20 to 60% are wrong against the gold; the checker releases 15 to 35% of all questions per model (so at least 250 is not certain); misleading quotes at most 1.5% (upper at most 3%); errors after the truth check at most 8 per model (upper bound below 1% needs at most about 11 of 2,001). The draft error rate among answered questions is reported for comparison.
 A failure for any model is reported; the rule is not changed on these data.
+
+## Result (2026-11-11 18:3x; results/runs/s65/G14_result.md)
+
+| model | answered | draft wrong against gold | released (of 2,001) | misleading quotes (both reviewers) | decoys | gold-wrong releases | errors after truth check | error bound, all questions |
+|---|---|---|---|---|---|---|---|---|
+| Llama 3.1 8B | 972 | 506 (52%) | 305 (15.2%) | 3 of 300 (1.0%, upper 2.9%) | 10/10 | 19 | 0 | 0.18% |
+| Gemma 3 12B | 1,485 | 1,009 (68%) | 330 (16.5%) | 1 of 300 (0.3%, upper 1.8%) | 10/10 | 25 | 0 | 0.18% |
+| Mistral Nemo 12B | 1,292 | 808 (63%) | 326 (16.3%) | 2 of 300 (0.7%, upper 2.4%) | 10/10 | 19 | 0 | 0.18% |
+
+Truth check: two reviewers looked up all 63 gold-wrong releases (and 24 gold-matching ones and 12 decoys); all 63 were judged right by both (the gold lists of PopQA miss many correct answers: other occupations, genres or capitals); decoys 12 of 12 wrong for both; gold-matching releases called wrong by both 0 of 24. Reviewer pairs agreed on 299, 309 and 300 of 310 quote verdicts with 2, 3 and 2 identical notes; the truth checkers agreed on 99 of 99, their shared notes being page short descriptions.
+Against the predictions: answered 40 to 90%: met for all three. Draft wrong 20 to 60%: met for Llama (52%), FAILED for Gemma (68%) and Mistral (63%). Released 15 to 35%: met (15.2 to 16.5%). Misleading at most 1.5%: met (1.0, 0.3, 0.7%). Errors at most 8: met (0, 0, 0).
+Gate G14: for each of the three models, misleading upper bound at most 3% (2.9, 1.8, 2.4%), error upper bound below 1% (0.18%), at least 250 releases (305, 330, 326), sealed questions, decoys valid. The gate passes. Limits: the checker uses the subject's own page given by PopQA (a retrieval step would be needed in use); it releases only about a sixth of the questions, because these models answer long-tail questions wrongly half the time or more; language-model reviewers; Llama's misleading bound (2.9%) is close to the threshold.

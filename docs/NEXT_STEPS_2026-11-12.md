@@ -18,3 +18,8 @@ Order of work. GPU jobs run one at a time under the shared lock; reviewer rounds
 
 ## Added 2026-11-12 after the G4 result (S58 failed: 7 adjudicated errors, upper 1.20%)
 4b. G4 second test, registered before any output: rule Q2 unchanged; adjudication fixed in advance on the two causes found: (a) 'answer right' (equivalent to the gold) is a clearing verdict when both adjudicators give it, as are 'gold wrong' and 'equally acceptable'; (b) the quote check also matches against the rendered page text (MediaWiki action=parse text), so that dates written with templates are found. Questions: a fresh natural-question set, since Mintaka's generic questions are used up: candidates are the NQ-open or WebQuestions test sets (public; download needed, under the user's download permission), sealed with a script that prints counts only. Runs after G15 and before tool v2.
+
+## Status 2026-11-12 morning
+- G4 first test failed (S58); G15 failed on the registered check (S66; 208 /bio values not verbatim in their quotes). Bar 40 of 48.
+- G4 second test (S68, NQ-open, 1,500 sealed) registered; prefetch running, run queued.
+- Tool v2 written (tool/qoq_v2.py: /check, /answer2, /bio2 with the shown value taken from the quote; errors return Unresolved, not HTTP 500). Next, after S68 frees the GPU: v2 self-test, then G15 second test on v2 (registered first, inputs fixed before the run), then phase 2 (items 7 to 11).

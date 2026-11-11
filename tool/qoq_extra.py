@@ -206,7 +206,7 @@ def _cw(s):
     return {w for w in E7L.toks(s) if w not in STOPW and len(w) > 2}
 
 
-def bio(name):
+def bio(name, judge=None):
     text = LW.page_text(name)
     if not text:
         return {"status": "Unresolved", "reason": f"no page titled '{name}' in the pinned Wikipedia snapshot; try readings() for ambiguous names"}
@@ -248,7 +248,7 @@ def bio(name):
             if not all(w in qt or re.sub(r"\D", "", w) in qt for w in need) or len(vw & _cw(q)) / max(1, len(vw)) < 0.75:
                 continue
             meta.append((ci, q)); prompts += [JP.format(t=name, s=q, q=c["question"], a=c["value"]), JP.format(t=name, s=q, q=c["question"], a=sw)]
-    outs = [o[0] for o in pod.gen(prompts, 4)] if prompts else []
+    outs = ([judge(p_) for p_ in prompts] if judge else [o[0] for o in pod.gen(prompts, 4)]) if prompts else []   # v2 passes the 27B judge (rule W4-27)
     kept = {}
     for n, (ci, q) in enumerate(meta):
         if ci in kept:

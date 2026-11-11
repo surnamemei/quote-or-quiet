@@ -28,6 +28,28 @@ W.CACHE.mkdir(parents=True, exist_ok=True)
 NAMES = ("web", "wiki", "combo")
 
 
+def readers_only(question):
+    """v2 helper: the frozen pipeline up to the six readers (web, wiki and combined passages; plain and cautious prompts), without any release decision."""
+    item = [{"id": "q", "question": question}]
+    try:
+        web = E.build(item, backend="ddg", k=8, max_pages=8, workers=4)["q"]
+    except Exception:                                   # a failed web search leaves the web source empty (no HTTP 500)
+        web = {"kept": [], "passage": ""}
+    wiki = E.wiki_build(item, workers=1)["q"]
+    combo = {"passage": E.combo_passage(question, web["kept"], wiki["titles"])}
+    ev = {"web": web, "wiki": wiki, "combo": combo}
+    prompts, keys = [], []
+    for s in NAMES:
+        p_ = ev[s]["passage"]
+        if p_ and len(p_) <= 60000:                     # as S68: a passage over 60,000 characters is not read
+            for k, tmpl in (("plain", PLAIN), ("cautious", CAUTIOUS)):
+                prompts.append(tmpl.format(p=p_, q=question)); keys.append(f"{s}_{k}")
+    outs = pod.gen(prompts, 40) if prompts else []
+    r = {k: None for k in S.ORDER}
+    r.update({k: parse(o[0]) for k, o in zip(keys, outs)})
+    return {"readers": {k: r[k] for k in S.ORDER}, "web_pages": web["kept"], "wiki_titles": wiki["titles"]}
+
+
 def answer(question):
     t0 = time.time()
     item = [{"id": "q", "question": question}]

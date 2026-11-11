@@ -15,3 +15,6 @@ Order of work. GPU jobs run one at a time under the shared lock; reviewer rounds
 9. Paper pass to version 0.5: structure around the gates and the tracker, every number checked against its result file, an anti-defensive style pass.
 10. Release cleanup: README with the tracker table, tool v2 documentation and limits, a fresh-clone check against docs/REPLICATION.md.
 11. New scope (user permission given 2026-11-12, "feel free to do that"; download of the Chinese Wikipedia snapshot): the quote check on Chinese questions, as a new gate.
+
+## Added 2026-11-12 after the G4 result (S58 failed: 7 adjudicated errors, upper 1.20%)
+4b. G4 second test, registered before any output: rule Q2 unchanged; adjudication fixed in advance on the two causes found: (a) 'answer right' (equivalent to the gold) is a clearing verdict when both adjudicators give it, as are 'gold wrong' and 'equally acceptable'; (b) the quote check also matches against the rendered page text (MediaWiki action=parse text), so that dates written with templates are found. Questions: a fresh natural-question set, since Mintaka's generic questions are used up: candidates are the NQ-open or WebQuestions test sets (public; download needed, under the user's download permission), sealed with a script that prints counts only. Runs after G15 and before tool v2.

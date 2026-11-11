@@ -5,3 +5,6 @@ Rule A3 (frozen now; results/runs/s63/s63_a3.py): A2 unchanged, plus YES require
 Topics: 200 new contested pages (same title filter; S56 and S62 topics excluded; seed 6301). Statements as before.
 Review: as S62 (300 random kept statements or all if fewer; up to 100 best-overlap sentences where different; 30 decoys; two blind sentence-only reviewers; verdicts states / other party / opposite / not). Change to decoys: only on witness sentences that contain all content words of the original party (and none of the replacement's), so that the sentence visibly names the original party.
 Predictions: A3 keeps 15 to 30% of statements; at least 250 kept; misleading for both at most 1.5% and other party or opposite at most 1% among reviewed kept (upper bounds at most 3%); decoys at least 27 of 30 for both measures.
+
+Note (14:4x): the first run stopped after statement generation (1,576 statements, candidates built) because of a syntax error in the attribution prompt string of s63_a3.py (a line break where 
+ was meant); the string was repaired with no change of wording and the run resumed from the parties step.

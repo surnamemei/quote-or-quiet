@@ -19,11 +19,7 @@ cw = lambda t: {w for w in re.findall(r"[a-z0-9]+", "".join(c for c in unicodeda
 yes = lambda o: str(o or "").strip().upper().startswith("YES")
 JP = ('Topic page: {t}\nSentence from that page: "{s}"\n\nStatement: {a}\n\nDoes this sentence report that the party named in the statement holds this view: the same party and the same stance, '
       "not the opposite stance and not another party's view? Reply with only YES or NO.")
-AP = ('Sentence: "{s}"
-
-Statement: {a}
-
-The statement says that a particular party holds a view. Does the sentence itself say that this same party holds, states or argues this view? '
+AP = ('Sentence: "{s}"\n\nStatement: {a}\n\nThe statement says that a particular party holds a view. Does the sentence itself say that this same party holds, states or argues this view? '
       "Answer NO if the sentence states the view as a plain fact without saying who holds it, if it names a different person or body, or if it only covers part of the view. Reply with only YES or NO.")
 load = lambda f: json.load(open(D / f, encoding="utf-8")) if (D / f).exists() else {}
 save = lambda f, o: json.dump(o, open(D / f, "w", encoding="utf-8"), ensure_ascii=False)

@@ -13,7 +13,7 @@ echo "--- A3 $(date)"
 while true; do while [ -e $LOCK ] || ! headroom_ok; do sleep 60; done; echo "$ME $(date +%H:%M)" > $LOCK; sleep 15; grep -q "^$ME " $LOCK && break; done
 echo "lock taken $(date)"
 start_ollama
-python -B $R/e12.py gen && OLLAMA_HOST_URL=http://127.0.0.1:9 python -B $R/e12.py cands || { echo "A3 FAILED gen"; exit 1; }
+[ -e $R/e12_cands.jsonl ] || { python -B $R/e12.py gen && OLLAMA_HOST_URL=http://127.0.0.1:9 python -B $R/e12.py cands || { echo "A3 FAILED gen"; exit 1; }; }
 for m in parties swap judge sheet; do python -B $R/s63_a3.py $m || { echo "A3 FAILED $m"; exit 1; }; done
 cleanup; trap - EXIT
 echo "A3_DONE $(date)"

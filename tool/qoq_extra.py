@@ -253,7 +253,8 @@ def bio(name, judge=None):
     for n, (ci, q) in enumerate(meta):
         if ci in kept:
             continue
-        if str(outs[2 * n]).strip().upper().startswith("YES") and not str(outs[2 * n + 1]).strip().upper().startswith("YES"):
+        swap_ok = str(outs[2 * n + 1]).strip().upper().startswith("NO") if judge else not str(outs[2 * n + 1]).strip().upper().startswith("YES")   # v2 (27B): the control must be an explicit NO
+        if str(outs[2 * n]).strip().upper().startswith("YES") and swap_ok:
             kept[ci] = q
     out = [{"question": claims[ci]["question"], "value": claims[ci]["value"], "quote": q, "source_title": name,
             "source_url": "https://en.wikipedia.org/wiki/" + name.replace(" ", "_"), "page_sha256": V.doc_hash(text)} for ci, q in sorted(kept.items())]

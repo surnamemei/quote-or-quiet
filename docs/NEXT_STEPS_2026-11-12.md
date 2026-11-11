@@ -23,3 +23,6 @@ Order of work. GPU jobs run one at a time under the shared lock; reviewer rounds
 - G4 first test failed (S58); G15 failed on the registered check (S66; 208 /bio values not verbatim in their quotes). Bar 40 of 48.
 - G4 second test (S68, NQ-open, 1,500 sealed) registered; prefetch running, run queued.
 - Tool v2 written (tool/qoq_v2.py: /check, /answer2, /bio2 with the shown value taken from the quote; errors return Unresolved, not HTTP 500). Next, after S68 frees the GPU: v2 self-test, then G15 second test on v2 (registered first, inputs fixed before the run), then phase 2 (items 7 to 11).
+
+## Track C (added 2026-11-12)
+Context-faithful answering from user-provided material: docs/TRACK_C_CONTEXT_FAITHFUL_PLAN.md. Starts after S68, S69 and the v2 self-test, with a diagnosis before any new method. The progress bar counts gate criteria for public-source checking; it is not a percentage of hallucination solved.

@@ -26,8 +26,14 @@ SWAP = {"phrase": ["John Smith", "Paris", "the Acme Corporation", "Brazil", "The
 TPLUS = re.compile(r"\b(this|last|next)\s+(year|season|month|week)\b|\brecent(ly)?\b|\bupcoming\b", re.I)
 
 
+def _yn(o):
+    """Strict reading of a judge reply: True for YES, False for NO, None for anything else (empty, malformed, error text)."""
+    t = str(o or "").strip().upper()
+    return True if t.startswith("YES") else False if t.startswith("NO") else None
+
+
 def _yes(o):
-    return str(o or "").strip().upper().startswith("YES")
+    return _yn(o) is True
 
 
 def judge27(prompt):
@@ -77,8 +83,8 @@ def _witness27(question, answer, titles):
             sw = _swap(answer, s["quote"])
             if not sw:
                 continue
-            if _yes(judge27(JP.format(t=t, s=s["quote"], q=question, a=answer))) and not _yes(judge27(JP.format(t=t, s=s["quote"], q=question, a=sw))):
-                return s
+            if _yn(judge27(JP.format(t=t, s=s["quote"], q=question, a=answer))) is True and _yn(judge27(JP.format(t=t, s=s["quote"], q=question, a=sw))) is False:
+                return s                                          # the swap control must be an explicit NO; an empty or malformed reply withholds
     return None
 
 

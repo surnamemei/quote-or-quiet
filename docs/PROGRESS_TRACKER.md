@@ -1,7 +1,7 @@
 # Progress tracker (2026-11-11)
 
 ```
-Overall [######################..................] 27/48 (56%)
+Overall [#########################...............] 30/48 (62%)
 ```
 
 Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson upper bound of the gate's error share is at or below the threshold. N: the evaluated sample has at least the minimum size. V: the test was registered with predictions before it ran, on data not used in the design, with decoy checks valid (at least 27 of 30 decoys caught). A criterion counts only when met in full. Progress = criteria met / all criteria. The bar is full at 48 of 48.
@@ -24,13 +24,13 @@ Each gate has three standard criteria. T: the 97.5% one-sided Clopper-Pearson up
 | G5 | Ambiguous names: false answer or misleading quote per reading | upper bound <=3% | >=250 readings | YYY | S57: 150 new ambiguous names, 315 readings with a witness: 0 misleading (upper 1.2%), 2 of 309 wrong by look-up (upper 2.3%), decoys 30 of 30 and 20 of 20 | docs/S57_G5_AMBIGUITY_PLAN.md |
 | G6 | Two-hop questions: quote chain misleading or answer wrong | upper bound <=3% | >=150 reviewed chains | YYY | S57: C2' on 1,400 fresh persons: 0 of 209 accepted chains misleading or wrong (upper 1.7%), decoys 58 of 60; birth place to country only | docs/S57_G6_CHAINS_PLAN.md |
 
-## Stage 2: new kinds of text and attribution: [############........] 7/12 (58%)
+## Stage 2: new kinds of text and attribution: [#################...] 10/12 (83%)
 
 | Gate | Area | T (threshold) | N (minimum sample) | T N V | Now | Evidence |
 |---|---|---|---|---|---|---|
 | G8 | Long-form, other kinds of text (organisations, events, science topics) | upper bound <=3% for both | >=300 reviewed claims | YYY | S60 (second test, W4 with the 27B judge, 50 fresh topic pages): 5 of 400 kept claims false (upper 2.9%), 0 misleading (upper 0.9%), decoys 30 of 30; the first test with the 4B judge (S59) failed on truth | docs/S60_G8B_PLAN.md |
-| G9 | Contested topics: shown sentence does not report the view for the stated party | upper bound <=3% | >=250 reviewed kept statements | Y-- | 0 of 135 kept (upper 2.7%); decoys 16 of 30, invalid | results/runs/s56/E12_result.md |
-| G10 | Contested topics: view moved to another party or reversed | upper bound <=3% by an independent check with valid decoys | >=250 checked statements | --- | judge accepts a moved party for 4.4% of usable cases (upper 9.4%); 81% of kept statements had no flip control before rule A2 | results/runs/s56/E12c_result.md |
+| G9 | Contested topics: shown sentence does not report the view for the stated party | upper bound <=3% | >=250 reviewed kept statements | -YY | S62 (A2, 150 new topics, registered): 25 of 300 kept statements misleading (upper 12.1%), mostly a view credited to a party the sentence does not name; decoys valid (28/30) | docs/S62_G9_G10_PLAN.md |
+| G10 | Contested topics: view moved to another party or reversed | upper bound <=3% by an independent check with valid decoys | >=250 checked statements | YY- | S62: other party or opposite for both 3 of 300 (upper 2.9%) but decoys 26 of 30 (criterion 27), so V fails | docs/S62_G9_G10_PLAN.md |
 | G11 | Pages that are not Wikipedia: shown quote does not state the answer | upper bound <=3% | >=250 reviewed releases | YYY | S61: R27 on non-Wikipedia pages of 705 Mintaka releases: 1 of 523 witnesses misleading (upper 1.1%), decoys 30 of 30; rule R with the 4B judge had 3.8% (S49) | docs/S61_G11_WEB_PLAN.md |
 
 ## Stage 3: independent validity: [#######.............] 2/6 (33%)

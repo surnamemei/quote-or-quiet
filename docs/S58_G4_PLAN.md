@@ -25,3 +25,9 @@ A failure is reported as failed; the rule is not changed on these data.
 Note (2026-11-11 16:5x): the first run stopped with a CUDA out-of-memory error at the reader stage (other processes held about 21 GB at that moment); the evidence stages (web, wiki, combo) had finished and are kept. The run is resumed with the 4B server capped at 45% of the card instead of 68% (generation is greedy, so only batch size changes, as in the tool). No other change.
 
 Note (2026-11-11 18:1x): the resumed run also stopped (out of memory inside the 45% cap: one batch of long web passages needs more). The cap goes back to 68% as registered and in S40; the reader stage now waits for at least 24 GB of free memory before each of up to five attempts (cached stages are kept). No change to any rule.
+
+Note (2026-11-11 18:1x): the third start failed the same way at 68% (the cap of the 4B server, not the card, was reached by a 24,000-token batch of long web passages). vkg/podgen_server.py now reads the batch budget from VKG_TOKENS_PER_BATCH (default 24,000 unchanged); S58 runs with 12,000. Generation is greedy, so only the grouping of prompts into batches changes. No rule changed.
+
+Note (2026-11-11 18:2x): cause of the out-of-memory stops found: 2 of the 1,200 questions had a web page without word breaks, so the word-capped web and combined passages reached 444,147 and 324,825 characters (S40 maximum 29,600). Those 4 passages (2 questions, web and combined) are blanked in the evidence files (originals kept as *.orig.json): the source abstains for these 2 questions. This can only withhold answers. The run continues from the reader stage.
+
+Note (2026-11-11, evening): stopped at the user's request after the reader stage finished (all six reader outputs saved in results/runs/s58/run_fsm); candidates, the 27B judge, grading and adjudication have not run, and nothing from them has been seen. The run can be resumed from the candidate step.

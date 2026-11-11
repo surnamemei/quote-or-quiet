@@ -10,7 +10,7 @@ start_ollama() { if ! netstat -ano | grep -q "127.0.0.1:11540 .*LISTEN"; then po
 
 echo "--- G15 $(date)"
 until grep -qE "G14_DONE|G14 FAILED" results/runs/s65/run_g14.log 2>/dev/null; do sleep 120; done
-until grep -qE "S58_DONE|FAILED" results/runs/s58/run_s58c.log 2>/dev/null; do sleep 120; done   # G4 (S58) first
+until grep -qE "S58_DONE|FAILED" results/runs/s58/run_s58e.log 2>/dev/null; do sleep 120; done   # G4 (S58) first
 while true; do while [ -e $LOCK ] || ! headroom_ok; do sleep 60; done; echo "$ME $(date +%H:%M)" > $LOCK; sleep 15; grep -q "^$ME " $LOCK && break; done
 echo "lock taken $(date)"
 trap 'grep -q "^$ME " $LOCK 2>/dev/null && rm -f $LOCK; bash tool/stop_service.sh > /dev/null 2>&1' EXIT   # lock first, so that stop_service also frees the 4B server and Ollama

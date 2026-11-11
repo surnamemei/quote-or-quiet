@@ -19,7 +19,7 @@ from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
 
 MODEL = sys.argv[1]
 EMB_MODEL = sys.argv[2] if len(sys.argv) > 2 else None
-TOKENS_PER_BATCH = 24_000
+TOKENS_PER_BATCH = int(os.environ.get("VKG_TOKENS_PER_BATCH", "24000"))   # default unchanged; S58 sets 12000 (batch grouping only, greedy output)
 EMB_TOKENS_PER_BATCH = 32_768
 # The pod GPU is shared (mini-kimi training): hard cap on this process; an OOM here is reported to the client, never spread.
 torch.cuda.set_per_process_memory_fraction(float(os.environ.get("VKG_MEM_FRAC", "0.26")))   # shared pod: 0.26; dedicated GPU: set higher

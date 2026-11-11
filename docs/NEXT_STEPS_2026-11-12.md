@@ -1,0 +1,10 @@
+# Next steps (2026-11-12, bar 36 of 48)
+
+Order of work. GPU jobs run one at a time under the shared lock; reviewer rounds start when a sheet is ready.
+
+1. G4 (S58, running): candidates, 27B judge (rule Q2), grading, adjudication sheet; then two blind reviewers adjudicate every gold-wrong release (gold shown, removing verdicts need a quote found in the page), 12 decoys and 24 gold-matching releases mixed in; unblind; record pass or fail as registered (coverage at least 35% and at most 5 adjudicated errors of 1,200).
+2. G15 (S66, queued after G4): the 1,000-request stress test of the service (about 4 to 5 hours with 10 s between web questions); independent check of every released statement; record.
+3. G16 (replication by someone else; CPU now): a replication guide in the release repository (docs/REPLICATION.md) listing, for each gate, the command that recomputes its table from the released aggregates and scripts, what needs the local models and Wikipedia snapshot, and what a replicator should send back. The gate is met only when another person reruns it.
+4. G12 (people check the reviewers; CPU now): refresh the human audit sheet so that it covers the kinds of verdict the gates now rest on (quote states the answer; attribution on contested topics; long-form claims), 180 rows, Chinese and English instructions, no answer key in the folder; the gate needs two people.
+5. Tool v2 (after G15; design first): the service still uses the 4B judge for rule R. Put the validated 27B rules in: R27 for open questions (G3, G11), Q2 for natural-question coverage (G4, if it passes), W4-27 for /bio (G8), A3 for a new /views endpoint (G9, G10), the G14 check for drafts of any model (/check). Memory: the 27B (about 20 GB) cannot sit beside the 4B server and Phi-4 with the desktop's share, so v2 loads models in turn (readers, then the judge) or drops Phi-4 where a rule does not use it. After v2: rerun G15 on v2 (registered as a second stress test).
+6. Paper and release after each result: tracker, sections, abstract, release push.

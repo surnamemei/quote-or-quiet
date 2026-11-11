@@ -9,3 +9,5 @@ Predictions: 0 violations; at most 1% HTTP 500 or timeouts; median latency 5 to 
 Pacing: /answer requests at least 10 s apart (live web search; bot checks are never bypassed).
 
 Note (2026-11-11 18:2x): a first G15 run started at 17:57 when the G4 run had failed; it was stopped by me (to let the G4 run go first) and its service processes were ended; responses already received are kept (the driver resumes). Inputs and checks are unchanged.
+
+Note (2026-11-11, evening): stopped at the user's request before the run started (no request sent).

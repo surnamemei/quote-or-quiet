@@ -3,6 +3,7 @@
 # Headroom gate and check-after-write lock as before; idle priority.
 cd "/f/Projects/AI hallucinations"
 until grep -q '^PREFETCH_COMPLETE' results/runs/s58/prefetch.log 2>/dev/null; do if grep -q '^PREFETCH_GAVE_UP' results/runs/s58/prefetch.log 2>/dev/null; then echo 'prefetch gave up'; exit 1; fi; sleep 300; done
+export VKG_TOKENS_PER_BATCH=12000   # S58: smaller generation batches (out of memory at 24000 tokens with long Mintaka web passages)
 export PYTHONIOENCODING=utf-8 VKG_EMB=hf VKG_WEB=ddg VKG_POD_HOST=local VKG_OLLAMA_URL=http://127.0.0.1:11540 S29_SEARCH=fsm
 LOCK=results/gpu_lock.txt; ME="vkg-main s58 $$"
 headroom_ok() { ram=$(powershell -c "[math]::Floor((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory/1MB)" | tr -d '\r'); vram=$(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | awk -F', ' '{printf "%d", ($2-$1)/1024}'); [ "${ram:-0}" -ge 16 ] && [ "${vram:-0}" -ge 10 ]; }

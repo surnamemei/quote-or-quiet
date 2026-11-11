@@ -18,7 +18,9 @@ JP = ('Page title: {t}\nSentence from that page: "{s}"\n\nQuestion: {q}\nPropose
       "Does this sentence state that the proposed answer is the answer to this exact question? Reply with only YES or NO.")
 ORD = "first second third fourth fifth sixth seventh eighth ninth tenth debut final last only".split()
 SETS = [("mintaka_dev", ROOT / "results/runs/s19/mintaka_dev_outputs.jsonl"), ("mintaka_test", ROOT / "results/runs/s19/mintaka_test_outputs.jsonl")]
-if os.environ.get("G4SET") == "s58":                      # S58 sealed test of rule Q2 (docs/S58_G4_PLAN.md)
+if os.environ.get("G4SET") == "s68":                      # S68 second sealed test of rule Q2 (docs/S68_G4B_PLAN.md)
+    SETS = [("m68", ROOT / "results/runs/s68/run_fsm/m68_outputs.jsonl")]
+elif os.environ.get("G4SET") == "s58":                      # S58 sealed test of rule Q2 (docs/S58_G4_PLAN.md)
     SETS = [("m58", ROOT / "results/runs/s58/run_fsm/m58_outputs.jsonl")]
 elif os.environ.get("G4SET") == "s39":                      # second design check: the 600 Mintaka design items of S39
     SETS = [("s39_mintaka", ROOT / "results/runs/s57/g4/s39_mintaka_outputs.jsonl")]
@@ -54,7 +56,7 @@ if MODE == "cands":
     from vkg.s12_run import agree
     from vkg.s14_eval import ans
     import e7_lib as L
-    rng = random.Random(5801 if os.environ.get("G4SET") == "s58" else 5720)
+    rng = random.Random({"s58": 5801, "s68": 6802}.get(os.environ.get("G4SET"), 5720))
     for name, f in SETS:
         rows = [json.loads(l) for l in open(f, encoding="utf-8")]
         pool = {}

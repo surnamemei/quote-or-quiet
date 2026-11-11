@@ -1,0 +1,6 @@
+# S69: cross-family reviewer check (plan, 2026-11-12, before any S69 output)
+
+Why. Every gate's verdicts come from two Claude reviewers; a shared blind spot of one model family would pass unnoticed. This check does not replace gate G12 (people), which stays open.
+Design (results/runs/s69/xfam.py): a fixed random sample (seed 6901) of 600 rows from finished review sheets: 100 each from G3, G11 and G14 (quote rows), 150 attribution rows (S63) and 150 long-form claim rows (S60), decoys included as they occur. Two reviewers of other families, Gemma 3 12B and Mistral Nemo 12B (Ollama, temperature 0), see the same blind inputs with the same instructions and give one verdict per row.
+Reported per model and block: agreement and Cohen kappa with the Claude pair where the pair agrees; for rows the pair called not (or other party / opposite), the share the other family also does not call 'states'; decoys caught.
+Expectations (written before any output): agreement with the Claude pair at least 0.75 on quote rows and 0.6 on attribution rows for at least one of the two models; at least 80% of the pair's 'not' rows also not 'states' for that model; decoys mostly caught. Smaller models may be weaker reviewers; a low score is reported as it is and is not a verdict on the gates by itself.

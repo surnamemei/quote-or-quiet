@@ -26,3 +26,7 @@ Order of work. GPU jobs run one at a time under the shared lock; reviewer rounds
 
 ## Track C (added 2026-11-12)
 Context-faithful answering from user-provided material: docs/TRACK_C_CONTEXT_FAITHFUL_PLAN.md. Starts after S68, S69 and the v2 self-test, with a diagnosis before any new method. The progress bar counts gate criteria for public-source checking; it is not a percentage of hallucination solved.
+
+## Decisions 2026-11-12 (user)
+- Daily models: the Infernix builds (Flash Next Uncensored-NVFP4 with DFlash2; 27B Uncensored-NVFP4). Track C tests them first (results/runs/s70/run_c1_infernix.sh, queued after the Ollama C1 run).
+- No human reviewers now. G12 stays open; alternatives reported separately and never as human review: gold by construction (Track C), agreement with existing human labels in public datasets (FEVER, VitaminC, an attribution benchmark, SQuAD 2.0), reviewers of other model families (S69).

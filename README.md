@@ -24,7 +24,7 @@ Overall [#################################.......] 40/48 (83%)
 |---|---|---|
 | G1, G2 | templated short facts: wrong answer; quote not stating it | passed |
 | G3, G5, G6 | natural questions (quote); ambiguous names; two-hop chains | passed |
-| G4 | natural questions: wrong answer under 1% at 35% coverage | failed first test (7 errors, upper 1.20%); second test (1,500 NQ-open questions) running |
+| G4 | natural questions: wrong answer under 1% at 35% coverage | failed twice: Mintaka 35.2% coverage but upper bound 1.20%; NQ-open 5 errors in 1,500 (upper 0.78%) but coverage 17.1% |
 | G7, G8 | long-form claims (biographies; other kinds of text) | passed |
 | G9, G10 | contested topics: view credited to the wrong party | passed |
 | G11 | pages that are not Wikipedia | passed |

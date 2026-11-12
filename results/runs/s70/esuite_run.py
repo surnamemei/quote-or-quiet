@@ -1,5 +1,5 @@
 """Track C, C1/C2: run the evidence-sensitivity suite on a model and score it mechanically.
-  run BACKEND SYSTEM : BACKEND = infernix:PORT (OpenAI chat API of infernix-serve), ollama:MODEL (Ollama on 11540); SYSTEM = direct | material_only.
+  run BACKEND SYSTEM : (INFX_NOTHINK=1 turns thinking off on infernix, as think=False on Ollama.) BACKEND = infernix:PORT (OpenAI chat API of infernix-serve), ollama:MODEL (Ollama on 11540); SYSTEM = direct | material_only.
                        One request at a time, temperature 0, max 160 output tokens; resumable; records seconds per request.
   score              : per model and system, per version (A to E), context (short/long) and language: correct share and error kinds.
 python -B results/runs/s70/esuite_run.py run infernix:11951 material_only ; python -B results/runs/s70/esuite_run.py score
@@ -35,7 +35,7 @@ def call(backend, prompt):
                 if not _MID:
                     _MID = requests.get(f"http://127.0.0.1:{arg}/v1/models", timeout=60).json()["data"][0]["id"]      # the served model's name
                 r = requests.post(f"http://127.0.0.1:{arg}/v1/chat/completions", json={"model": _MID, "messages": [{"role": "user", "content": prompt}],
-                                  "temperature": 0, "max_tokens": 160}, timeout=900).json()
+                                  "temperature": 0, "max_tokens": 160, **({"chat_template_kwargs": {"enable_thinking": False}} if os.environ.get("INFX_NOTHINK") == "1" else {})}, timeout=900).json()
                 return r["choices"][0]["message"]["content"]
             r = requests.post("http://127.0.0.1:11540/api/chat", json={"model": arg, "messages": [{"role": "user", "content": prompt}], "stream": False, "think": False,
                               "options": {"temperature": 0, "seed": 0, "num_predict": 160, "num_ctx": 16384}}, timeout=900).json()
@@ -70,10 +70,14 @@ if sys.argv[1] == "run":
         keep = [l for l in open(F, encoding="utf-8") if json.loads(l)["answer"] is not None]
         open(F, "w", encoding="utf-8").writelines(keep)
     done = {json.loads(l)["id"] for l in open(F, encoding="utf-8")} if F.exists() else set()
+    ctx = set(os.environ.get("CONTEXTS", "short,long").split(","))          # e.g. CONTEXTS=short; LONG_BASES=N keeps long prompts for the first N base items only
+    lb = int(os.environ.get("LONG_BASES", "0")); bases = list(dict.fromkeys(x["base"] for x in S))[:lb] if lb else None
     for n, x in enumerate(S):
-        if x["id"] in done:
+        if x["id"] in done or x["context"] not in ctx or (x["context"] == "long" and bases is not None and x["base"] not in bases):
             continue
         t0 = time.time(); a = call(backend, SYS[system].format(m=x["material"], q=x["question"]))
+        if a is None:                                                  # server gone (e.g. unloaded): stop instead of writing empty rows
+            print("no reply; stopping", backend, system, flush=True); sys.exit(2)
         with open(F, "a", encoding="utf-8") as f:
             f.write(json.dumps({"id": x["id"], "answer": a, "sec": round(time.time() - t0, 2)}, ensure_ascii=False) + "\n")
         if n % 200 == 0:

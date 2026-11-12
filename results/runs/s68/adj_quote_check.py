@@ -20,8 +20,7 @@ def live(title):
             try:
                 r = requests.get("https://en.wikipedia.org/w/api.php", params={"action": "parse", "page": title, "prop": "wikitext|text", "format": "json", "redirects": 1},
                                  headers={"User-Agent": "research-quote-check/1.0"}, timeout=60).json()
-                pr = r.get("parse", {}); cache[title] = pr.get("wikitext", {}).get("*", "") + "
-" + re.sub(r"<[^>]+>", " ", pr.get("text", {}).get("*", "")); break   # S68: wikitext and rendered text
+                pr = r.get("parse", {}); cache[title] = pr.get("wikitext", {}).get("*", "") + " \n " + re.sub(r"<[^>]+>", " ", pr.get("text", {}).get("*", "")); break   # S68: wikitext and rendered text
             except Exception:
                 time.sleep(5)
         else:

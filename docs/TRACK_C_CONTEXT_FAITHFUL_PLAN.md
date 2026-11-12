@@ -61,3 +61,37 @@ E was found to be built badly after the count: the distractor sentence was the o
 Note (2026-11-12 12:5x): infernix-serve answers a request with logprobs=true with the error "logprobs_not_supported" ("Infernix does not provide per-token log probabilities"), so decoding-time interventions (C4) cannot use the Infernix builds; they run on models under transformers (4B, 27B bf16). The first Flash Next C1 attempt failed because the request named the model "default" (the API wants the served name); fixed (the name is read from /v1/models), empty answers are re-asked.
 
 C1 v2, version F on the 27B (Ollama): correct 93% (short English), 91% (short Chinese), 90% (long); the distractor's value was given in 1, 0 and 1 of 200; the remaining errors are 'not stated' replies (11 to 16 of 200). Binding to the right subject is therefore not a weakness of this model on this material; the E failures were the construction. Summary for the 27B (Ollama, material-only prompt): reading given evidence 89 to 98%, refusing to guess when the answer is absent 97 to 100%, reporting conflicts 96 to 98%, binding 90 to 93%; the clear weakness is evidence that contradicts what the model knows (B: 80%, 66% with a Chinese question), mostly answered 'not stated'.
+
+## C1 result: Flash Next on Infernix (2026-11-12, 18:47 to 22:06)
+Run through the user's own running infernix-serve (port 12689; their settings: Uncensored-NVFP4, DFlash2 drafter, n-gram volume, int8 KV cache, max concurrency 2), thinking off, one request at a time; no model of mine loaded. Short contexts for both prompts (2,242 each); long contexts for the first 100 base items, material_only only (563). Median 0.6 s per request (material_only), 1.7 s (direct); long prompts about 6 to 10 s. Outputs out_esuite_v2_infernix_flashnext_user_*.jsonl; table in ESUITE_esuite_v2_result.md.
+
+| version (English, short) | material_only | direct (no instruction) |
+|---|---|---|
+| A original | 99% | 98% |
+| B value changed in the material | 89% (13 gave the model's own value) | 40% (115 gave the model's own value) |
+| C fact removed (should say not stated) | 96% (7 guessed) | 64% (73 guessed) |
+| D two records conflict (give both) | 97% | 98% |
+| F real distractor sentence | 96% | 98% |
+Long context (material_only, 100 items): A 100%, B 93%, C 100%, D 99%, F 100%.
+Chinese questions: the low material_only scores (A 54%, F 56%) are mostly a scoring artefact: the model answers in Chinese (德黑兰 for Tehran, 雅典 for Athens), and the mechanical scorer looks for the English value. Not counted as errors until scored with Chinese value names.
+Reading: the main model-level failure is the same as for the 27B, and much larger without an instruction: when the material contradicts what the model knows, Flash Next answers from memory (B direct 58% wrong value) and fills a removed fact from memory (C direct 37% guessed). The material_only instruction removes most of it (B 6.5% wrong value, C 3.5% guessed) but not all. This is the target for C3 (evidence-change training) and C4 (decoding interventions), and the direct column is the baseline a deployed model shows when the user just pastes material.
+
+## C1 result: 27B Uncensored-NVFP4 on Infernix (2026-11-13, 01:09 to 01:52)
+My own infernix-serve on port 11951 (--reproducible, --max-context 16384, --vram-headroom-mib 6144: the 10,240 MiB reserve left no room for the KV cache after 21.1 GiB of weights), thinking off, full suite for both prompts (3,363 each). Median 0.1 s (material_only), 0.5 s (direct) per request.
+
+| version (English) | material_only short / long | direct short / long |
+|---|---|---|
+| A original | 98% / 94% | 99% / 98% |
+| B value changed in the material | 80% / 83% (8 / 9 own value; 27 / 17 abstained) | 50% / 63% (99 / 73 own value) |
+| C fact removed | 96% / 98% | 50% / 61% (100 / 78 guessed) |
+| D conflict | 98% / 95% | 100% / 86% (26 picked one, long) |
+| F real distractor | 94% / 95% | see table |
+Same pattern as the 27B on Ollama and as Flash Next: with the instruction, the remaining B failures are mostly abstention ('not stated' when the material contradicts the model), not the model's own value; without it, half of the changed-value and removed-fact items are answered from memory.
+
+## C1 summary across the three models (English, short context)
+| | B own value, direct | C guessed, direct | B own value, material_only | C guessed, material_only | B abstained, material_only |
+|---|---|---|---|---|---|
+| Flash Next (Infernix, user's server) | 58% | 37% | 6.5% | 3.5% | 3% |
+| 27B NVFP4 (Infernix) | 50% | 50% | 4% | 3.5% | 13.5% |
+| 27B (Ollama, Q-quant) | not run | not run | 3% | 3% | 14.5% |
+Conclusion for C2 to C4: the model-level failure is real and large when material is pasted without an instruction (half of contradicted or removed facts answered from memory); an instruction cuts it to 3 to 6.5% but trades part of it for abstention on the 27B. The target of C3/C4 is the material_only residue (own value and guesses, 3 to 7%) without raising abstention, and the direct-prompt behaviour.

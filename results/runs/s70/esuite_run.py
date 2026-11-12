@@ -11,7 +11,8 @@ import json, os, re, sys, time, unicodedata
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]; D = ROOT / "results/runs/s70"
 sys.stdout.reconfigure(encoding="utf-8")
-S = [json.loads(l) for l in open(D / "esuite.jsonl", encoding="utf-8")]
+SUITE = os.environ.get("ESUITE", "esuite_v2")   # v2 since 2026-11-12 (v1 had base sentences that did not state the answer)
+S = [json.loads(l) for l in open(D / f"{SUITE}.jsonl", encoding="utf-8")]
 SYS = {"direct": "Material:\n{m}\n\nQuestion: {q}",
        "material_only": "Answer the question using only the material below. If the material does not state the answer, say that it does not. If the material gives different answers, "
                         "say that the records conflict and give each. Answer briefly.\n\nMaterial:\n{m}\n\nQuestion: {q}"}
@@ -21,13 +22,19 @@ ABST = re.compile(r"does not (state|say|mention|specify|provide|contain|include)
 fold = lambda t: "".join(c for c in unicodedata.normalize("NFKD", str(t or "")) if not unicodedata.combining(c)).casefold()
 
 
+_MID = None
+
+
 def call(backend, prompt):
     import requests
     kind, arg = backend.split(":", 1)
     for t in range(6):
         try:
             if kind == "infernix":
-                r = requests.post(f"http://127.0.0.1:{arg}/v1/chat/completions", json={"model": "default", "messages": [{"role": "user", "content": prompt}],
+                global _MID
+                if not _MID:
+                    _MID = requests.get(f"http://127.0.0.1:{arg}/v1/models", timeout=60).json()["data"][0]["id"]      # the served model's name
+                r = requests.post(f"http://127.0.0.1:{arg}/v1/chat/completions", json={"model": _MID, "messages": [{"role": "user", "content": prompt}],
                                   "temperature": 0, "max_tokens": 160}, timeout=900).json()
                 return r["choices"][0]["message"]["content"]
             r = requests.post("http://127.0.0.1:11540/api/chat", json={"model": arg, "messages": [{"role": "user", "content": prompt}], "stream": False, "think": False,
@@ -58,7 +65,10 @@ def judge(x, a):
 
 if sys.argv[1] == "run":
     backend, system = sys.argv[2], sys.argv[3]
-    F = D / f"out_{re.sub(r'[^a-z0-9]+', '_', backend.lower())}_{system}.jsonl"
+    F = D / f"out_{SUITE}_{re.sub(r'[^a-z0-9]+', '_', backend.lower())}_{system}.jsonl"
+    if F.exists():                                                   # rows without an answer (failed calls) are dropped and asked again
+        keep = [l for l in open(F, encoding="utf-8") if json.loads(l)["answer"] is not None]
+        open(F, "w", encoding="utf-8").writelines(keep)
     done = {json.loads(l)["id"] for l in open(F, encoding="utf-8")} if F.exists() else set()
     for n, x in enumerate(S):
         if x["id"] in done:
@@ -72,7 +82,7 @@ if sys.argv[1] == "run":
 else:
     from collections import Counter, defaultdict
     X = {x["id"]: x for x in S}; out = ["# Track C, C1: evidence-sensitivity suite (development data; mechanical scoring)", ""]
-    for F in sorted(D.glob("out_*.jsonl")):
+    for F in sorted(D.glob(f"out_{SUITE}_*.jsonl")):
         R = [json.loads(l) for l in open(F, encoding="utf-8")]; tab = defaultdict(Counter); secs = [r["sec"] for r in R]
         for r in R:
             x = X[r["id"]]; v = judge(x, r["answer"])
@@ -82,4 +92,4 @@ else:
             c = tab[k]; n = sum(c.values())
             out.append(f"| {k[0]} | {k[1]} | {k[2]} | {n} | {c['correct']} ({100*c['correct']/max(1,n):.0f}%) | {', '.join(f'{e} {m}' for e, m in c.most_common() if e != 'correct')} |")
         out.append("")
-    (D / "ESUITE_result.md").write_text("\n".join(out) + "\n", encoding="utf-8"); print("\n".join(out))
+    (D / f"ESUITE_{SUITE}_result.md").write_text("\n".join(out) + "\n", encoding="utf-8"); print("\n".join(out))

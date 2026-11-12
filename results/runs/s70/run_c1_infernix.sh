@@ -9,10 +9,10 @@ FN="E:/InfernixTest/Qwen3.8-Flash-Next-Uncensored-NVFP4-Infernix/Qwen3.8-Flash-N
 DR="E:/InfernixTest/Qwen3.8-Flash-Next-DFlash2-Infernix/Qwen3.8-Flash-Next-DFlash2-Infernix.infernix"
 NG="E:/InfernixTest/Qwen3.8-Flash-Next-NVIDIA-NVFP4-Infernix/Qwen3.8-Flash-Next-NVIDIA-NVFP4-Infernix.ngram"
 M27="E:/InfernixTest/Qwen3.8-27B-Uncensored-NVFP4-NInferV3/qwen3_8_27b_nvfp4-uncensored.ninfer"
-headroom_ok() { ram=$(powershell -c "[math]::Floor((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory/1MB)" | tr -d '\r'); vram=$(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | awk -F', ' '{printf "%d", ($2-$1)/1024}'); [ "${ram:-0}" -ge 40 ] && [ "${vram:-0}" -ge 26 ]; }
+headroom_ok() { ram=$(powershell -c "[math]::Floor((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory/1MB)" | tr -d '\r'); vram=$(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | awk -F', ' '{printf "%d", ($2-$1)/1024}'); [ "${ram:-0}" -ge 32 ] && [ "${vram:-0}" -ge 20 ]; }
 killport() { PID=$(netstat -ano | grep "127.0.0.1:$1 .*LISTENING" | awk '{print $NF}' | head -1); [ -n "$PID" ] && taskkill //PID $PID //F > /dev/null 2>&1; }
 echo "--- C1INF $(date)"
-until grep -qE "C1_DONE|C1 FAILED" $R/run_c1.log 2>/dev/null; do sleep 120; done
+until grep -qE "C1F_DONE|C1F FAILED" $R/run_c1f.log 2>/dev/null; do sleep 120; done   # after the VitaminC judge and the F items
 while true; do while [ -e $LOCK ] || ! headroom_ok; do sleep 120; done; echo "$ME $(date +%H:%M)" > $LOCK; sleep 15; grep -q "^$ME " $LOCK && break; done
 echo "lock taken $(date)"
 trap 'killport 11951; grep -q "^$ME " $LOCK 2>/dev/null && rm -f $LOCK' EXIT
@@ -23,7 +23,7 @@ run_model() { tag=$1; shift
   nvidia-smi --query-gpu=memory.used --format=csv,noheader > $R/infernix_${tag}_vram.txt
   curl -s -m 60 localhost:11951/v1/chat/completions -H "Content-Type: application/json" -d '{"model":"default","messages":[{"role":"user","content":"Say OK."}],"max_tokens":5,"temperature":0,"logprobs":true,"top_logprobs":3}' > $R/infernix_${tag}_logprobs_probe.json
   for s in material_only direct; do python -B $R/esuite_run.py run infernix:11951 $s || { echo "C1INF FAILED $tag $s"; exit 1; }
-    f=$R/out_infernix_11951_$s.jsonl; [ -e $f ] && mv $f $R/out_infernix_${tag}_$s.jsonl; done
+    f=$R/out_esuite_v2_infernix_11951_$s.jsonl; [ -e $f ] && mv $f $R/out_esuite_v2_infernix_${tag}_$s.jsonl; done
   killport 11951; sleep 20; }
 run_model flashnext "$FN" --draft-model "$DR" --ngram-volume "$NG"
 run_model q27nvfp4 "$M27"

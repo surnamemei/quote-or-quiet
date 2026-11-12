@@ -8,6 +8,32 @@ Most of what is below is how we measured that, and what we found when we tried t
 
 **中文简介：** 目标是让模型别胡说：能联网、能核对来源时才给确定答案，核对不了就明说"无法确认"，而不是让用户每次都要二次确认。这个仓库放的是系统、论文草稿和全部评估记录。结论很克制：在 SimpleQA 封存题上，所有问题里"给出错误答案"的占比上界为 0.76%（覆盖率 37.2%）；换到另外两个基准，覆盖率不够，并且发现那里很多"错误"其实是基准自己的金标准过时或问题有歧义。这不是"消除了幻觉"。
 
+## Progress tracker (docs/PROGRESS_TRACKER.md)
+The objective is that a model presents nothing it cannot back with a checked quote. It is split into 16 gates with 3 criteria each:
+- T: the 97.5% upper bound of the gate's error share is at or below its threshold.
+- N: the sample has the minimum size.
+- V: the test was registered beforehand, on unseen data, with valid decoys.
+
+The bar counts criteria met. It is not a percentage of hallucination solved.
+
+```
+Overall [#################################.......] 40/48 (83%)
+```
+
+| gate | area | status |
+|---|---|---|
+| G1, G2 | templated short facts: wrong answer; quote not stating it | passed |
+| G3, G5, G6 | natural questions (quote); ambiguous names; two-hop chains | passed |
+| G4 | natural questions: wrong answer under 1% at 35% coverage | failed first test (7 errors, upper 1.20%); second test (1,500 NQ-open questions) running |
+| G7, G8 | long-form claims (biographies; other kinds of text) | passed |
+| G9, G10 | contested topics: view credited to the wrong party | passed |
+| G11 | pages that are not Wikipedia | passed |
+| G12 | people agree with the language-model reviewers | open (needs two people) |
+| G13 | the quote rule beats standard checkers | passed |
+| G14 | applied to drafts of other models (Llama, Gemma, Mistral) | passed |
+| G15 | tool stress test: no release without a checked quote | failed first test (208 /bio values not verbatim in their quote); second test on tool v2 registered (docs/S72_G15B_PLAN.md) |
+| G16 | replication by someone else | open (docs/REPLICATION.md) |
+
 ## What it does
 For each question the system reads three evidence sources (web pages, a local Wikipedia snapshot, and both combined) with a 4B model, and releases an answer only if
 1. all three sources agree on it,

@@ -30,3 +30,5 @@ Context-faithful answering from user-provided material: docs/TRACK_C_CONTEXT_FAI
 ## Decisions 2026-11-12 (user)
 - Daily models: the Infernix builds (Flash Next Uncensored-NVFP4 with DFlash2; 27B Uncensored-NVFP4). Track C tests them first (results/runs/s70/run_c1_infernix.sh, queued after the Ollama C1 run).
 - No human reviewers now. G12 stays open; alternatives reported separately and never as human review: gold by construction (Track C), agreement with existing human labels in public datasets (FEVER, VitaminC, an attribution benchmark, SQuAD 2.0), reviewers of other model families (S69).
+
+Status (2026-11-12, 18:30): G15 second test registered before any output (docs/S72_G15B_PLAN.md; inputs fixed, sha256 9448b397…). It runs after S68, S69 and the v2 self-test. S68 generation was paused at 17:51 because the user's own Infernix server needed the memory; it resumes when 24 GB of VRAM is free. The Track C Infernix runs wait for 32 GB of free RAM.

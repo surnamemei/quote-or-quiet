@@ -1,5 +1,7 @@
 # Plan to a full bar (2026-11-11)
 
+Status 2026-11-13: 41 of 48. G4 was not reached in two sealed tests and a redesign on design data (docs/S73_G4C_DESIGN.md), so the clause below applies: the objective is restricted for natural questions to quote-backed statements at low coverage. The remaining six criteria (G12, G16) need people. Current order of work: docs/PLAN_2026-11-13.md.
+
 Objective: for the question types in scope, a person who re-checks a released statement against its quote is not misled: no statement without support (nonsense) and no statement credited to a source or party that does not say it (calling a deer a horse). Measured by the tracker in docs/PROGRESS_TRACKER.md (16 gates, 48 criteria; bar = criteria met / 48; run `python -B results/progress.py`). The bar is full at 48 of 48. Now 15 of 48 (31%).
 
 What a full bar means: for each gate's population, the 97.5% upper bound of the misleading or wrong share is at or below the gate's threshold, on registered, unseen data, checked by people as well as by language models, and the same holds when the system is put on the drafts of at least three other models. What it does not mean: that released statements are true (the page can be wrong), that every question is answered (the system stays silent when it has no quote), that other languages or sources outside the tested kinds are covered, or that the base model is changed. 'Applied to existing models' means the checker is placed after any model and releases only the statements it can quote.

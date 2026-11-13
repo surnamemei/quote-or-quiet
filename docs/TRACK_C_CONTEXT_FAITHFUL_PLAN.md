@@ -103,3 +103,16 @@ Chinese labels and aliases for the 226 answer values from Wikidata (zh_names.py:
 - 27B NVFP4, direct: B 70% / 55% (89 own value, 44.5%), C 46% / 41% (118 guessed); material_only: A 96%, B 76% (37 abstained), C 98%, D 98%, F 92%.
 - 27B Ollama, material_only: A 95%, B 66% (61 abstained), C 98%, D 97%, F 92%.
 Reading: the low Chinese material_only scores of Flash Next were the scoring artefact; with Chinese names the Chinese-question results match the English ones. The model-level failure is the same in both languages: without an instruction about half of contradicted or removed facts are answered from memory (Flash Next B 58% own value, C 56% guessed; 27B NVFP4 44.5%, 59%), and with the instruction the 27B models abstain on a third of the contradicted items with a Chinese question (B 18.5 to 30.5%), more than with an English one (13.5 to 14.5%). Caveat: a top search hit can be the wrong entity, and a Chinese alias can match more than the value; the rescore can therefore overcount named values a little, in both the correct and the error columns.
+
+## Correction to C1 (2026-11-13; results/runs/s70/scorer_audit.py, rescore_bc.py)
+The scorer counted an answer as 'wrong value from material' whenever the original value occurred in it. An audit of the stored answers (prompted by an outside review of the scoring function) shows that in version B under the direct prompt every such answer also contains the material's value: 115 of 115 (Flash Next) and 98 of 99 (27B NVFP4). Read in full they say 'based on the material, X' and add a note that in reality it is Y. The statements above that the models 'answer from memory' on 50 to 58% of changed-value items are therefore wrong and are withdrawn, as is the 'B own value' column of the three-model summary and the same reading of the Chinese rescore.
+Rescored (English, short, 200 items per version):
+| run | B: material's value | of these with a note of the original | B: original only | B: abstained | C: original value given, no abstention | C: abstained (of these also naming the original) |
+|---|---|---|---|---|---|---|
+| Flash Next, direct | 196 | 115 | 0 | 0 | 57 | 139 (12) |
+| Flash Next, material_only | 191 | 12 | 1 | 5 | 5 | 193 (0) |
+| 27B NVFP4, direct | 199 | 98 | 1 | 0 | 51 | 143 (43) |
+| 27B NVFP4, material_only | 174 | 8 | 0 | 22 | 5 | 193 (0) |
+| 27B Ollama, material_only | 169 | 6 | 0 | 27 | 4 | 194 (0) |
+What stands: (1) with a plain prompt a removed fact is filled in for about a quarter of the items (57 and 51 of 200; some of these read the answer off the title, which is a defensible inference); the instruction cuts it to 5 of 200; (2) with the instruction the 27B refuses 11 to 13.5% of changed-value items that the material does state; Flash Next 2.5%. What does not stand: memory overriding stated material; on these items it almost never happens (0 or 1 of 200).
+Still unchecked by this scorer: unsupported additions around a right value (18 to 42 of the correct direct answers to A are over 25 words), and conflict answers that give both values while picking one (11 to 14 of the direct D answers contain a phrase such as 'is correct' or 'outdated'). A semantic review of a random sample comes before any further claim (docs/PLAN_2026-11-13.md, step 0).

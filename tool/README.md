@@ -45,11 +45,12 @@ The two environments are kept apart because the MCP SDK lives in the free-search
 1. Start the service (needs free RAM >= 16 GB and free VRAM >= 22 GB; it refuses while another job holds the project GPU lock):
    `bash tool/start_service.sh`
 2. Register the MCP server with your client. For Claude Code:
-   `claude mcp add quote-or-quiet -- F:/Projects/tools/fsm_venv/Scripts/python.exe -I "F:/Projects/AI hallucinations/tool/qoq_mcp.py"`
+   `claude mcp add quote-or-quiet -- <fsm-venv>/Scripts/python.exe -I "<repo>/tool/qoq_mcp.py"`
+   (`<fsm-venv>` is the free-search-mcp environment, `<repo>` this repository.)
    For clients with a JSON config (LM Studio, Cherry Studio, Claude Desktop and others):
    ```json
-   {"mcpServers": {"quote-or-quiet": {"command": "F:/Projects/tools/fsm_venv/Scripts/python.exe",
-     "args": ["-I", "F:/Projects/AI hallucinations/tool/qoq_mcp.py"]}}}
+   {"mcpServers": {"quote-or-quiet": {"command": "<fsm-venv>/Scripts/python.exe",
+     "args": ["-I", "<repo>/tool/qoq_mcp.py"]}}}
    ```
 3. Stop it and free the GPU: `bash tool/stop_service.sh`
 

@@ -95,3 +95,11 @@ Same pattern as the 27B on Ollama and as Flash Next: with the instruction, the r
 | 27B NVFP4 (Infernix) | 50% | 50% | 4% | 3.5% | 13.5% |
 | 27B (Ollama, Q-quant) | not run | not run | 3% | 3% | 14.5% |
 Conclusion for C2 to C4: the model-level failure is real and large when material is pasted without an instruction (half of contradicted or removed facts answered from memory); an instruction cuts it to 3 to 6.5% but trades part of it for abstention on the 27B. The target of C3/C4 is the material_only residue (own value and guesses, 3 to 7%) without raising abstention, and the direct-prompt behaviour.
+
+## C1: Chinese questions rescored with Chinese value names (2026-11-13; results/runs/s70/zh_rescore.py, ESUITE_zh_rescore_result.md)
+Chinese labels and aliases for the 226 answer values from Wikidata (zh_names.py: English label search, top hit; 215 of 226 got a name; names of one character not used). Same scoring rule, a value now counts as named in its English form or any Chinese name. Short context, Chinese question, correct before / after:
+- Flash Next, material_only: A 54% / 94%, B 75% / 90% (12 own value), C 94% / 94%, D 88% / 97%, F 56% / 92%.
+- Flash Next, direct: B 62% / 42% (116 of 200 own value, 58%), C 46% / 44% (112 guessed).
+- 27B NVFP4, direct: B 70% / 55% (89 own value, 44.5%), C 46% / 41% (118 guessed); material_only: A 96%, B 76% (37 abstained), C 98%, D 98%, F 92%.
+- 27B Ollama, material_only: A 95%, B 66% (61 abstained), C 98%, D 97%, F 92%.
+Reading: the low Chinese material_only scores of Flash Next were the scoring artefact; with Chinese names the Chinese-question results match the English ones. The model-level failure is the same in both languages: without an instruction about half of contradicted or removed facts are answered from memory (Flash Next B 58% own value, C 56% guessed; 27B NVFP4 44.5%, 59%), and with the instruction the 27B models abstain on a third of the contradicted items with a Chinese question (B 18.5 to 30.5%), more than with an English one (13.5 to 14.5%). Caveat: a top search hit can be the wrong entity, and a Chinese alias can match more than the value; the rescore can therefore overcount named values a little, in both the correct and the error columns.

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Self-test of the Quote or Quiet service: waits for headroom (the GPU lock free, free RAM >= 16 GB, free VRAM >= 22 GB), starts the servers, runs one call of each
 # kind, writes tool/selftest.log, stops everything it started. Leaves other jobs and the desktop alone.
-cd "/f/Projects/AI hallucinations"
+cd "$(dirname "$0")/.."   # the repository root
 LOG=tool/selftest.log; : > $LOG
 until bash tool/start_service.sh > tool/selftest_start.log 2>&1; do sleep 120; done
 for t in $(seq 1 40); do python -c "import sys,os; sys.path.insert(0,'.'); os.environ['VKG_EMB']='hf'; from vkg import pod; pod.gen(['Say hi'],2)" > /dev/null 2>&1 && break; sleep 15; done

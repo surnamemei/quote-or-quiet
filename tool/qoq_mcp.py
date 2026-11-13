@@ -2,7 +2,7 @@
 Tool quote_or_quiet(question): searches the web with the free-search-mcp pool (the same pool as the S29 sealed run), stores the URL list
 where the pipeline reads it, and asks the local Quote or Quiet service (tool/qoq_service.py) for a Verified answer with its quote, or
 Unresolved with the reason. The answer is never produced here.
-Run (stdio): F:/Projects/tools/fsm_venv/Scripts/python.exe -I "F:/Projects/AI hallucinations/tool/qoq_mcp.py" """
+Run (stdio): <fsm-venv>/Scripts/python.exe -I "<repo>/tool/qoq_mcp.py" """
 import hashlib
 import json
 import os

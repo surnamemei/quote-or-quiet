@@ -17,7 +17,7 @@ The objective is that a model presents nothing it cannot back with a checked quo
 The bar counts criteria met. It is not a percentage of hallucination solved.
 
 ```
-Overall [#################################.......] 40/48 (83%)
+Overall [##################################......] 41/48 (85%)
 ```
 
 | gate | area | status |
@@ -31,7 +31,7 @@ Overall [#################################.......] 40/48 (83%)
 | G12 | people agree with the language-model reviewers | open (needs two people) |
 | G13 | the quote rule beats standard checkers | passed |
 | G14 | applied to drafts of other models (Llama, Gemma, Mistral) | passed |
-| G15 | tool stress test: no release without a checked quote | failed first test (208 /bio values not verbatim in their quote); second test on tool v2 registered (docs/S72_G15B_PLAN.md) |
+| G15 | tool stress test: no release without a checked quote | passed on tool v2 (1,000 requests, 1,475 released statements, 0 violations); the first test had failed on 208 /bio values |
 | G16 | replication by someone else | open (docs/REPLICATION.md) |
 
 ## What it does

@@ -8,6 +8,7 @@ Gate G16 is met when someone other than the authors reruns a registered test and
 - The judge: we used a 27B Qwen model (Qwen3.8-27B, Q5_K_M GGUF) in Ollama under the name qwen3.8-27b, called with temperature 0 and thinking off. Use the same model if you can; if you use another, say so, because the result then tests the rule with a different judge.
 - One drafting model of your choice through Ollama (we used llama3.1:8b, gemma3:12b, mistral-nemo:12b).
 - PopQA (akariasai/PopQA, test.tsv) and Mintaka (only if you also rerun other gates) under data/external/.
+- Paths: the scripts in tool/ find the repository root themselves. The run scripts under results/runs/ are the records of what we ran and are released unchanged (some are covered by registered hashes), so several still name our folders (F:/Projects/AI hallucinations, a separate free-search-mcp environment): replace the `cd` line or the ROOT constant with your clone's path before running one.
 
 ## Steps
 1. Draw fresh questions. Copy results/runs/s65/seal65.py and change the slice to part[1767:2100] (positions no test used; S65 used 1000 to 1667, the stress-test inputs 1667 to 1767). Run it; it prints only a count and a hash. Do not open the items file.

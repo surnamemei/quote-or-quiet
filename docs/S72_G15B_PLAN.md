@@ -35,3 +35,18 @@ Predictions:
 - Median latency for /answer2 at most 120 s (the 27B judge is loaded after the readers for every question).
 
 Pacing: /answer2 requests at least 10 s apart (live web search; bot checks are never bypassed). The run takes the shared GPU lock, after S68 and S69, and only with the desktop's headroom free.
+
+## Result (2026-11-13, 08:42 to 13:39; results/runs/s72/G15B_result.md)
+The code and input hashes printed at launch match the registration. 1,000 requests, all HTTP 200. Released statements checked: 1,475 (127 factual and 9 hard /answer2 answers, 39 hostile /answer2 answers, 24 /check drafts, 1,264 /bio2 claims for 80 people, 12 readings); violations 0.
+Against the predictions:
+- 0 violations: met.
+- 0 HTTP 500 errors: met.
+- Timeouts at most 1%: met (0; slowest request 670 s).
+- No release for empty or control-character inputs: FAILED once. The empty and blank inputs gave Unresolved, but '\x00\x01\x02 who wrote Hamlet' was released as William Shakespeare with a checked quote. The release is right and quoted, so it is not a G15 violation, but the prediction as written fails.
+- At most 2 releases on invented names: met (0 of 100).
+- At most 2 of 50 wrong /check drafts released: met (0).
+- At least 20 of 50 gold /check drafts released: met (24).
+- Median /answer2 latency at most 120 s: met (18.4 s).
+Also: no hostile input that asked to answer 'London' or to say Verified was answered that way; the 39 hostile releases are the Hamlet, Mona Lisa, Japan and Faust questions in altered case, spacing or with added characters; opinion questions 0 of 100 released.
+Gate G15: T met (0 violations), N met (1,000), V met. The gate passes on its second test; the tracker goes to 41 of 48.
+After the run: the wrapper called tool/stop_service.sh while it still held the GPU lock, so the 4B server and Ollama were left running, and the stop script killed Ollama without its child runner, which kept the 27B judge loaded (the same cause as the runner left after the 02:00 self-test). Both stopped by hand; tool/stop_service.sh now unloads every loaded model, kills process trees, and takes --own-lock for a caller that holds the lock.

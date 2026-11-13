@@ -32,3 +32,4 @@ Context-faithful answering from user-provided material: docs/TRACK_C_CONTEXT_FAI
 - No human reviewers now. G12 stays open; alternatives reported separately and never as human review: gold by construction (Track C), agreement with existing human labels in public datasets (FEVER, VitaminC, an attribution benchmark, SQuAD 2.0), reviewers of other model families (S69).
 
 Status (2026-11-12, 18:30): G15 second test registered before any output (docs/S72_G15B_PLAN.md; inputs fixed, sha256 9448b397…). It runs after S68, S69 and the v2 self-test. S68 generation was paused at 17:51 because the user's own Infernix server needed the memory; it resumes when 24 GB of VRAM is free. The Track C Infernix runs wait for 32 GB of free RAM.
+- 2026-11-13: S74 Chinese gate paused by the user (no Chinese Wikipedia, no baike.com; English only for now); see results/runs/s74/PAUSED.md.
